@@ -28,14 +28,32 @@ int main()
     for(int i=1; i<=3; i++)
     {
         scanf("%d %d", &x, &y);
+        if(x<=SIZE && y<=SIZE)
+        {
         BOARD_P1[x][y] = 1;
+        }
+        else
+        {
+            i--;
+            printf("ERROR\n");
+            continue;
+        }
     }
 
     printf("Please enter the coordinates of 3 boats for FOCP2 (x y): \n");
     for(int i=1; i<=3; i++)
     {
         scanf("%d %d", &x, &y);
-        BOARD_P2[x][y] = 1;
+        if(x<=SIZE && y<=SIZE)
+        {
+            BOARD_P2[x][y] = 1;
+        }
+        else
+        {
+            i--;
+            printf("ERROR\n");
+            continue;
+        }
     }
 
 
