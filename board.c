@@ -15,14 +15,14 @@ int main()
         }
     }
     //VARED KARDANE SHOMARE OFOGHI
-    for(int j=0; j<n+1; j++)
+    for(int j=1; j<n+1; j++)
     {
-        BOARD[0][j] = j+1;
+        BOARD[0][j] = j;
     } 
     //VARED KARDANE SHOMARE AMOODI  
-    for(int i=0; i<n+1; i++)
+    for(int i=1; i<n+1; i++)
     {
-        BOARD[i][0] = i+1;
+        BOARD[i][0] = i;
     }
 
     for(int i=0; i<n+1; i++)
