@@ -4,6 +4,7 @@
 #include <time.h>
 // #include <ctime>
 
+
 //TABE BARAYE KHAT KESHI BE TOOLE VOOROODIE (length)
 int Line(int length)
 {
@@ -34,12 +35,13 @@ int Line(int length)
 
 
 //TABE TAGHIR RANG
-// void setTextColor(int textColor , int backColor)
-// {
-//     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-//     int colorAttribute = backColor << 4 | textColor;
-//     SetConsoleTextAttribute(consoleHandle , colorAttribute);
-// }
+void setTextColor(int textColor , int backColor)
+{
+    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    int colorAttribute = backColor << 4 | textColor;
+    SetConsoleTextAttribute(consoleHandle , colorAttribute);
+}
+// 0=black,1=blue,2=green,3=cyan,4=red,14=yellow,15=white
 
 
 //TABE IJADE DELAY
@@ -53,7 +55,7 @@ int Line(int length)
 int main()
 {
     const int SIZE;
-    printf("Please enter the length: ");
+    printf("Please enter the length of board: ");
     scanf("%d", &SIZE);    
     int BOARD_P1[SIZE+1][SIZE+1];
     int BOARD_P2[SIZE+1][SIZE+1];
@@ -70,18 +72,18 @@ int main()
     }
 
     const int Boat_Count;
-    printf("Please enter the number of boats: ");
+    printf("Please enter the number of ships: ");
     scanf("%d", &Boat_Count);
 
     //gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
-    printf("Please enter the coordinates of 3 boats for FOCP1 (x y): \n");
+    printf("Please enter the coordinates of 3 ships for FOCP1 (x y): \n");
     for(int i=1; i<=3; i++)
     {
         scanf("%d %d", &x, &y);
         if(BOARD_P1[x][y] == 1)
         {
             i--;
-            printf("YOU ALREADY PUT A BOAT HERE!\n");
+            printf("YOU ALREADY PUT A SHIP HERE!\n");
             continue;
         }
         else if(x<=SIZE && y<=SIZE && x>=1 && y>=1)
@@ -91,19 +93,19 @@ int main()
         else
         {
             i--;
-            printf("YOUR COORDINATE IS OUT FO THE BOARD!\n");
+            printf("YOUR COORDINATE IS OUT OF THE BOARD!\n");
             continue;
         }
     }
 
-    printf("Please enter the coordinates of 3 boats for FOCP2 (x y): \n");
+    printf("Please enter the coordinates of 3 ships for FOCP2 (x y): \n");
     for(int i=1; i<=3; i++)
     {
         scanf("%d %d", &x, &y);
         if(BOARD_P2[x][y] == 1)
         {
             i--;
-            printf("YOU ALREADY PUT A BOAT HERE!\n");
+            printf("YOU ALREADY PUT A SHIP HERE!\n");
             continue;
         }
         else if(x<=SIZE && y<=SIZE && x>=1 && y>=1)
@@ -113,7 +115,7 @@ int main()
         else
         {
             i--;
-            printf("YOUR COORDINATE IS OUT FO THE BOARD!\n");
+            printf("YOUR COORDINATE IS OUT OF THE BOARD!\n");
             continue;
         }
     }
@@ -146,11 +148,15 @@ int main()
             }     
             else if(i>=1 && j>=1 && BOARD_P1[i][j]==0) //TARH UB DADAN
             {
+                setTextColor(3,0);
                 printf("~  ");
+                setTextColor(15,0);
             }
             else if(i>=1 && j>=1 && BOARD_P1[i][j]==1) //TARH UB DADAN
             {
+                setTextColor(4,0);
                 printf("X  ");
+                setTextColor(15,0);
             }
             else
             {
@@ -186,11 +192,15 @@ int main()
             }     
             else if(i>=1 && j>=1 && BOARD_P2[i][j]==0) //TARH UB DADAN
             {
+                setTextColor(3,0);
                 printf("~  ");
+                setTextColor(15,0);
             }
             else if(i>=1 && j>=1 && BOARD_P2[i][j]==1) //TARH UB DADAN
             {
+                setTextColor(4,0);
                 printf("X  ");
+                setTextColor(15,0);
             }
             else
             {
