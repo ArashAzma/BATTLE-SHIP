@@ -1,29 +1,68 @@
 #include <stdio.h>
+#include <windows.h>
+#include <conio.h>
+#include <time.h>
+// #include <ctime>
 
-int Line(int lengh)
+//TABE BARAYE KHAT KESHI BE TOOLE VOOROODIE (length)
+int Line(int length)
 {
     int i;
-    for( i=0 ; i<lengh ; i++ )
+    for( i=0 ; i<length ; i++ )
     {
-        printf("☵");
+        printf("=");
     }
 }
 
+
+//TABE JABEJAYI MAKAN NAMA
+// void gotoxy(int x,int y)
+// {
+//     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+//     COORD cursorCoord;
+//     cursorCoord.X=y;
+//     cursorCoord.Y=x;
+//     SetConsoleCursorPosition(consoleHandle,cursorCoord);
+// }
+
+
+//TABE BARAYE PAK KARDANE SAFE
+// void ClearScreen()
+// {
+//     system("cls");
+// }
+
+
+//TABE TAGHIR RANG
+// void setTextColor(int textColor , int backColor)
+// {
+//     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+//     int colorAttribute = backColor << 4 | textColor;
+//     SetConsoleTextAttribute(consoleHandle , colorAttribute);
+// }
+
+
+//TABE IJADE DELAY
+// void Sleep(unsigned int mseconds)
+// {
+//     clock_t goal = mseconds + clock();
+//     while (goal > clock());
+// }
 
 
 int main()
 {
     const int SIZE;
-    printf("Please enter the lenght: ");
+    printf("Please enter the length: ");
     scanf("%d", &SIZE);    
-    int BOARD_P1[SIZE+2][SIZE+2];
-    int BOARD_P2[SIZE+2][SIZE+2];
+    int BOARD_P1[SIZE+1][SIZE+1];
+    int BOARD_P2[SIZE+1][SIZE+1];
     int x=0; int y=0;
 
     //SEFR KARDANE KHANE HA
-    for(int i=0; i<SIZE+2; i++)
+    for(int i=0; i<SIZE+1; i++)
     {
-        for(int j=0; j<SIZE+2; j++)
+        for(int j=0; j<SIZE+1; j++)
         {
             BOARD_P1[i][j] = 0;
             BOARD_P2[i][j] = 0;
@@ -96,75 +135,77 @@ int main()
 
 
     // printe board FOCP1
-    for(int i=0; i<SIZE+2; i++)
+    for(int i=0; i<SIZE+1; i++)
     {
-        for(int j=0; j<SIZE+2; j++)
+        for(int j=0; j<SIZE+1; j++)
         {
-            if(i>0 && j==SIZE+1)
-            {
-                printf("◈");
-                continue;
-            }
-            if(j>0 && i==SIZE+1)
-            {
-                printf("◈  ");
-                continue;
-            }
-            if((i==0 && j==0) || (i==0 && j==SIZE+1) || (i==SIZE+1 && j==0))
+            if(i==0 && j==0)
             {
                 printf("   ");
                 continue;
             }     
-            if(i>=1 && j>=1 && BOARD_P1[i][j]==0) //TARH UB DADAN
+            else if(i>=1 && j>=1 && BOARD_P1[i][j]==0) //TARH UB DADAN
             {
                 printf("~  ");
             }
             else if(i>=1 && j>=1 && BOARD_P1[i][j]==1) //TARH UB DADAN
             {
-                printf("✕  ");
+                printf("X  ");
             }
             else
             {
-                printf("%d  ", BOARD_P1[i][j]);
+                if(i==0 && j>9)
+                {
+                    printf("%d ", BOARD_P1[i][j]);
+                }
+                else if(i>9 && j==0)
+                {
+                    printf("%d ", BOARD_P1[i][j]);
+                }
+                else
+                {
+                    printf("%d  ", BOARD_P1[i][j]);
+                }
             }
         }
         printf("\n\n");
     }
 
-    Line((SIZE+1)*3+1);
+    Line(SIZE*3+1);
     printf("\n\n");
-
+    
     //printe board FOCP2
-   for(int i=0; i<SIZE+2; i++)
+   for(int i=0; i<SIZE+1; i++)
     {
-        for(int j=0; j<SIZE+2; j++)
+        for(int j=0; j<SIZE+1; j++)
         {
-            if(i>0 && j==SIZE+1)
-            {
-                printf("◈");
-                continue;
-            }
-            if(j>0 && i==SIZE+1)
-            {
-                printf("◈  ");
-                continue;
-            }
-            if((i==0 && j==0) || (i==0 && j==SIZE+1) || (i==SIZE+1 && j==0))
+            if(i==0 && j==0)
             {
                 printf("   ");
                 continue;
             }     
-            if(i>=1 && j>=1 && BOARD_P2[i][j]==0) //TARH UB DADAN
+            else if(i>=1 && j>=1 && BOARD_P2[i][j]==0) //TARH UB DADAN
             {
                 printf("~  ");
             }
             else if(i>=1 && j>=1 && BOARD_P2[i][j]==1) //TARH UB DADAN
             {
-                printf("✕  ");
+                printf("X  ");
             }
             else
             {
-                printf("%d  ", BOARD_P2[i][j]);
+                if(i==0 && j>9)
+                {
+                    printf("%d ", BOARD_P1[i][j]);
+                }
+                else if(i>9 && j==0)
+                {
+                    printf("%d ", BOARD_P1[i][j]);
+                }
+                else
+                {
+                    printf("%d  ", BOARD_P2[i][j]);
+                }
             }
         }
         printf("\n\n");
