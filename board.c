@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <windows.h>
 #include <conio.h>
-#include <time.h>
-// #include <ctime>
 
 
 //TABE BARAYE KHAT KESHI BE TOOLE VOOROODIE (length)
@@ -14,17 +12,6 @@ int Line(int length)
         printf("=");
     }
 }
-
-
-//TABE JABEJAYI MAKAN NAMA
-// void gotoxy(int x,int y)
-// {
-//     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-//     COORD cursorCoord;
-//     cursorCoord.X=y;
-//     cursorCoord.Y=x;
-//     SetConsoleCursorPosition(consoleHandle,cursorCoord);
-// }
 
 
 //TABE BARAYE PAK KARDANE SAFE
@@ -42,14 +29,6 @@ void setTextColor(int textColor , int backColor)
     SetConsoleTextAttribute(consoleHandle , colorAttribute);
 }
 // 0=black,1=blue,2=green,3=cyan,4=red,14=yellow,15=white
-
-
-//TABE IJADE DELAY
-// void Sleep(unsigned int mseconds)
-// {
-//     clock_t goal = mseconds + clock();
-//     while (goal > clock());
-// }
 
 
 int main()
@@ -137,6 +116,10 @@ int main()
 
 
     // printe board FOCP1
+    printf("\n");
+    printf("~FOCP1~\n"); 
+    printf("remaining ship: %d\n\n", Boat_Count);
+
     for(int i=0; i<SIZE+1; i++)
     {
         for(int j=0; j<SIZE+1; j++)
@@ -181,6 +164,9 @@ int main()
     printf("\n\n");
     
     //printe board FOCP2
+    printf("\n");
+    printf("~FOCP2~\n"); 
+    printf("remaining ship: %d\n\n", Boat_Count);
    for(int i=0; i<SIZE+1; i++)
     {
         for(int j=0; j<SIZE+1; j++)
@@ -206,11 +192,11 @@ int main()
             {
                 if(i==0 && j>9)
                 {
-                    printf("%d ", BOARD_P1[i][j]);
+                    printf("%d ", BOARD_P2[i][j]);
                 }
                 else if(i>9 && j==0)
                 {
-                    printf("%d ", BOARD_P1[i][j]);
+                    printf("%d ", BOARD_P2[i][j]);
                 }
                 else
                 {
