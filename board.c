@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include <conio.h>
+#include <string.h>
 
 // TABE BARAYE KHAT KESHI BE TOOLE VOOROODIE (length)
 int Line(int length)
@@ -9,6 +10,49 @@ int Line(int length)
     for (i = 0; i < length; i++)
     {
         printf("=");
+    }
+}
+
+int Print_Board(int board[][100],int Size)
+{
+    for (int i = 0; i < Size + 1; i++)
+    {
+        for (int j = 0; j < Size + 1; j++)
+        {
+            if (i == 0 && j == 0)
+            {
+                printf("   ");
+                continue;
+            }
+            else if (i >= 1 && j >= 1 && board[i][j] == 0) // TARH UB DADAN
+            {
+                setTextColor(3, 0);
+                printf("~  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board[i][j] == 1) // TARH UB DADAN
+            {
+                setTextColor(6, 0);
+                printf("O  ");
+                setTextColor(15, 0);
+            }
+            else
+            {
+                if (i == 0 && j > 9)
+                {
+                    printf("%d ", board[i][j]);
+                }
+                else if (i > 9 && j == 0)
+                {
+                    printf("%d ", board[i][j]);
+                }
+                else
+                {
+                    printf("%d  ", board[i][j]);
+                }
+            }
+        }
+        printf("\n\n");
     }
 }
 
@@ -113,8 +157,8 @@ void setTextColor(int textColor, int backColor)
 int main()
 {
     const int SIZE;
-    char player1[10];
-    char player2[10];
+    char player1[15];
+    char player2[15];
     char position;
     printf("Please enter the length of board: ");
     scanf("%d", &SIZE);
@@ -137,16 +181,18 @@ int main()
     printf("Please enter the number of ships: ");
     scanf("%d", &Boat_Count);
     printf("Please enter your name: ");
-    scanf("%s", player1);
+    scanf("\n%s",player1);
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
-    printf("Please enter the coordinates of your ships and their position %s(x y (h/v)): \n", player1);
+    printf("Please enter the coordinates of your ships and their positions %s(x y (h/v)): \n", player1);
     for (int i = 1; i <= Boat_Count; i++)
     {
         scanf("%d %d %c", &x, &y, &position);
         if (check_place(BOARD_P1, x, y, position, SIZE + 1) == 1 || x>SIZE || y>SIZE)
         {
-            printf("YOU CANT PLACE THERE!\n" );
+            setTextColor(4,0);
+            printf("YOU CANT PLACE HERE!\n" );
+            setTextColor(15,0);
             i--;
             continue;
         }
@@ -156,17 +202,23 @@ int main()
             place_boat(BOARD_P1, x, y, position, SIZE + 1);
         }
     }
-    printf("---\n");
+
+    Line(5);
+    printf("\n");
+
     printf("Please enter your name: ");
-    scanf("%s", player2);
+    scanf("\n%s",player2);
+
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
-    printf("Please enter the coordinates of your ships and their position %s(x y (h/v)): \n", player2);
+    printf("Please enter the coordinates of your ships and their positions %s(x y (h/v)): \n", player2);
     for (int i = 1; i <= Boat_Count; i++)
     {
         scanf("%d %d %c", &x, &y, &position);
         if (check_place(BOARD_P2, x, y, position, SIZE + 1) == 1 || x>SIZE || y>SIZE)
         {
-            printf("YOU CANT PLACE THERE!\n");
+            setTextColor(4,0);
+            printf("YOU CANT PLACE HERE!\n");
+            setTextColor(15,0);
             i--;
             continue;
         }
@@ -195,91 +247,16 @@ int main()
     printf("~%s~\n", player1);
     printf("Number of ships: %d\n\n", Boat_Count);
 
-    for (int i = 0; i < SIZE + 1; i++)
-    {
-        for (int j = 0; j < SIZE + 1; j++)
-        {
-            if (i == 0 && j == 0)
-            {
-                printf("   ");
-                continue;
-            }
-            else if (i >= 1 && j >= 1 && BOARD_P1[i][j] == 0) // TARH UB DADAN
-            {
-                setTextColor(3, 0);
-                printf("~  ");
-                setTextColor(15, 0);
-            }
-            else if (i >= 1 && j >= 1 && BOARD_P1[i][j] == 1) // TARH UB DADAN
-            {
-                setTextColor(2, 0);
-                printf("O  ");
-                setTextColor(15, 0);
-            }
-            else
-            {
-                if (i == 0 && j > 9)
-                {
-                    printf("%d ", BOARD_P1[i][j]);
-                }
-                else if (i > 9 && j == 0)
-                {
-                    printf("%d ", BOARD_P1[i][j]);
-                }
-                else
-                {
-                    printf("%d  ", BOARD_P1[i][j]);
-                }
-            }
-        }
-        printf("\n\n");
-    }
+    Print_Board(BOARD_P1,SIZE);
+
     Line(SIZE * 3 + 1);
     printf("\n\n");
 
     // printe board FOCP2
-    printf("\n");
     printf("~%s~\n", player2);
     printf("Number of ships: %d\n\n", Boat_Count);
-    for (int i = 0; i < SIZE + 1; i++)
-    {
-        for (int j = 0; j < SIZE + 1; j++)
-        {
-            if (i == 0 && j == 0)
-            {
-                printf("   ");
-                continue;
-            }
-            else if (i >= 1 && j >= 1 && BOARD_P2[i][j] == 0) // TARH UB DADAN
-            {
-                setTextColor(3, 0);
-                printf("~  ");
-                setTextColor(15, 0);
-            }
-            else if (i >= 1 && j >= 1 && BOARD_P2[i][j] == 1) // TARH UB DADAN
-            {
-                setTextColor(2, 0);
-                printf("O  ");
-                setTextColor(15, 0);
-            }
-            else
-            {
-                if (i == 0 && j > 9)
-                {
-                    printf("%d ", BOARD_P2[i][j]);
-                }
-                else if (i > 9 && j == 0)
-                {
-                    printf("%d ", BOARD_P2[i][j]);
-                }
-                else
-                {
-                    printf("%d  ", BOARD_P2[i][j]);
-                }
-            }
-        }
-        printf("\n\n");
-    }
+
+    Print_Board(BOARD_P2,SIZE);
 
     return 0;
 }
