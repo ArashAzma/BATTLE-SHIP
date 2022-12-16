@@ -157,8 +157,8 @@ void setTextColor(int textColor, int backColor)
 int main()
 {
     const int SIZE;
-    char player1[15];
-    char player2[15];
+    char player1[20];
+    char player2[20];
     char position;
     printf("Please enter the length of board: ");
     scanf("%d", &SIZE);
@@ -179,16 +179,40 @@ int main()
 
     const int Boat_Count;
     printf("Please enter the number of ships: ");
-    scanf("%d", &Boat_Count);
+    for( ; ; )
+    {
+        scanf("%d", &Boat_Count);
+        if(Boat_Count>SIZE*SIZE/3)
+        {
+            setTextColor(4,0);
+            printf("NO SPACE FOR ALL SHIPS!\n" );
+            setTextColor(15,0);
+        }
+        else if(Boat_Count<1)
+        {
+            setTextColor(4,0);
+            printf("INVALID NUMBER!\n" );
+            setTextColor(15,0);
+        }
+        else break;
+    }
     printf("Please enter your name: ");
     scanf("\n%s",player1);
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
     printf("Please enter the coordinates of your ships and their positions %s(x y (h/v)): \n", player1);
     for (int i = 1; i <= Boat_Count; i++)
-    {
+    {  
         scanf("%d %d %c", &x, &y, &position);
-        if (check_place(BOARD_P1, x, y, position, SIZE + 1) == 1 || x>SIZE || y>SIZE)
+        if (position!='v' && position!='h')
+        {
+            setTextColor(4,0);
+            printf("INVALID LETTER!\n" );
+            setTextColor(15,0);
+            i--;
+            continue;
+        }
+        else if (check_place(BOARD_P1, x, y, position, SIZE + 1) == 1 || x>SIZE || y>SIZE || x<1 || y<1)
         {
             setTextColor(4,0);
             printf("YOU CANT PLACE HERE!\n" );
@@ -214,7 +238,15 @@ int main()
     for (int i = 1; i <= Boat_Count; i++)
     {
         scanf("%d %d %c", &x, &y, &position);
-        if (check_place(BOARD_P2, x, y, position, SIZE + 1) == 1 || x>SIZE || y>SIZE)
+        if (position!='v' && position!='h')
+        {
+            setTextColor(4,0);
+            printf("INVALID LETTER!\n" );
+            setTextColor(15,0);
+            i--;
+            continue;
+        }
+        else if (check_place(BOARD_P2, x, y, position, SIZE + 1) == 1 || x>SIZE || y>SIZE || x<1 || y<1)
         {
             setTextColor(4,0);
             printf("YOU CANT PLACE HERE!\n");
