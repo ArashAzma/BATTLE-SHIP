@@ -182,6 +182,7 @@ int main()
     for( ; ; )
     {
         scanf("%d", &Boat_Count);
+        getchar();
         if(Boat_Count>SIZE*SIZE/3)
         {
             setTextColor(4,0);
@@ -197,13 +198,14 @@ int main()
         else break;
     }
     printf("Please enter your name: ");
-    scanf("\n%s",player1);
+    gets(player1);
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
     printf("Please enter the coordinates of your ships and their positions %s(x y (h/v)): \n", player1);
     for (int i = 1; i <= Boat_Count; i++)
     {  
         scanf("%d %d %c", &x, &y, &position);
+        getchar();
         if (position!='v' && position!='h')
         {
             setTextColor(4,0);
@@ -231,7 +233,7 @@ int main()
     printf("\n");
 
     printf("Please enter your name: ");
-    scanf("\n%s",player2);
+    gets(player2);
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
     printf("Please enter the coordinates of your ships and their positions %s(x y (h/v)): \n", player2);
