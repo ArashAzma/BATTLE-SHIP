@@ -41,14 +41,32 @@ int Print_Board(int board[][100],int Size)
             }
             else if (i >= 1 && j >= 1 && board[i][j] == 1) // TARH KASHTI
             {
-                setTextColor(13, 0);
-                printf("O  ");
+                setTextColor(6, 0);
+                printf("o  ");
                 setTextColor(15, 0);
             }
             else if (i >= 1 && j >= 1 && board[i][j] == 2) // TARH KASHTI
             {
-                setTextColor(8, 0);
-                printf("O  ");
+                setTextColor(6, 0);
+                printf("˂  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board[i][j] == -2) // TARH KASHTI
+            {
+                setTextColor(6, 0);
+                printf("˃  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board[i][j] == 3) // TARH KASHTI
+            {
+                setTextColor(6, 0);
+                printf("∧  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board[i][j] == -3) // TARH KASHTI
+            {
+                setTextColor(6, 0);
+                printf("∨  ");
                 setTextColor(15, 0);
             }
             else
@@ -73,13 +91,13 @@ int Print_Board(int board[][100],int Size)
 
 int check_place(int board[][100], int x, int y, char position, int size)
 {
-    if (position == 'h')
+    if (position == 'h' || position == 'H')
     {
         if (y < size - 2)
         {
             for (int i = 0; i < 3; i++)
             {
-                if (board[x][y + i] == 1 || board[x][y + i] == 2)
+                if (board[x][y + i] == 1 || board[x][y + i] == 2 || board[x][y + i] == -2 || board[x][y + i] == 3 || board[x][y + i] == -3)
                 {
                     return 1;
                 }
@@ -89,20 +107,20 @@ int check_place(int board[][100], int x, int y, char position, int size)
         {
             for (int i = 0; i < 3; i++)
             {
-                if (board[x][y - i] == 1 || board[x][y + i] == 2)
+                if (board[x][y - i] == 1 || board[x][y - i] == 2 || board[x][y - i] == -2 || board[x][y - i] == 3 || board[x][y - i] == -3)
                 {
                     return 1;
                 }
             }
         }
     }
-    else if (position == 'v')
+    else if (position == 'v' || position == 'V')
     {
         if (x < size - 2)
         {
             for (int i = 0; i < 3; i++)
             {
-                if (board[x + i][y] == 2 || board[x][y + i] == 1)
+                if (board[x + i][y] == 1 || board[x + i][y] == 2 || board[x + i][y] == -2 || board[x + i][y] == 3 || board[x + i][y] == -3)
                 {
                     return 1;
                 }
@@ -112,7 +130,7 @@ int check_place(int board[][100], int x, int y, char position, int size)
         {
             for (int i = 0; i < 3; i++)
             {
-                if (board[x - i][y] == 2 || board[x][y + i] == 1)
+                if (board[x - i][y] == 1 || board[x - i][y] == 2 || board[x - i][y] == -2 || board[x - i][y] == 3 || board[x - i][y] == -3)
                 {
                     return 1;
                 }
@@ -124,37 +142,81 @@ int check_place(int board[][100], int x, int y, char position, int size)
 
 void place_boat(int board[][100], int x, int y, char position, int size)
 {
-    if (position == 'h')
+    if (position == 'h' || position == 'H')
     {
         if (y < size - 2)
         {
             for (int i = 0; i < 3; i++)
             {
-                board[x][y + i] = 1;
+                if(i == 0)
+                {
+                    board[x][y + i] = 2; // 2 = ˂
+                }
+                else if(i == 2)
+                {
+                    board[x][y + i] = -2; // -2 = ˃
+                }
+                else
+                {
+                    board[x][y + i] = 1; // 1 = o
+                }
             }
         }
         else
         {
             for (int i = 0; i < 3; i++)
             {
-                board[x][y - i] = 1;
+                if(i == 0)
+                {
+                    board[x][y - i] = -2; // -2 = ˃
+                }
+                else if(i == 2)
+                {
+                    board[x][y - i] = 2; // 2 = ˂
+                }
+                else 
+                {
+                    board[x][y - i] = 1; // 1 = o
+                }
             }
         }
     }
-    else if (position == 'v')
+    else if (position == 'v' || position == 'V')
     {
         if (x < size - 2)
         {
             for (int i = 0; i < 3; i++)
             {
-                board[x + i][y] = 2;
+                if(i == 0)
+                {
+                    board[x + i][y] = 3; // 3 = ∧
+                }
+                else if(i == 2)
+                {
+                    board[x + i][y] = -3; // -3 = ∨
+                }
+                else
+                {
+                    board[x + i][y] = 1; // 1 = o
+                }
             }
         }
         else
         {
             for (int i = 0; i < 3; i++)
             {
-                board[x - i][y] = 2;
+                if(i == 0)
+                {
+                    board[x - i][y] = -3; // -3 = ∨
+                }
+                else if (i == 2)
+                {
+                    board[x - i][y] = 3; // 3 = ∧
+                }
+                else
+                {
+                    board[x - i][y] = 1; // 1 = o
+                }
             }
         }
     }
@@ -214,7 +276,7 @@ int main()
     {  
         scanf("%d %d %c", &x, &y, &position);
         getchar();
-        if (position!='v' && position!='h')
+        if (position!='v' && position!='h' && position!='V' && position!='H')
         {
             setTextColor(4,0);
             printf("INVALID LETTER!\n" );
@@ -248,7 +310,7 @@ int main()
     for (int i = 1; i <= Boat_Count; i++)
     {
         scanf("%d %d %c", &x, &y, &position);
-        if (position!='v' && position!='h')
+        if (position!='v' && position!='h' && position!='V' && position!='H')
         {
             setTextColor(4,0);
             printf("INVALID LETTER!\n" );
