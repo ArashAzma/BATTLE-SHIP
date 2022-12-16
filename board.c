@@ -13,6 +13,15 @@ int Line(int length)
     }
 }
 
+// TABE TAGHIR RANG
+void setTextColor(int textColor, int backColor)
+{
+    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    int colorAttribute = backColor << 4 | textColor;
+    SetConsoleTextAttribute(consoleHandle, colorAttribute);
+}
+// 0=black,1=blue,2=green,3=cyan,4=red,14=yellow,15=white
+
 int Print_Board(int board[][100],int Size)
 {
     for (int i = 0; i < Size + 1; i++)
@@ -30,9 +39,15 @@ int Print_Board(int board[][100],int Size)
                 printf("~  ");
                 setTextColor(15, 0);
             }
-            else if (i >= 1 && j >= 1 && board[i][j] == 1) // TARH UB DADAN
+            else if (i >= 1 && j >= 1 && board[i][j] == 1) // TARH KASHTI
             {
-                setTextColor(6, 0);
+                setTextColor(13, 0);
+                printf("O  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board[i][j] == 2) // TARH KASHTI
+            {
+                setTextColor(8, 0);
                 printf("O  ");
                 setTextColor(15, 0);
             }
@@ -64,7 +79,7 @@ int check_place(int board[][100], int x, int y, char position, int size)
         {
             for (int i = 0; i < 3; i++)
             {
-                if (board[x][y + i] == 1)
+                if (board[x][y + i] == 1 || board[x][y + i] == 2)
                 {
                     return 1;
                 }
@@ -74,7 +89,7 @@ int check_place(int board[][100], int x, int y, char position, int size)
         {
             for (int i = 0; i < 3; i++)
             {
-                if (board[x][y - i] == 1)
+                if (board[x][y - i] == 1 || board[x][y + i] == 2)
                 {
                     return 1;
                 }
@@ -87,7 +102,7 @@ int check_place(int board[][100], int x, int y, char position, int size)
         {
             for (int i = 0; i < 3; i++)
             {
-                if (board[x + i][y] == 1)
+                if (board[x + i][y] == 2 || board[x][y + i] == 1)
                 {
                     return 1;
                 }
@@ -97,7 +112,7 @@ int check_place(int board[][100], int x, int y, char position, int size)
         {
             for (int i = 0; i < 3; i++)
             {
-                if (board[x - i][y] == 1)
+                if (board[x - i][y] == 2 || board[x][y + i] == 1)
                 {
                     return 1;
                 }
@@ -132,27 +147,20 @@ void place_boat(int board[][100], int x, int y, char position, int size)
         {
             for (int i = 0; i < 3; i++)
             {
-                board[x + i][y] = 1;
+                board[x + i][y] = 2;
             }
         }
         else
         {
             for (int i = 0; i < 3; i++)
             {
-                board[x - i][y] = 1;
+                board[x - i][y] = 2;
             }
         }
     }
 }
 
-// TABE TAGHIR RANG
-void setTextColor(int textColor, int backColor)
-{
-    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-    int colorAttribute = backColor << 4 | textColor;
-    SetConsoleTextAttribute(consoleHandle, colorAttribute);
-}
-// 0=black,1=blue,2=green,3=cyan,4=red,14=yellow,15=white
+
 
 int main()
 {
