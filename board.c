@@ -392,7 +392,22 @@ int main()
     printf("Please enter the coordinates of your ships and their positions %s(x y (h/v)): \n", player2);
     for (int i = 1; i <= Boat_Count; i++)
     {
-        scanf("%d %d %c", &x, &y, &position);
+        for( ; ; )
+        {
+            scanf("%s %s %c", &temp1, &temp2, &position);
+            if ( Check_Input(temp1) == 1 || Check_Input(temp2) == 1 )
+            {
+                setTextColor(4,0);
+                printf("INVALID NUMBER!\n" );
+                setTextColor(15,0);
+            }
+            else
+            {
+                x = StrToNum(temp1);
+                y = StrToNum(temp2);
+                break;
+            }
+        }
         if (position!='v' && position!='h' && position!='V' && position!='H')
         {
             setTextColor(4,0);
