@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <conio.h>
 #include <string.h>
+#include <math.h>
 
 #define COLOR_BOLD  "\e[1m"
 #define COLOR_OFF   "\e[m"
@@ -262,18 +263,18 @@ int main()
     char player1[20];
     char player2[20];
     char position;
-    char temp[20];
+    char temp1[20],temp2[2];
     printf("Please enter the length of board: ");
     for( ; ; )
     {
-        scanf("%s", temp);
-        if( StrToNum(temp) < 3 )
+        scanf("%s", temp1);
+        if( StrToNum(temp1) < 3 )
         {
             setTextColor(4,0);
             printf("ITS NOT ENOUGH FOR LENGTH!\n");
             setTextColor(15,0);
         }
-        else if ( Check_Input(temp) == 1 )
+        else if ( Check_Input(temp1) == 1 )
         {
             setTextColor(4,0);
             printf("ITS NOT A NUMBER!\n");
@@ -281,7 +282,7 @@ int main()
         }
         else
         {
-            SIZE = StrToNum(temp) ;
+            SIZE = StrToNum(temp1) ;
             break;
         }
     }
@@ -306,14 +307,14 @@ int main()
     {
         for ( ; ; )
         {
-            scanf("%s", temp);
-            if ( Check_Input(temp) == 1 )
+            scanf("%s", temp1);
+            if ( Check_Input(temp1) == 1 )
             {
                 setTextColor(4,0);
                 printf("ITS NOT A NUMBER!\n");
                 setTextColor(15,0);
             }
-            else if ( StrToNum(temp) < 1 )
+            else if ( StrToNum(temp1) < 1 )
             {
                 setTextColor(4,0);
                 printf("INVALID NUMBER!\n");
@@ -321,7 +322,7 @@ int main()
             }
             else
             {
-                Boat_Count = StrToNum(temp) ;
+                Boat_Count = StrToNum(temp1) ;
                 break;
             }        
         }
@@ -341,7 +342,22 @@ int main()
     printf("Please enter the coordinates of your ships and their positions %s(x y (h/v)): \n", player1);
     for (int i = 1; i <= Boat_Count; i++)
     {  
-        scanf("%d %d %c", &x, &y, &position);
+        for( ; ; )
+        {
+            scanf("%s %s %c", &temp1, &temp2, &position);
+            if ( Check_Input(temp1) == 1 || Check_Input(temp2) == 1 )
+            {
+                setTextColor(4,0);
+                printf("INVALID NUMBER!\n" );
+                setTextColor(15,0);
+            }
+            else
+            {
+                x = StrToNum(temp1);
+                y = StrToNum(temp2);
+                break;
+            }
+        }
         getchar();
         if (position!='v' && position!='h' && position!='V' && position!='H')
         {
