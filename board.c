@@ -16,6 +16,35 @@ int Line(int length)
     }
 }
 
+// TABE BARAYE CHECK KARDANE VOOROODI KE FAGHAT ADAD BASHE
+int Check_Input( char Str[] )
+{
+    int i ;
+    for( i = 0 ; Str[i] != 0 ; i++ )
+    {
+        if ( Str[i] < 48 || Str[i] > 57 )
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
+//TABE BARAYE TABDIL STRING BE ADAD
+int StrToNum( char Str[] )
+{
+    int i , j ;
+    int sum ;
+    i = strlen(Str);
+    for( j = 0 , sum = 0 ; Str[j] != 0 ; i-- , j++ )
+    {
+        sum = (Str[j] - 48) * pow(10 , i-1) + sum ;
+    }
+    return ( sum ) ;
+}
+
+
 // TABE TAGHIR RANG
 void setTextColor(int textColor, int backColor)
 {
@@ -229,12 +258,33 @@ void place_boat(int board[][100], int x, int y, char position, int size)
 
 int main()
 {
-    const int SIZE;
+    int SIZE;
     char player1[20];
     char player2[20];
     char position;
+    char temp[20];
     printf("Please enter the length of board: ");
-    scanf("%d", &SIZE);
+    for( ; ; )
+    {
+        scanf("%s", temp);
+        if( StrToNum(temp) < 3 )
+        {
+            setTextColor(4,0);
+            printf("ITS NOT ENOUGH FOR LENGTH!\n");
+            setTextColor(15,0);
+        }
+        else if ( Check_Input(temp) == 1 )
+        {
+            setTextColor(4,0);
+            printf("ITS NOT A NUMBER!\n");
+            setTextColor(15,0);
+        }
+        else
+        {
+            SIZE = StrToNum(temp) ;
+            break;
+        }
+    }
     int BOARD_P1[SIZE + 1][100];
     int BOARD_P2[SIZE + 1][100];
     int x = 0;
@@ -250,22 +300,36 @@ int main()
         }
     }
 
-    const int Boat_Count;
+    int Boat_Count;
     printf("Please enter the number of ships: ");
     for( ; ; )
     {
-        scanf("%d", &Boat_Count);
+        for ( ; ; )
+        {
+            scanf("%s", temp);
+            if ( Check_Input(temp) == 1 )
+            {
+                setTextColor(4,0);
+                printf("ITS NOT A NUMBER!\n");
+                setTextColor(15,0);
+            }
+            else if ( StrToNum(temp) < 1 )
+            {
+                setTextColor(4,0);
+                printf("INVALID NUMBER!\n");
+                setTextColor(15,0);
+            }
+            else
+            {
+                Boat_Count = StrToNum(temp) ;
+                break;
+            }        
+        }
         getchar();
         if(Boat_Count>SIZE*SIZE/3)
         {
             setTextColor(4,0);
             printf("NO SPACE FOR ALL SHIPS!\n" );
-            setTextColor(15,0);
-        }
-        else if(Boat_Count<1)
-        {
-            setTextColor(4,0);
-            printf("INVALID NUMBER!\n" );
             setTextColor(15,0);
         }
         else break;
@@ -329,7 +393,6 @@ int main()
             i--;
             continue;
         }
-
         else
         {
             place_boat(BOARD_P2, x, y, position, SIZE + 1);
@@ -351,8 +414,8 @@ int main()
 
     // printe board FOCP1
     printf("\n");
-    printf(COLOR_BOLD"~ %s ~\n", player1, COLOR_OFF);
-    printf("Number of ships: %d\n\n", Boat_Count);
+    printf(COLOR_BOLD"~ %s ~\n", player1);
+    printf(COLOR_OFF"Number of ships: %d\n\n", Boat_Count);
 
     Print_Board(BOARD_P1,SIZE);
 
@@ -360,8 +423,8 @@ int main()
     printf("\n\n");
 
     // printe board FOCP2
-    printf(COLOR_BOLD"~ %s ~\n", player2, COLOR_OFF);
-    printf("Number of ships: %d\n\n", Boat_Count);
+    printf(COLOR_BOLD"~ %s ~\n", player2);
+    printf(COLOR_OFF"Number of ships: %d\n\n", Boat_Count);
 
     Print_Board(BOARD_P2,SIZE);
 
