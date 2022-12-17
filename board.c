@@ -38,38 +38,38 @@ int Print_Board(int board[][100],int Size)
             }
             else if (i >= 1 && j >= 1 && board[i][j] == 0) // TARH UB DADAN
             {
-                setTextColor(3, 0);
+                setTextColor(9, 0);
                 printf("~  ");
                 setTextColor(15, 0);
             }
             else if (i >= 1 && j >= 1 && board[i][j] == 1) // TARH KASHTI
             {
-                setTextColor(6, 0);
+                setTextColor(13, 0);
                 printf("o  ");
                 setTextColor(15, 0);
             }
             else if (i >= 1 && j >= 1 && board[i][j] == 2) // TARH KASHTI
             {
-                setTextColor(6, 0);
-                printf("˂  ");
+                setTextColor(13, 0);
+                printf("<  ");
                 setTextColor(15, 0);
             }
             else if (i >= 1 && j >= 1 && board[i][j] == -2) // TARH KASHTI
             {
-                setTextColor(6, 0);
-                printf("˃  ");
+                setTextColor(13, 0);
+                printf(">  ");
                 setTextColor(15, 0);
             }
             else if (i >= 1 && j >= 1 && board[i][j] == 3) // TARH KASHTI
             {
-                setTextColor(6, 0);
-                printf("∧  ");
+                setTextColor(13, 0);
+                printf("^  ");
                 setTextColor(15, 0);
             }
             else if (i >= 1 && j >= 1 && board[i][j] == -3) // TARH KASHTI
             {
-                setTextColor(6, 0);
-                printf("∨  ");
+                setTextColor(13, 0);
+                printf("V  ");
                 setTextColor(15, 0);
             }
             else
