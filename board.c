@@ -3,6 +3,9 @@
 #include <conio.h>
 #include <string.h>
 
+#define COLOR_BOLD  "\e[1m"
+#define COLOR_OFF   "\e[m"
+
 // TABE BARAYE KHAT KESHI BE TOOLE VOOROODIE (length)
 int Line(int length)
 {
@@ -348,7 +351,7 @@ int main()
 
     // printe board FOCP1
     printf("\n");
-    printf("~%s~\n", player1);
+    printf(COLOR_BOLD"~ %s ~\n", player1, COLOR_OFF);
     printf("Number of ships: %d\n\n", Boat_Count);
 
     Print_Board(BOARD_P1,SIZE);
@@ -357,7 +360,7 @@ int main()
     printf("\n\n");
 
     // printe board FOCP2
-    printf("~%s~\n", player2);
+    printf(COLOR_BOLD"~ %s ~\n", player2, COLOR_OFF);
     printf("Number of ships: %d\n\n", Boat_Count);
 
     Print_Board(BOARD_P2,SIZE);
