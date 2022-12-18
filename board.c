@@ -251,7 +251,7 @@ int main()
     char player1[20];
     char player2[20];
     char position;
-    char temp1[20],temp2[2];
+    char temp1[20],temp2[20];
     printf("Please enter the length of board: ");
     for( ; ; )
     {
