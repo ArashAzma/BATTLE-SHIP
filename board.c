@@ -308,14 +308,14 @@ int main()
         {
             scanf("%s", temp);
             if ( Check_Input(temp) == 1 )
-            {
-                setTextColor(4,0);
+        {
+            setTextColor(4,0);
                 printf("ITS NOT A NUMBER!\n");
-                setTextColor(15,0);
-            }
+            setTextColor(15,0);
+        }
             else if ( StrToNum(temp) < 1 )
-            {
-                setTextColor(4,0);
+        {
+            setTextColor(4,0);
                 printf("INVALID NUMBER!\n");
                 setTextColor(15,0);
             }
