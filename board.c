@@ -45,6 +45,52 @@ int StrToNum( char Str[] )
     return ( sum ) ;
 }
 
+int Error(int Err_Num)
+{
+    // Error 1 : ITS NOT ENOUGH FOR LENGTH!
+    // Error 2 : ITS NOT A NUMBER!
+    // Error 3 : INVALID NUMBER!
+    // Error 4 : INVALID LETTER!
+    // Error 5 : NO SPACE FOR ALL SHIPS!
+    // Error 6 : YOU CANT PLACE HERE!
+    if (Err_Num == 1) 
+    {
+        setTextColor(4,0);
+        printf("ITS NOT ENOUGH FOR LENGTH!\n");
+        setTextColor(15,0);
+    }
+    else if (Err_Num == 2) 
+    {
+        setTextColor(4,0);
+        printf("ITS NOT A NUMBER!\n");
+        setTextColor(15,0);
+    }
+    else if (Err_Num == 3) 
+    {
+        setTextColor(4,0);
+        printf("INVALID NUMBER!\n");
+        setTextColor(15,0);
+    }
+    else if (Err_Num == 4) 
+    {
+        setTextColor(4,0);
+        printf("INVALID LETTER!\n");
+        setTextColor(15,0);
+    }
+    else if (Err_Num == 5) 
+    {
+        setTextColor(4,0);
+        printf("NO SPACE FOR ALL SHIPS!\n");
+        setTextColor(15,0);
+    }
+    else if (Err_Num == 6) 
+    {
+        setTextColor(4,0);
+        printf("YOU CANT PLACE HERE!\n");
+        setTextColor(15,0);
+    }
+}
+
 
 // TABE TAGHIR RANG
 void setTextColor(int textColor, int backColor)
@@ -389,15 +435,11 @@ int main()
         scanf("%s", temp1);
         if( StrToNum(temp1) < 3 )
         {
-            setTextColor(4,0);
-            printf("ITS NOT ENOUGH FOR LENGTH!\n");
-            setTextColor(15,0);
+            Error(1);
         }
         else if ( Check_Input(temp1) == 1 )
         {
-            setTextColor(4,0);
-            printf("ITS NOT A NUMBER!\n");
-            setTextColor(15,0);
+            Error(2);
         }
         else
         {
@@ -434,15 +476,11 @@ int main()
             scanf("%s", temp1);
             if ( Check_Input(temp1) == 1 )
             {
-                setTextColor(4,0);
-                printf("ITS NOT A NUMBER!\n");
-                setTextColor(15,0);
+                Error(2);
             }
             else if ( StrToNum(temp1) < 1 )
             {
-                setTextColor(4,0);
-                printf("INVALID NUMBER!\n");
-                setTextColor(15,0);
+                Error(3);
             }
             else
             {
@@ -453,9 +491,7 @@ int main()
         getchar();
         if(Boat_Count>SIZE*SIZE/3)
         {
-            setTextColor(4,0);
-            printf("NO SPACE FOR ALL SHIPS!\n" );
-            setTextColor(15,0);
+            Error(5);
         }
         else break;
     }
@@ -471,9 +507,7 @@ int main()
             scanf("%s %s %c", &temp1, &temp2, &position);
             if ( Check_Input(temp1) == 1 || Check_Input(temp2) == 1 )
             {
-                setTextColor(4,0);
-                printf("INVALID NUMBER!\n" );
-                setTextColor(15,0);
+                Error(3);
             }
             else
             {
@@ -485,17 +519,13 @@ int main()
         getchar();
         if (position!='v' && position!='h' && position!='V' && position!='H')
         {
-            setTextColor(4,0);
-            printf("INVALID LETTER!\n" );
-            setTextColor(15,0);
+            Error(4);
             i--;
             continue;
         }
         else if (check_place(BOARD_P1, x, y, position, SIZE + 1) == 1 || x>SIZE || y>SIZE || x<1 || y<1)
         {
-            setTextColor(4,0);
-            printf("YOU CANT PLACE HERE!\n" );
-            setTextColor(15,0);
+            Error(6);
             i--;
             continue;
         }
@@ -521,9 +551,7 @@ int main()
             scanf("%s %s %c", &temp1, &temp2, &position);
             if ( Check_Input(temp1) == 1 || Check_Input(temp2) == 1 )
             {
-                setTextColor(4,0);
-                printf("INVALID NUMBER!\n" );
-                setTextColor(15,0);
+                Error(3);
             }
             else
             {
@@ -534,17 +562,13 @@ int main()
         }
         if (position!='v' && position!='h' && position!='V' && position!='H')
         {
-            setTextColor(4,0);
-            printf("INVALID LETTER!\n" );
-            setTextColor(15,0);
+            Error(4);
             i--;
             continue;
         }
         else if (check_place(BOARD_P2, x, y, position, SIZE + 1) == 1 || x>SIZE || y>SIZE || x<1 || y<1)
         {
-            setTextColor(4,0);
-            printf("YOU CANT PLACE HERE!\n");
-            setTextColor(15,0);
+            Error(6);
             i--;
             continue;
         }
