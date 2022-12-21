@@ -3,6 +3,7 @@
 #include <conio.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
 #define COLOR_BOLD  "\e[1m"
 #define COLOR_OFF   "\e[m"
@@ -104,14 +105,26 @@ int Error(int Err_Num)
 // TABE TAGHIR RANG
 void setTextColor(int textColor, int backColor)
 {
+    // 0=black,1=blue,2=green,3=cyan,4=red,14=yellow,15=white
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     int colorAttribute = backColor << 4 | textColor;
     SetConsoleTextAttribute(consoleHandle, colorAttribute);
 }
-// 0=black,1=blue,2=green,3=cyan,4=red,14=yellow,15=white
 
-int Print_Board(int board[][100],int Size)
+void Delay(unsigned int mseconds)
 {
+    clock_t goal = mseconds + clock();
+    while (goal>clock());
+}
+
+int Print_Board(int board[][100],int Size,char name[],int NumOfShips)
+{
+    printf(COLOR_BOLD"~ %s ~\n", name);
+    printf(COLOR_OFF"Number Of Ships: %d\n\n\n", NumOfShips);
+    Space(5*Size/4-2);
+    Delay(1000);
+    printf("Your Board :\n\n");
+    Delay(1000);
     for (int i = 0; i < Size + 1; i++)
     {
         for (int j = 0; j < Size + 1; j++)
@@ -173,7 +186,10 @@ int Print_Board(int board[][100],int Size)
                 }
             }
         }
-        printf("\n\n");
+        if(i!=Size)
+        {
+            printf("\n\n");
+        }
     }
 }
 
@@ -184,9 +200,11 @@ int Print_TwoBoard(int board1[][100],int board2[][100],int Size,char name[],int 
     Space((3*Size+1)+4);
     printf(COLOR_OFF"Number Of Ships: %d\n\n\n", NumOfShips);
     Space(5*Size/4-2);
+    Delay(1000);
     printf("Your Board :");
     Space(3*Size+8);
     printf("Your OPP's Board :\n\n");
+    Delay(1000);
     for (int i = 0; i < Size + 1; i++)
     {
         //PRINT BOARD AVAL
@@ -312,7 +330,10 @@ int Print_TwoBoard(int board1[][100],int board2[][100],int Size,char name[],int 
                 }
             }
         }
-        printf("\n\n");
+        if(i!=Size)
+        {
+            printf("\n\n");
+        }
     }
 }
 
@@ -445,7 +466,7 @@ int main()
     char player1[20];
     char player2[20];
     char position;
-    char temp1[20],temp2[20];
+    char temp1[20],temp2[20],temp;
     printf("Please enter the length of board: ");
     for( ; ; )
     {
@@ -594,6 +615,8 @@ int main()
             place_boat(BOARD_P2, x, y, position, SIZE + 1);
         }
     }
+    Line(5);
+    printf("\n");
 
     //  VARED KARDANE SHOMARE OFOGHI
     for (int j = 1; j < SIZE + 1; j++)
@@ -612,17 +635,67 @@ int main()
         BOARD_OPP_P2[i][0] = i;
     }
 
-    // printe board FOCP1
+    Delay(1000);
+
+    printf("\n%s! IF YOU READY TO SEE YOUR FINAL BOARD , ENTER y : ",player1);
+
+
+    for( ; ; )
+    {
+        scanf("%s",temp1);
+        if(temp1[0] == 'y' || temp1[0] == 'Y')
+        {
+            break;
+        }
+        else
+        {
+            Error(4);
+        }
+    }
+
+    printf("\n");
+    Line(SIZE * 3 + 1);
     printf("\n");
 
-    Print_TwoBoard(BOARD_P1,BOARD_OPP_P1,SIZE,player1,Boat_Count);
+    Delay(1000);
 
-    Line(SIZE * 3 + 1);
+    // printe board FOCP1
+    Print_Board(BOARD_P1,SIZE,player1,Boat_Count);
+
     printf("\n\n");
+    Line(SIZE * 3 + 1);
+    printf("\n");
+
+    Delay(1000);
+
+    printf("\n%s! IF YOU READY TO SEE YOUR FINAL BOARD , ENTER y : ",player2);
+
+
+    for( ; ; )
+    {
+        scanf("%s",temp1);
+        if(temp1[0] == 'y' || temp1[0] == 'Y')
+        {
+            break;
+        }
+        else
+        {
+            Error(4);
+        }
+    }
+
+    printf("\n");
+    Line(SIZE * 3 + 1);
+    printf("\n");
+
+    Delay(1000);
 
     // printe board FOCP2
+    Print_Board(BOARD_P2,SIZE,player2,Boat_Count);
 
-    Print_TwoBoard(BOARD_P2,BOARD_OPP_P2,SIZE,player2,Boat_Count);
+    printf("\n\n");
+    Line(SIZE * 3 + 1);
+    printf("\n");
 
     return 0;
 }
