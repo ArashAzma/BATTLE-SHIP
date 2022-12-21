@@ -7,6 +7,15 @@
 #define COLOR_BOLD  "\e[1m"
 #define COLOR_OFF   "\e[m"
 
+int Space(int Count)
+{
+    int i;
+    for (i = 0 ; i < Count ; i++)
+    {
+        printf(" ");
+    }
+}
+
 // TABE BARAYE KHAT KESHI BE TOOLE VOOROODIE (length)
 int Line(int length)
 {
@@ -168,8 +177,16 @@ int Print_Board(int board[][100],int Size)
     }
 }
 
-int Print_TwoBoard(int board1[][100],int board2[][100],int Size)
+int Print_TwoBoard(int board1[][100],int board2[][100],int Size,char name[],int NumOfShips)
 {
+    Space((3*Size+1)+4);
+    printf(COLOR_BOLD"~ %s ~\n", name);
+    Space((3*Size+1)+4);
+    printf(COLOR_OFF"Number Of Ships: %d\n\n\n", NumOfShips);
+    Space(5*Size/4-2);
+    printf("Your Board :");
+    Space(3*Size+8);
+    printf("Your OPP's Board :\n\n");
     for (int i = 0; i < Size + 1; i++)
     {
         //PRINT BOARD AVAL
@@ -233,7 +250,7 @@ int Print_TwoBoard(int board1[][100],int board2[][100],int Size)
             }
         }
 
-        printf("\t\t\t\t");
+        printf("\t\t\t");
 
         //PRINT BOARD DOVOM
         for (int j = 0; j < Size + 1; j++)
@@ -597,19 +614,15 @@ int main()
 
     // printe board FOCP1
     printf("\n");
-    printf(COLOR_BOLD"~ %s ~\n", player1);
-    printf(COLOR_OFF"Number of ships: %d\n\n", Boat_Count);
 
-    Print_TwoBoard(BOARD_P1,BOARD_OPP_P1,SIZE);
+    Print_TwoBoard(BOARD_P1,BOARD_OPP_P1,SIZE,player1,Boat_Count);
 
     Line(SIZE * 3 + 1);
     printf("\n\n");
 
     // printe board FOCP2
-    printf(COLOR_BOLD"~ %s ~\n", player2);
-    printf(COLOR_OFF"Number of ships: %d\n\n", Boat_Count);
 
-    Print_TwoBoard(BOARD_P2,BOARD_OPP_P2,SIZE);
+    Print_TwoBoard(BOARD_P2,BOARD_OPP_P2,SIZE,player2,Boat_Count);
 
     return 0;
 }
