@@ -63,6 +63,8 @@ int Error(int Err_Num)
     // Error 4 : INVALID LETTER!
     // Error 5 : NO SPACE FOR ALL SHIPS!
     // Error 6 : YOU CANT PLACE HERE!
+    // Error 7 : YOU CANT ATTACK HERE!
+
     if (Err_Num == 1) 
     {
         setTextColor(4,0);
@@ -97,6 +99,12 @@ int Error(int Err_Num)
     {
         setTextColor(4,0);
         printf("YOU CANT PLACE HERE!\n");
+        setTextColor(15,0);
+    }
+    else if (Err_Num == 7) 
+    {
+        setTextColor(4,0);
+        printf("YOU CANT ATTACK HERE!\n");
         setTextColor(15,0);
     }
 }
@@ -251,6 +259,12 @@ int Print_TwoBoard(int board1[][100],int board2[][100],int Size,char name[],int 
                 printf("V  ");
                 setTextColor(15, 0);
             }
+            else if (i >= 1 && j >= 1 && board1[i][j] == 10) // TARH KASHTI
+            {
+                setTextColor(4, 0);
+                printf("X  ");
+                setTextColor(15, 0);
+            }
             else
             {
                 if (i == 0 && j > 9)
@@ -268,7 +282,9 @@ int Print_TwoBoard(int board1[][100],int board2[][100],int Size,char name[],int 
             }
         }
 
+
         printf("\t\t\t");
+
 
         //PRINT BOARD DOVOM
         for (int j = 0; j < Size + 1; j++)
@@ -312,6 +328,18 @@ int Print_TwoBoard(int board1[][100],int board2[][100],int Size,char name[],int 
             {
                 setTextColor(13, 0);
                 printf("V  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board2[i][j] == 10) // TARH KASHTI
+            {
+                setTextColor(4, 0);
+                printf("X  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board2[i][j] == -10) // TARH KASHTI
+            {
+                setTextColor(4, 0);
+                printf("?  ");
                 setTextColor(15, 0);
             }
             else
@@ -696,6 +724,141 @@ int main()
     printf("\n\n");
     Line(SIZE * 3 + 1);
     printf("\n");
+
+
+
+    int RMN_Ships1 = Boat_Count; //remaining ships for player 1
+    int RMN_Ships2 = Boat_Count; //remaining ships for player 2
+    int Round;
+
+    for( Round = 1 ; RMN_Ships1 != 0 && RMN_Ships2 != 0 ; )
+    {
+        Delay(1500);
+        Space((3*SIZE+1)+4);
+
+        setTextColor(4,0);
+        printf("ROUND%d\n\n",Round);
+        setTextColor(15,0);
+
+        Delay(1500);
+
+        printf("%s! ENTER A COORDINATE TO ATTACK: ",player1);
+
+        for( ; ; )
+        {
+            scanf("%s %s", &temp1, &temp2);
+            if ( Check_Input(temp1) == 1 || Check_Input(temp2) == 1 )
+            {
+                Error(3);
+                printf("\n");
+
+            }
+            else
+            {
+                x = StrToNum(temp1);
+                y = StrToNum(temp2);
+            }
+            if (x < 0 || y < 0 || x > SIZE || y > SIZE)
+            {
+                Error(7);
+                printf("\n");
+            }
+            else 
+            {
+                break;
+            }
+        }
+        if (BOARD_P2[x][y] == 1 || BOARD_P2[x][y] == 2 || BOARD_P2[x][y] == -2 || BOARD_P2[x][y] == 3 || BOARD_P2[x][y] == -3)
+        {
+            BOARD_OPP_P1[x][y] = 10;
+            BOARD_P2[x][y] = 10;
+        }
+        else
+        {
+            BOARD_OPP_P1[x][y] = -10;
+        }
+
+        printf("\n");
+        Line(7 * SIZE + 2 + 21);
+        printf("\n");
+
+        Print_TwoBoard(BOARD_P1,BOARD_OPP_P1,SIZE,player1,RMN_Ships1);
+
+        if(BOARD_OPP_P1[x][y] == -10)
+        {
+            BOARD_OPP_P1[x][y] = 0;
+        }
+
+        Delay(1500);
+
+        printf("\n");
+        Line(7 * SIZE + 2 + 21);
+        printf("\n");
+
+
+
+
+        Delay(1500);
+        printf("\n");
+
+        printf("%s! ENTER A COORDINATE TO ATTACK: ",player2);
+
+        for( ; ; )
+        {
+            scanf("%s %s", &temp1, &temp2);
+            if ( Check_Input(temp1) == 1 || Check_Input(temp2) == 1 )
+            {
+                Error(3);
+                printf("\n");
+
+            }
+            else
+            {
+                x = StrToNum(temp1);
+                y = StrToNum(temp2);
+            }
+            if (x < 0 || y < 0 || x > SIZE || y > SIZE)
+            {
+                Error(7);
+                printf("\n");
+            }
+            else 
+            {
+                break;
+            }
+        }
+        if (BOARD_P1[x][y] == 1 || BOARD_P1[x][y] == 2 || BOARD_P1[x][y] == -2 || BOARD_P1[x][y] == 3 || BOARD_P1[x][y] == -3)
+        {
+            BOARD_OPP_P2[x][y] = 10;
+            BOARD_P1[x][y] = 10;
+        }
+        else
+        {
+            BOARD_OPP_P2[x][y] = -10;
+        }
+
+        printf("\n");
+        Line(7 * SIZE + 2 + 21);
+        printf("\n");
+
+        Print_TwoBoard(BOARD_P2,BOARD_OPP_P2,SIZE,player2,RMN_Ships2);
+
+        if(BOARD_OPP_P2[x][y]==-10)
+        {
+            BOARD_OPP_P2[x][y] = 0;
+        }
+
+        Delay(1500);
+
+        printf("\n");
+        Line(7 * SIZE + 2 + 21);
+        printf("\n");
+
+
+        Round++;
+    }
+
+
 
     return 0;
 }
