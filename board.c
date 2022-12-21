@@ -122,6 +122,137 @@ int Print_Board(int board[][100],int Size)
     }
 }
 
+int Print_TwoBoard(int board1[][100],int board2[][100],int Size)
+{
+    for (int i = 0; i < Size + 1; i++)
+    {
+        //PRINT BOARD AVAL
+        for (int j = 0; j < Size + 1; j++)
+        {
+            if (i == 0 && j == 0)
+            {
+                printf("   ");
+                continue;
+            }
+            else if (i >= 1 && j >= 1 && board1[i][j] == 0) // TARH UB DADAN
+            {
+                setTextColor(9, 0);
+                printf("~  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board1[i][j] == 1) // TARH KASHTI
+            {
+                setTextColor(13, 0);
+                printf("o  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board1[i][j] == 2) // TARH KASHTI
+            {
+                setTextColor(13, 0);
+                printf("<  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board1[i][j] == -2) // TARH KASHTI
+            {
+                setTextColor(13, 0);
+                printf(">  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board1[i][j] == 3) // TARH KASHTI
+            {
+                setTextColor(13, 0);
+                printf("^  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board1[i][j] == -3) // TARH KASHTI
+            {
+                setTextColor(13, 0);
+                printf("V  ");
+                setTextColor(15, 0);
+            }
+            else
+            {
+                if (i == 0 && j > 9)
+                {
+                    printf("%d ", board1[i][j]);
+                }
+                else if (i > 9 && j == 0)
+                {
+                    printf("%d ", board1[i][j]);
+                }
+                else
+                {
+                    printf("%d  ", board1[i][j]);
+                }
+            }
+        }
+
+        printf("\t\t\t\t");
+
+        //PRINT BOARD DOVOM
+        for (int j = 0; j < Size + 1; j++)
+        {
+            if (i == 0 && j == 0)
+            {
+                printf("   ");
+                continue;
+            }
+            else if (i >= 1 && j >= 1 && board2[i][j] == 0) // TARH UB DADAN
+            {
+                setTextColor(9, 0);
+                printf("~  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board2[i][j] == 1) // TARH KASHTI
+            {
+                setTextColor(13, 0);
+                printf("o  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board2[i][j] == 2) // TARH KASHTI
+            {
+                setTextColor(13, 0);
+                printf("<  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board2[i][j] == -2) // TARH KASHTI
+            {
+                setTextColor(13, 0);
+                printf(">  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board2[i][j] == 3) // TARH KASHTI
+            {
+                setTextColor(13, 0);
+                printf("^  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board2[i][j] == -3) // TARH KASHTI
+            {
+                setTextColor(13, 0);
+                printf("V  ");
+                setTextColor(15, 0);
+            }
+            else
+            {
+                if (i == 0 && j > 9)
+                {
+                    printf("%d ", board2[i][j]);
+                }
+                else if (i > 9 && j == 0)
+                {
+                    printf("%d ", board2[i][j]);
+                }
+                else
+                {
+                    printf("%d  ", board2[i][j]);
+                }
+            }
+        }
+        printf("\n\n");
+    }
+}
+
 int check_place(int board[][100], int x, int y, char position, int size)
 {
     if (position == 'h' || position == 'H')
@@ -276,6 +407,8 @@ int main()
     }
     int BOARD_P1[SIZE + 1][100];
     int BOARD_P2[SIZE + 1][100];
+    int BOARD_OPP_P1[SIZE + 1][100];
+    int BOARD_OPP_P2[SIZE + 1][100]; 
     int x = 0;
     int y = 0;
 
@@ -286,6 +419,8 @@ int main()
         {
             BOARD_P1[i][j] = 0;
             BOARD_P2[i][j] = 0;
+            BOARD_OPP_P1[i][j] = 0;
+            BOARD_OPP_P2[i][j] = 0;
         }
     }
 
@@ -424,12 +559,16 @@ int main()
     {
         BOARD_P1[0][j] = j;
         BOARD_P2[0][j] = j;
+        BOARD_OPP_P1[0][j] = j;
+        BOARD_OPP_P2[0][j] = j;
     }
     // VARED KARDANE SHOMARE AMOODI
     for (int i = 1; i < SIZE + 1; i++)
     {
         BOARD_P1[i][0] = i;
         BOARD_P2[i][0] = i;
+        BOARD_OPP_P1[i][0] = i;
+        BOARD_OPP_P2[i][0] = i;
     }
 
     // printe board FOCP1
@@ -437,7 +576,7 @@ int main()
     printf(COLOR_BOLD"~ %s ~\n", player1);
     printf(COLOR_OFF"Number of ships: %d\n\n", Boat_Count);
 
-    Print_Board(BOARD_P1,SIZE);
+    Print_TwoBoard(BOARD_P1,BOARD_OPP_P1,SIZE);
 
     Line(SIZE * 3 + 1);
     printf("\n\n");
@@ -446,7 +585,7 @@ int main()
     printf(COLOR_BOLD"~ %s ~\n", player2);
     printf(COLOR_OFF"Number of ships: %d\n\n", Boat_Count);
 
-    Print_Board(BOARD_P2,SIZE);
+    Print_TwoBoard(BOARD_P2,BOARD_OPP_P2,SIZE);
 
     return 0;
 }
