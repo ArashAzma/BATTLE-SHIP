@@ -1,3 +1,4 @@
 *.exe
 .vscode/tasks.json
 .gitignore
+.test.c
