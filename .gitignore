@@ -1,4 +1,5 @@
 *.exe
 .vscode/tasks.json
 .gitignore
-.test.c
+test.c
+tempCodeRunnerFile.c
