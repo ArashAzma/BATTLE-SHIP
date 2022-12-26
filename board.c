@@ -4,7 +4,6 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
-#include <stdlib.h>
 
 #define COLOR_BOLD  "\e[1m"
 #define COLOR_OFF   "\e[m"
@@ -205,15 +204,15 @@ int Print_Board(int board[][100],int Size,char name[],int NumOfShips)
 int Print_TwoBoard(int board1[][100],int board2[][100],int Size,char name[],int NumOfShips)
 {
     Space((3*Size+1)+4);
-    printf(COLOR_BOLD"    ~ %s ~\n", name);
+    printf(COLOR_BOLD"~ %s ~\n", name);
     Space((3*Size+1)+4);
     printf(COLOR_OFF"Number Of Ships: %d\n\n\n", NumOfShips);
     Space(5*Size/4-2);
-    Delay(500);
+    Delay(1000);
     printf("Your Board :");
     Space(3*Size+8);
     printf("Your OPP's Board :\n\n");
-    Delay(500);
+    Delay(1000);
     for (int i = 0; i < Size + 1; i++)
     {
         //PRINT BOARD AVAL
@@ -496,7 +495,6 @@ int main()
     char player2[20];
     char position;
     char temp1[20],temp2[20],temp;
-    system("@cls||clear");
     printf("Please enter the length of board: ");
     for( ; ; )
     {
@@ -666,13 +664,14 @@ int main()
     }
 
     Delay(1000);
-    getchar();
-    printf("\n%s! IF YOU READY TO SEE YOUR FINAL BOARD , Press ENTER : ",player1);
+
+    printf("\n%s! IF YOU READY TO SEE YOUR FINAL BOARD , ENTER y : ",player1);
+
 
     for( ; ; )
     {
-        gets(temp1);
-        if(temp1[0] == 0 )
+        scanf("%s",temp1);
+        if(temp1[0] == 'y' || temp1[0] == 'Y')
         {
             break;
         }
@@ -682,25 +681,28 @@ int main()
         }
     }
 
-    // printf("\n");
-    // Line(SIZE * 3 + 1);
-    // printf("\n");
+    printf("\n");
+    Line(SIZE * 3 + 1);
+    printf("\n");
 
-    Delay(600);
+    Delay(1000);
 
     // printe board FOCP1
-    system("@cls||clear");
     Print_Board(BOARD_P1,SIZE,player1,Boat_Count);
-    Delay(4000);
-    system("@cls||clear");
 
-    printf("\n%s! IF YOU READY TO SEE YOUR FINAL BOARD , Press ENTER : ",player2);
+    printf("\n\n");
+    Line(SIZE * 3 + 1);
+    printf("\n");
+
+    Delay(1000);
+
+    printf("\n%s! IF YOU READY TO SEE YOUR FINAL BOARD , ENTER y : ",player2);
 
 
     for( ; ; )
     {
-        gets(temp1);
-        if(temp1[0] == 0)
+        scanf("%s",temp1);
+        if(temp1[0] == 'y' || temp1[0] == 'Y')
         {
             break;
         }
@@ -710,19 +712,18 @@ int main()
         }
     }
 
-    // printf("\n");
-    // Line(SIZE * 3 + 1);
-    // printf("\n");
+    printf("\n");
+    Line(SIZE * 3 + 1);
+    printf("\n");
 
+    Delay(1000);
 
     // printe board FOCP2
-    system("@cls||clear");
     Print_Board(BOARD_P2,SIZE,player2,Boat_Count);
-    Delay(4000);
-    system("@cls||clear");
-    // printf("\n\n");
-    // Line(SIZE * 3 + 1);
-    // printf("\n");
+
+    printf("\n\n");
+    Line(SIZE * 3 + 1);
+    printf("\n");
 
 
 
@@ -778,8 +779,7 @@ int main()
         }
 
         printf("\n");
-        //Line(7 * SIZE + 2 + 21);
-        //getchar();
+        Line(7 * SIZE + 2 + 21);
         printf("\n");
 
         Print_TwoBoard(BOARD_P1,BOARD_OPP_P1,SIZE,player1,RMN_Ships1);
@@ -789,11 +789,18 @@ int main()
             BOARD_OPP_P1[x][y] = 0;
         }
 
-        Delay(4000);
-        system("@cls||clear");
+        Delay(1500);
 
         printf("\n");
-        Delay(2000);
+        Line(7 * SIZE + 2 + 21);
+        printf("\n");
+
+
+
+
+        Delay(1500);
+        printf("\n");
+
         printf("%s! ENTER A COORDINATE TO ATTACK: ",player2);
 
         for( ; ; )
@@ -830,9 +837,9 @@ int main()
             BOARD_OPP_P2[x][y] = -10;
         }
 
-        // printf("\n");
-        // Line(7 * SIZE + 2 + 21);
-        // printf("\n");
+        printf("\n");
+        Line(7 * SIZE + 2 + 21);
+        printf("\n");
 
         Print_TwoBoard(BOARD_P2,BOARD_OPP_P2,SIZE,player2,RMN_Ships2);
 
@@ -841,11 +848,13 @@ int main()
             BOARD_OPP_P2[x][y] = 0;
         }
 
+        Delay(1500);
+
         printf("\n");
         Line(7 * SIZE + 2 + 21);
         printf("\n");
-        Delay(4000);
-        system("@cls||clear");
+
+
         Round++;
     }
 
