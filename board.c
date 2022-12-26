@@ -410,7 +410,7 @@ int check_place(int board[][100], int x, int y, char position, int size)
     return 0;
 }
 
-void place_boat(int board[][100], int x, int y, char position, int size)
+void place_boat(int board[][100], int const_board[][100], int x, int y, char position, int size)
 {
     if (position == 'h' || position == 'H')
     {
@@ -421,14 +421,17 @@ void place_boat(int board[][100], int x, int y, char position, int size)
                 if(i == 0)
                 {
                     board[x][y + i] = 2; // 2 = ˂
+                    const_board[x][y + i] = 2;
                 }
                 else if(i == 2)
                 {
                     board[x][y + i] = -2; // -2 = ˃
+                    const_board[x][y + i] = -2;
                 }
                 else
                 {
                     board[x][y + i] = 1; // 1 = o
+                    const_board[x][y + i] = 1;
                 }
             }
         }
@@ -460,14 +463,17 @@ void place_boat(int board[][100], int x, int y, char position, int size)
                 if(i == 0)
                 {
                     board[x + i][y] = 3; // 3 = ∧
+                    const_board[x + i][y] = 3;
                 }
                 else if(i == 2)
                 {
                     board[x + i][y] = -3; // -3 = ∨
+                    const_board[x + i][y] = -3;
                 }
                 else
                 {
                     board[x + i][y] = 1; // 1 = o
+                    const_board[x + i][y] = 1;
                 }
             }
         }
@@ -523,6 +529,8 @@ int main()
     int BOARD_P2[SIZE + 1][100];
     int BOARD_OPP_P1[SIZE + 1][100];
     int BOARD_OPP_P2[SIZE + 1][100]; 
+    int BOARD_CONST_P1[SIZE + 1][100]; 
+    int BOARD_CONST_P2[SIZE + 1][100]; 
     int x = 0;
     int y = 0;
 
@@ -535,6 +543,8 @@ int main()
             BOARD_P2[i][j] = 0;
             BOARD_OPP_P1[i][j] = 0;
             BOARD_OPP_P2[i][j] = 0;
+            BOARD_CONST_P1[i][j] = 0;
+            BOARD_CONST_P2[i][j] = 0;
         }
     }
 
@@ -604,7 +614,7 @@ int main()
 
         else
         {
-            place_boat(BOARD_P1, x, y, position, SIZE + 1);
+            place_boat(BOARD_P1, BOARD_CONST_P1, x, y, position, SIZE + 1);
         }
     }
 
@@ -646,7 +656,7 @@ int main()
         }
         else
         {
-            place_boat(BOARD_P2, x, y, position, SIZE + 1);
+            place_boat(BOARD_P2, BOARD_CONST_P2, x, y, position, SIZE + 1);
         }
     }
     Line(5);
@@ -659,6 +669,8 @@ int main()
         BOARD_P2[0][j] = j;
         BOARD_OPP_P1[0][j] = j;
         BOARD_OPP_P2[0][j] = j;
+        BOARD_CONST_P1[0][j] = j;
+        BOARD_CONST_P2[0][j] = j;
     }
     // VARED KARDANE SHOMARE AMOODI
     for (int i = 1; i < SIZE + 1; i++)
@@ -667,7 +679,10 @@ int main()
         BOARD_P2[i][0] = i;
         BOARD_OPP_P1[i][0] = i;
         BOARD_OPP_P2[i][0] = i;
+        BOARD_CONST_P1[i][0] = i;
+        BOARD_CONST_P2[i][0] = i;
     }
+
 
     Delay(1000);
 
@@ -750,7 +765,7 @@ int main()
         setTextColor(15,0);
 
         Delay(1500);
-
+        
         printf("%s! ENTER A COORDINATE TO ATTACK: ",player1);
 
         for( ; ; )
@@ -778,14 +793,60 @@ int main()
                 }
             }
         }
+
         if (BOARD_P2[x][y] == 1 || BOARD_P2[x][y] == 2 || BOARD_P2[x][y] == -2 || BOARD_P2[x][y] == 3 || BOARD_P2[x][y] == -3)
         {
+            if (BOARD_P2[x][y] == 1)
+            {
+                if (BOARD_P2[x-1][y] == 10 && BOARD_P2[x+1][y] == 10 && BOARD_CONST_P2[x-1][y] == 3 && BOARD_CONST_P2[x+1][y] == -3)
+                {
+                    RMN_Ships2--;
+                }
+                else if (BOARD_P2[x][y-1] == 10 && BOARD_P2[x][y+1] == 10 && BOARD_CONST_P2[x][y-1] == 2 && BOARD_CONST_P2[x][y+1] == -2)
+                {
+                    RMN_Ships2--;
+                }
+            }
+            else if (BOARD_P2[x][y] == 2)
+            {
+                if (BOARD_P2[x][y+1] == 10 && BOARD_P2[x][y+2] == 10 && BOARD_CONST_P2[x][y+1] == 1 && BOARD_CONST_P2[x][y+2] == -2)
+                {
+                    RMN_Ships2--;
+                }
+            }
+            else if (BOARD_P2[x][y] == -2)
+            {
+                if (BOARD_P2[x][y-1] == 10 && BOARD_P2[x][y-2] == 10 && BOARD_CONST_P2[x][y-1] == 1 && BOARD_CONST_P2[x][y-2] == 2)
+                {
+                    RMN_Ships2--;
+                }
+            }
+            else if (BOARD_P2[x][y] == 3)
+            {
+                if (BOARD_P2[x+1][y] == 10 && BOARD_P2[x+2][y] == 10 && BOARD_CONST_P2[x+1][y] == 1 && BOARD_CONST_P2[x+2][y] == -3)
+                {
+                    RMN_Ships2--;
+                }
+            }
+            else if (BOARD_P2[x][y] == -3)
+            {
+                if (BOARD_P2[x-1][y] == 10 && BOARD_P2[x-2][y] == 10 && BOARD_CONST_P2[x-1][y] == 1 && BOARD_CONST_P2[x-2][y] == 3)
+                {
+                    RMN_Ships2--;
+                }
+            }
             BOARD_OPP_P1[x][y] = 10;
             BOARD_P2[x][y] = 10;
         }
         else
         {
             BOARD_OPP_P1[x][y] = -10;
+        }
+
+        if (RMN_Ships2 == 0)
+        {
+            printf("%s WINS!",player1);
+            break;
         }
 
         printf("\n");
@@ -828,7 +889,7 @@ int main()
                 {
                     Error(7);
                 }
-                else if (BOARD_P2[x][y] == 10)
+                else if (BOARD_P1[x][y] == 10)
                 {
                     Error(8);
                 }
@@ -840,12 +901,57 @@ int main()
         }
         if (BOARD_P1[x][y] == 1 || BOARD_P1[x][y] == 2 || BOARD_P1[x][y] == -2 || BOARD_P1[x][y] == 3 || BOARD_P1[x][y] == -3)
         {
+            if (BOARD_P1[x][y] == 1)
+            {
+                if (BOARD_P1[x-1][y] == 10 && BOARD_P1[x+1][y] == 10 && BOARD_CONST_P1[x-1][y] == 3 && BOARD_CONST_P1[x+1][y] == -3)
+                {
+                    RMN_Ships1--;
+                }
+                else if (BOARD_P1[x][y-1] == 10 && BOARD_P1[x][y+1] == 10 && BOARD_CONST_P1[x][y-1] == 2 && BOARD_CONST_P1[x][y+1] == -2)
+                {
+                    RMN_Ships1--;
+                }
+            }
+            else if (BOARD_P1[x][y] == 2)
+            {
+                if (BOARD_P1[x][y+1] == 10 && BOARD_P1[x][y+2] == 10 && BOARD_CONST_P1[x][y+1] == 1 && BOARD_CONST_P1[x][y+2] == -2)
+                {
+                    RMN_Ships1--;
+                }
+            }
+            else if (BOARD_P1[x][y] == -2)
+            {
+                if (BOARD_P1[x][y-1] == 10 && BOARD_P1[x][y-2] == 10 && BOARD_CONST_P1[x][y-1] == 1 && BOARD_CONST_P1[x][y-2] == 2)
+                {
+                    RMN_Ships1--;
+                }
+            }
+            else if (BOARD_P1[x][y] == 3)
+            {
+                if (BOARD_P1[x+1][y] == 10 && BOARD_P1[x+2][y] == 10 && BOARD_CONST_P1[x+1][y] == 1 && BOARD_CONST_P1[x+2][y] == -3)
+                {
+                    RMN_Ships1--;
+                }
+            }
+            else if (BOARD_P1[x][y] == -3)
+            {
+                if (BOARD_P1[x-1][y] == 10 && BOARD_P1[x-2][y] == 10 && BOARD_CONST_P1[x-1][y] == 1 && BOARD_CONST_P1[x-2][y] == 3)
+                {
+                    RMN_Ships1--;
+                }
+            }
             BOARD_OPP_P2[x][y] = 10;
             BOARD_P1[x][y] = 10;
         }
         else
         {
             BOARD_OPP_P2[x][y] = -10;
+        }
+
+        if (RMN_Ships1 == 0)
+        {
+            printf("%s WINS!",player2);
+            break;
         }
 
         printf("\n");
