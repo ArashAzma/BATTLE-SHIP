@@ -107,6 +107,12 @@ int Error(int Err_Num)
         printf("YOU CANT ATTACK HERE!\n");
         setTextColor(15,0);
     }
+    else if (Err_Num == 8) 
+    {
+        setTextColor(4,0);
+        printf("YOU HAVE ALREADY ATTACKED HERE!\n");
+        setTextColor(15,0);
+    }
 }
 
 
@@ -665,13 +671,14 @@ int main()
 
     Delay(1000);
 
-    printf("\n%s! IF YOU READY TO SEE YOUR FINAL BOARD , ENTER y : ",player1);
+    getchar();
+    printf("\n%s! IF YOU READY TO SEE YOUR FINAL BOARD , PRESS ENTER : ",player1);
 
 
     for( ; ; )
     {
-        scanf("%s",temp1);
-        if(temp1[0] == 'y' || temp1[0] == 'Y')
+        gets(temp1);
+        if(temp1[0] == 0 )
         {
             break;
         }
@@ -696,13 +703,13 @@ int main()
 
     Delay(1000);
 
-    printf("\n%s! IF YOU READY TO SEE YOUR FINAL BOARD , ENTER y : ",player2);
+    printf("\n%s! IF YOU READY TO SEE YOUR FINAL BOARD , PRESS ENTER : ",player2);
 
 
     for( ; ; )
     {
-        scanf("%s",temp1);
-        if(temp1[0] == 'y' || temp1[0] == 'Y')
+        gets(temp1);
+        if(temp1[0] == 0 )
         {
             break;
         }
@@ -731,6 +738,8 @@ int main()
     int RMN_Ships2 = Boat_Count; //remaining ships for player 2
     int Round;
 
+
+    // PHASE 3
     for( Round = 1 ; RMN_Ships1 != 0 && RMN_Ships2 != 0 ; )
     {
         Delay(1500);
@@ -750,22 +759,23 @@ int main()
             if ( Check_Input(temp1) == 1 || Check_Input(temp2) == 1 )
             {
                 Error(3);
-                printf("\n");
-
             }
             else
             {
                 x = StrToNum(temp1);
                 y = StrToNum(temp2);
-            }
-            if (x < 0 || y < 0 || x > SIZE || y > SIZE)
-            {
-                Error(7);
-                printf("\n");
-            }
-            else 
-            {
-                break;
+                if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                {
+                    Error(7);
+                }
+                else if (BOARD_P2[x][y] == 10)
+                {
+                    Error(8);
+                }
+                else 
+                {
+                    break;
+                }
             }
         }
         if (BOARD_P2[x][y] == 1 || BOARD_P2[x][y] == 2 || BOARD_P2[x][y] == -2 || BOARD_P2[x][y] == 3 || BOARD_P2[x][y] == -3)
@@ -809,22 +819,23 @@ int main()
             if ( Check_Input(temp1) == 1 || Check_Input(temp2) == 1 )
             {
                 Error(3);
-                printf("\n");
-
             }
             else
             {
                 x = StrToNum(temp1);
                 y = StrToNum(temp2);
-            }
-            if (x < 0 || y < 0 || x > SIZE || y > SIZE)
-            {
-                Error(7);
-                printf("\n");
-            }
-            else 
-            {
-                break;
+                if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                {
+                    Error(7);
+                }
+                else if (BOARD_P2[x][y] == 10)
+                {
+                    Error(8);
+                }
+                else 
+                {
+                    break;
+                }
             }
         }
         if (BOARD_P1[x][y] == 1 || BOARD_P1[x][y] == 2 || BOARD_P1[x][y] == -2 || BOARD_P1[x][y] == 3 || BOARD_P1[x][y] == -3)
