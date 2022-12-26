@@ -843,11 +843,6 @@ int main()
             BOARD_OPP_P1[x][y] = -10;
         }
 
-        if (RMN_Ships2 == 0)
-        {
-            printf("%s WINS!",player1);
-            break;
-        }
 
         printf("\n");
         Line(7 * SIZE + 2 + 21);
@@ -860,14 +855,19 @@ int main()
             BOARD_OPP_P1[x][y] = 0;
         }
 
+
         Delay(1500);
 
         printf("\n");
         Line(7 * SIZE + 2 + 21);
         printf("\n");
 
-
-
+        if (RMN_Ships2 == 0)
+        {
+            Delay(1500);
+            printf("%s WINS!",player1);
+            break;
+        }
 
         Delay(1500);
         printf("\n");
@@ -948,11 +948,6 @@ int main()
             BOARD_OPP_P2[x][y] = -10;
         }
 
-        if (RMN_Ships1 == 0)
-        {
-            printf("%s WINS!",player2);
-            break;
-        }
 
         printf("\n");
         Line(7 * SIZE + 2 + 21);
@@ -965,12 +960,19 @@ int main()
             BOARD_OPP_P2[x][y] = 0;
         }
 
+
         Delay(1500);
 
         printf("\n");
         Line(7 * SIZE + 2 + 21);
         printf("\n");
 
+        if (RMN_Ships1 == 0)
+        {
+            Delay(1500);
+            printf("%s WINS!",player2);
+            break;
+        }
 
         Round++;
     }
