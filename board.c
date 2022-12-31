@@ -502,7 +502,9 @@ int main()
     char player2[20];
     char position;
     char temp1[20], temp2[20], temp;
+    setTextColor(2, 0);
     printf("Please enter the length of board: ");
+    setTextColor(15, 0);
     for (;;)
     {
         scanf("%s", temp1);
@@ -544,7 +546,9 @@ int main()
     }
 
     int Boat_Count;
+    setTextColor(2, 0);
     printf("Please enter the number of ships: ");
+    setTextColor(15, 0);
     for (;;)
     {
         for (;;)
@@ -573,11 +577,15 @@ int main()
         else
             break;
     }
+    setTextColor(2, 0);
     printf("Please enter your name: ");
+    setTextColor(15, 0);
     gets(player1);
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
+    setTextColor(2, 0);
     printf("Please enter the coordinates of your ships and their positions %s(x y (h/v)): \n", player1);
+    setTextColor(15, 0);
     for (int i = 1; i <= Boat_Count; i++)
     {
         for (;;)
@@ -617,11 +625,15 @@ int main()
     Line(5);
     printf("\n");
 
+    setTextColor(2, 0);
     printf("Please enter your name: ");
+    setTextColor(15, 0);
     gets(player2);
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
+    setTextColor(2, 0);
     printf("Please enter the coordinates of your ships and their positions %s(x y (h/v)): \n", player2);
+    setTextColor(15, 0);
     for (int i = 1; i <= Boat_Count; i++)
     {
         for (;;)
@@ -682,7 +694,9 @@ int main()
     Delay(1000);
 
     getchar();
-    printf("\n%s! IF YOU READY TO SEE YOUR FINAL BOARD , PRESS ENTER : ", player1);
+    setTextColor(2, 0);
+    printf("\n%s! If you ready to see your final board , press ENTER : ", player1);
+    setTextColor(15, 0);
 
     for (;;)
     {
@@ -708,7 +722,9 @@ int main()
 
     printf("\n\n");
     Delay(3000);
+    setTextColor(2, 0);
     printf("Do you want to make changes to your board (y/n)? ");
+    setTextColor(15, 0);
     for (;;)
     {
         gets(temp1);
@@ -743,7 +759,9 @@ int main()
                 BOARD_OPP_P1[i][0] = i;
                 BOARD_CONST_P1[i][0] = i;
             }
+            setTextColor(2, 0);
             printf("Please enter the coordinates of your ships and their positions %s(x y (h/v)): \n", player1);
+            setTextColor(15, 0);
             for (int i = 1; i <= Boat_Count; i++)
             {
                 for (;;)
@@ -779,7 +797,9 @@ int main()
                 }
             }
             getchar();
-            printf("\n%s! IF YOU READY TO SEE YOUR FINAL BOARD , PRESS ENTER : ", player1);
+            setTextColor(2, 0);
+            printf("\n%s! If you ready to see your final board , press ENTER : ", player1);
+            setTextColor(15, 0);
 
             for (;;)
             {
@@ -819,7 +839,9 @@ int main()
 
     Delay(1000);
 
-    printf("\n%s! IF YOU READY TO SEE YOUR FINAL BOARD , PRESS ENTER : ", player2);
+    setTextColor(2, 0);
+    printf("\n%s! If you ready to see your final board , press ENTER : ", player2);
+    setTextColor(15, 0);
 
     for (;;)
     {
@@ -845,7 +867,9 @@ int main()
 
     printf("\n\n");
     Delay(3000);
+    setTextColor(2, 0);
     printf("Do you want to make changes to your board (y/n)? ");
+    setTextColor(15, 0);
     for (;;)
     {
         gets(temp1);
@@ -874,7 +898,9 @@ int main()
                 BOARD_OPP_P2[i][0] = i;
                 BOARD_CONST_P2[i][0] = i;
             }
+            setTextColor(2, 0);
             printf("Please enter the coordinates of your ships and their positions %s(x y (h/v)): \n", player2);
+            setTextColor(15, 0);
             for (int i = 1; i <= Boat_Count; i++)
             {
                 for (;;)
@@ -909,7 +935,9 @@ int main()
                 }
             }
             getchar();
-            printf("\n%s! IF YOU READY TO SEE YOUR FINAL BOARD , PRESS ENTER : ", player2);
+            setTextColor(2, 0);
+            printf("\n%s! If you ready to see your final board , press ENTER : ", player2);
+            setTextColor(15, 0);
 
             for (;;)
             {
@@ -964,7 +992,9 @@ int main()
 
         Delay(1500);
 
-        printf("%s! ENTER A COORDINATE TO ATTACK: ", player1);
+        setTextColor(2, 0);
+        printf("%s! Enter a coordinate to attack : ", player1);
+        setTextColor(15, 0);
 
         for (;;)
         {
@@ -1061,14 +1091,18 @@ int main()
         if (RMN_Ships2 == 0)
         {
             Delay(1500);
+            setTextColor(2, 0);
             printf("%s WINS!", player1);
+            setTextColor(15, 0);
             break;
         }
 
         Delay(1500);
         printf("\n");
 
-        printf("%s! ENTER A COORDINATE TO ATTACK: ", player2);
+        setTextColor(2, 0);
+        printf("%s! Enter a coordinate to attack : ", player2);
+        setTextColor(15, 0);
 
         for (;;)
         {
@@ -1164,7 +1198,9 @@ int main()
         if (RMN_Ships1 == 0)
         {
             Delay(1500);
-            printf("%s WINS!", player2);
+            setTextColor(2, 0);
+            printf("\n%s WINS!", player2);
+            setTextColor(15, 0);
             break;
         }
 
