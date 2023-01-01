@@ -575,7 +575,9 @@ int main()
             Error(5);
         }
         else
+        {
             break;
+        }
     }
     printf("Please enter your name : ");
     gets(player1);
@@ -592,7 +594,7 @@ int main()
     printf("\nPurple = 5\n");
     setTextColor(15, 0);
 
-    for (;;)
+    for (;;) // check kardan voroodi dorost baraye rang
     {
         scanf("%s", temp1);
         if (Check_Input(temp1) == 1)
@@ -615,7 +617,10 @@ int main()
     }
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
-    printf("%s! Please enter the coordinates of your ships and their positions (x y (h/v)): \n", player1);
+    setTextColor(P1_col,0);
+    printf("%s",player1);
+    setTextColor(15,0);
+    printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
 
     PrePlaceShip(SIZE, Boat_Count, BOARD_P1, BOARD_CONST_P1);
 
@@ -638,7 +643,7 @@ int main()
     printf("\nPurple = 5\n");
     setTextColor(15, 0);
 
-    for (;;)
+    for (;;) // check kardan voroodi dorost baraye rang
     {
         scanf("%s", temp1);
         if (Check_Input(temp1) == 1)
@@ -661,7 +666,10 @@ int main()
     }
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
-    printf("%s! Please enter the coordinates of your ships and their positions (x y (h/v)): \n", player2);
+    setTextColor(P2_col,0);
+    printf("%s",player2);
+    setTextColor(15,0);
+    printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
 
     PrePlaceShip(SIZE, Boat_Count, BOARD_P2, BOARD_CONST_P2);
 
@@ -671,7 +679,10 @@ int main()
     Delay(1000);
 
     getchar();
-    printf("\n%s! If you ready to see your final board , press ENTER : ", player1);
+    setTextColor(P1_col,0);
+    printf("\n%s",player1);
+    setTextColor(15,0);
+    printf("! If you ready to see your final board , press ENTER : ");
 
     for (;;)
     {
@@ -732,7 +743,10 @@ int main()
                 BOARD_OPP_P1[i][0] = i;
                 BOARD_CONST_P1[i][0] = i;
             }
-            printf("Please enter the coordinates of your ships and their positions %s(x y (h/v)): \n", player1);
+            setTextColor(P1_col,0);
+            printf("%s",player1);
+            setTextColor(15,0);
+            printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
             for (int i = 1; i <= Boat_Count; i++)
             {
                 for (;;)
@@ -768,7 +782,10 @@ int main()
                 }
             }
             getchar();
-            printf("\n%s! If you ready to see your final board , press ENTER : ", player1);
+            setTextColor(P1_col,0);
+            printf("\n%s",player1);
+            setTextColor(15,0);
+            printf("! If you ready to see your final board , press ENTER : ");
 
             for (;;)
             {
@@ -808,7 +825,10 @@ int main()
 
     Delay(1000);
 
-    printf("\n%s! If you ready to see your final board , press ENTER : ", player2);
+    setTextColor(P2_col,0);
+    printf("\n%s",player2);
+    setTextColor(15,0);
+    printf("! If you ready to see your final board , press ENTER : ");
 
     for (;;)
     {
@@ -863,7 +883,10 @@ int main()
                 BOARD_OPP_P2[i][0] = i;
                 BOARD_CONST_P2[i][0] = i;
             }
-            printf("Please enter the coordinates of your ships and their positions %s(x y (h/v)): \n", player2);
+            setTextColor(P2_col,0);
+            printf("%s",player2);
+            setTextColor(15,0);
+            printf("Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
             for (int i = 1; i <= Boat_Count; i++)
             {
                 for (;;)
@@ -898,7 +921,10 @@ int main()
                 }
             }
             getchar();
-            printf("\n%s! If you ready to see your final board , press ENTER : ", player2);
+            setTextColor(P2_col,0);
+            printf("%s",player2);
+            setTextColor(15,0);
+            printf("! If you ready to see your final board , press ENTER : ");
 
             for (;;)
             {
@@ -941,7 +967,7 @@ int main()
     int RMN_Ships2 = Boat_Count; // remaining ships for player 2
     int Round;
 
-    // PHASE 3
+    // ghesmate entehayi bazi (hamle kardan be mape hamdige)
     for (Round = 1; RMN_Ships1 != 0 && RMN_Ships2 != 0;)
     {
         Delay(1500);
@@ -953,7 +979,10 @@ int main()
 
         Delay(1500);
 
-        printf("%s! Enter a coordinate to attack : ", player1);
+        setTextColor(P1_col,0);
+        printf("%s",player1);
+        setTextColor(15,0);
+        printf("! Enter a coordinate to attack : ");
 
         for (;;)
         {
@@ -1050,14 +1079,20 @@ int main()
         if (RMN_Ships2 == 0)
         {
             Delay(1500);
-            printf("\n%s WINS!", player1);
+            setTextColor(P1_col,0);
+            printf("%s",player1);
+            setTextColor(15,0);
+            printf(" WINS!");
             break;
         }
 
         Delay(1500);
         printf("\n");
 
-        printf("%s! Enter a coordinate to attack : ", player2);
+        setTextColor(P2_col,0);
+        printf("%s",player2);
+        setTextColor(15,0);
+        printf("! Enter a coordinate to attack : ");
 
         for (;;)
         {
@@ -1153,7 +1188,10 @@ int main()
         if (RMN_Ships1 == 0)
         {
             Delay(1500);
-            printf("\n%s WINS!", player2);
+            setTextColor(P2_col,0);
+            printf("%s",player2);
+            setTextColor(15,0);
+            printf(" WINS!");
             break;
         }
 
