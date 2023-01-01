@@ -130,7 +130,42 @@ void Delay(unsigned int mseconds)
         ;
 }
 
-int Print_Board(int board[][100], int Size, char name[], int NumOfShips ,int Col)
+void PreBoard(int Size, int BOARD_P1[][100], int BOARD_P2[][100], int BOARD_OPP_P1[][100], int BOARD_OPP_P2[][100], int BOARD_CONST_P1[][100], int BOARD_CONST_P2[][100])
+{
+    int i, j;
+    for (i = 0; i < Size + 1; i++)
+    {
+        for (j = 0; j < Size + 1; j++)
+        {
+            BOARD_P1[i][j] = 0;
+            BOARD_P2[i][j] = 0;
+            BOARD_OPP_P1[i][j] = 0;
+            BOARD_OPP_P2[i][j] = 0;
+            BOARD_CONST_P1[i][j] = 0;
+            BOARD_CONST_P2[i][j] = 0;
+        }
+    }
+    for (int j = 1; j < Size + 1; j++)
+    {
+        BOARD_P1[0][j] = j;
+        BOARD_P2[0][j] = j;
+        BOARD_OPP_P1[0][j] = j;
+        BOARD_OPP_P2[0][j] = j;
+        BOARD_CONST_P1[0][j] = j;
+        BOARD_CONST_P2[0][j] = j;
+    }
+    for (int i = 1; i < Size + 1; i++)
+    {
+        BOARD_P1[i][0] = i;
+        BOARD_P2[i][0] = i;
+        BOARD_OPP_P1[i][0] = i;
+        BOARD_OPP_P2[i][0] = i;
+        BOARD_CONST_P1[i][0] = i;
+        BOARD_CONST_P2[i][0] = i;
+    }
+}
+
+int Print_Board(int board[][100], int Size, char name[], int NumOfShips, int Col)
 {
     setTextColor(Col, 0);
     printf(COLOR_BOLD "~ %s ~\n", name);
@@ -381,6 +416,47 @@ int check_place(int board[][100], int x, int y, char position, int size)
     return 0;
 }
 
+void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][100])
+{
+    char position;
+    char temp1[10];
+    char temp2[10];
+    int x, y;
+    for (int i = 1; i <= Boat_Count; i++)
+    {
+        for (;;)
+        {
+            scanf("%s %s %c", &temp1, &temp2, &position);
+            if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+            {
+                Error(3);
+            }
+            else
+            {
+                x = StrToNum(temp1);
+                y = StrToNum(temp2);
+                break;
+            }
+        }
+        if (position != 'v' && position != 'h' && position != 'V' && position != 'H')
+        {
+            Error(4);
+            i--;
+            continue;
+        }
+        else if (check_place(Board, x, y, position, SIZE + 1) == 1 || x > SIZE || y > SIZE || x < 1 || y < 1)
+        {
+            Error(6);
+            i--;
+            continue;
+        }
+        else
+        {
+            place_boat(Board, ConstBoard, x, y, position, SIZE + 1);
+        }
+    }
+}
+
 void place_boat(int board[][100], int const_board[][100], int x, int y, char position, int size)
 {
     if (position == 'h' || position == 'H')
@@ -469,19 +545,7 @@ int main()
     int x = 0;
     int y = 0;
 
-    // SEFR KARDANE KHANE HA
-    for (int i = 0; i < SIZE + 1; i++)
-    {
-        for (int j = 0; j < SIZE + 1; j++)
-        {
-            BOARD_P1[i][j] = 0;
-            BOARD_P2[i][j] = 0;
-            BOARD_OPP_P1[i][j] = 0;
-            BOARD_OPP_P2[i][j] = 0;
-            BOARD_CONST_P1[i][j] = 0;
-            BOARD_CONST_P2[i][j] = 0;
-        }
-    }
+    PreBoard(SIZE, BOARD_P1, BOARD_P2, BOARD_OPP_P1, BOARD_OPP_P2, BOARD_CONST_P1, BOARD_CONST_P2);
 
     int Boat_Count;
     printf("Please enter the number of ships: ");
@@ -517,16 +581,16 @@ int main()
     gets(player1);
 
     printf("Please choose a number of color : ");
-    
-    setTextColor(4,0);
+
+    setTextColor(4, 0);
     printf("\nRed = 4");
-    setTextColor(2,0);
+    setTextColor(2, 0);
     printf("\nGreen = 2");
-    setTextColor(6,0);
+    setTextColor(6, 0);
     printf("\nYellow = 6");
-    setTextColor(5,0);
+    setTextColor(5, 0);
     printf("\nPurple = 5\n");
-    setTextColor(15,0);
+    setTextColor(15, 0);
 
     for (;;)
     {
@@ -536,7 +600,7 @@ int main()
             Error(3);
             continue;
         }
-        else 
+        else
         {
             P1_col = StrToNum(temp1);
         }
@@ -552,59 +616,27 @@ int main()
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
     printf("%s! Please enter the coordinates of your ships and their positions (x y (h/v)): \n", player1);
-    for (int i = 1; i <= Boat_Count; i++)
-    {
-        for (;;)
-        {
-            scanf("%s %s %c", &temp1, &temp2, &position);
-            if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
-            {
-                Error(3);
-            }
-            else
-            {
-                x = StrToNum(temp1);
-                y = StrToNum(temp2);
-                break;
-            }
-        }
-        getchar();
-        if (position != 'v' && position != 'h' && position != 'V' && position != 'H')
-        {
-            Error(4);
-            i--;
-            continue;
-        }
-        else if (check_place(BOARD_P1, x, y, position, SIZE + 1) == 1 || x > SIZE || y > SIZE || x < 1 || y < 1)
-        {
-            Error(6);
-            i--;
-            continue;
-        }
 
-        else
-        {
-            place_boat(BOARD_P1, BOARD_CONST_P1, x, y, position, SIZE + 1);
-        }
-    }
+    PrePlaceShip(SIZE, Boat_Count, BOARD_P1, BOARD_CONST_P1);
 
     Line(5);
     printf("\n");
 
+    getchar();
     printf("Please enter your name: ");
     gets(player2);
 
     printf("Please choose a number of color : ");
 
-    setTextColor(4,0);
+    setTextColor(4, 0);
     printf("\nRed = 4");
-    setTextColor(2,0);
+    setTextColor(2, 0);
     printf("\nGreen = 2");
-    setTextColor(6,0);
+    setTextColor(6, 0);
     printf("\nYellow = 6");
-    setTextColor(5,0);
+    setTextColor(5, 0);
     printf("\nPurple = 5\n");
-    setTextColor(15,0);
+    setTextColor(15, 0);
 
     for (;;)
     {
@@ -614,7 +646,7 @@ int main()
             Error(3);
             continue;
         }
-        else 
+        else
         {
             P2_col = StrToNum(temp1);
         }
@@ -630,62 +662,11 @@ int main()
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
     printf("%s! Please enter the coordinates of your ships and their positions (x y (h/v)): \n", player2);
-    for (int i = 1; i <= Boat_Count; i++)
-    {
-        for (;;)
-        {
-            scanf("%s %s %c", &temp1, &temp2, &position);
-            if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
-            {
-                Error(3);
-            }
-            else
-            {
-                x = StrToNum(temp1);
-                y = StrToNum(temp2);
-                break;
-            }
-        }
-        if (position != 'v' && position != 'h' && position != 'V' && position != 'H')
-        {
-            Error(4);
-            i--;
-            continue;
-        }
-        else if (check_place(BOARD_P2, x, y, position, SIZE + 1) == 1 || x > SIZE || y > SIZE || x < 1 || y < 1)
-        {
-            Error(6);
-            i--;
-            continue;
-        }
-        else
-        {
-            place_boat(BOARD_P2, BOARD_CONST_P2, x, y, position, SIZE + 1);
-        }
-    }
+
+    PrePlaceShip(SIZE, Boat_Count, BOARD_P2, BOARD_CONST_P2);
+
     Line(5);
     printf("\n");
-
-    //  VARED KARDANE SHOMARE OFOGHI
-    for (int j = 1; j < SIZE + 1; j++)
-    {
-        BOARD_P1[0][j] = j;
-        BOARD_P2[0][j] = j;
-        BOARD_OPP_P1[0][j] = j;
-        BOARD_OPP_P2[0][j] = j;
-        BOARD_CONST_P1[0][j] = j;
-        BOARD_CONST_P2[0][j] = j;
-    }
-    // VARED KARDANE SHOMARE AMOODI
-    for (int i = 1; i < SIZE + 1; i++)
-    {
-        BOARD_P1[i][0] = i;
-        BOARD_P2[i][0] = i;
-        BOARD_OPP_P1[i][0] = i;
-        BOARD_OPP_P2[i][0] = i;
-        BOARD_CONST_P1[i][0] = i;
-        BOARD_CONST_P2[i][0] = i;
-    }
 
     Delay(1000);
 
@@ -1057,7 +1038,7 @@ int main()
 
         if (BOARD_OPP_P1[x][y] == -10)
         {
-            BOARD_OPP_P1[x][y] = 0; //hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
+            BOARD_OPP_P1[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
         }
 
         Delay(1500);
@@ -1160,7 +1141,7 @@ int main()
 
         if (BOARD_OPP_P2[x][y] == -10)
         {
-            BOARD_OPP_P2[x][y] = 0; //hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar 
+            BOARD_OPP_P2[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
         }
 
         Delay(1500);
