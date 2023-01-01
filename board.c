@@ -130,9 +130,11 @@ void Delay(unsigned int mseconds)
         ;
 }
 
-int Print_Board(int board[][100], int Size, char name[], int NumOfShips)
+int Print_Board(int board[][100], int Size, char name[], int NumOfShips ,int Col)
 {
+    setTextColor(Col, 0);
     printf(COLOR_BOLD "~ %s ~\n", name);
+    setTextColor(15, 0);
     printf(COLOR_OFF "Number Of Ships: %d\n\n\n", NumOfShips);
     Space(5 * Size / 4 - 2);
     Delay(1000);
@@ -155,31 +157,31 @@ int Print_Board(int board[][100], int Size, char name[], int NumOfShips)
             }
             else if (i >= 1 && j >= 1 && board[i][j] == 1) // TARH KASHTI
             {
-                setTextColor(13, 0);
+                setTextColor(Col, 0);
                 printf("o  ");
                 setTextColor(15, 0);
             }
             else if (i >= 1 && j >= 1 && board[i][j] == 2) // TARH KASHTI
             {
-                setTextColor(13, 0);
+                setTextColor(Col, 0);
                 printf("<  ");
                 setTextColor(15, 0);
             }
             else if (i >= 1 && j >= 1 && board[i][j] == -2) // TARH KASHTI
             {
-                setTextColor(13, 0);
+                setTextColor(Col, 0);
                 printf(">  ");
                 setTextColor(15, 0);
             }
             else if (i >= 1 && j >= 1 && board[i][j] == 3) // TARH KASHTI
             {
-                setTextColor(13, 0);
+                setTextColor(Col, 0);
                 printf("^  ");
                 setTextColor(15, 0);
             }
             else if (i >= 1 && j >= 1 && board[i][j] == -3) // TARH KASHTI
             {
-                setTextColor(13, 0);
+                setTextColor(Col, 0);
                 printf("V  ");
                 setTextColor(15, 0);
             }
@@ -206,10 +208,12 @@ int Print_Board(int board[][100], int Size, char name[], int NumOfShips)
     }
 }
 
-int Print_TwoBoard(int board1[][100], int board2[][100], int Size, char name[], int NumOfShips)
+int Print_TwoBoard(int board1[][100], int board2[][100], int Size, char name[], int NumOfShips, int Col)
 {
     Space((3 * Size + 1) + 4);
+    setTextColor(Col, 0);
     printf(COLOR_BOLD "~ %s ~\n", name);
+    setTextColor(15, 0);
     Space((3 * Size + 1) + 4);
     printf(COLOR_OFF "Number Of Ships: %d\n\n\n", NumOfShips);
     Space(5 * Size / 4 - 2);
@@ -236,31 +240,31 @@ int Print_TwoBoard(int board1[][100], int board2[][100], int Size, char name[], 
             }
             else if (i >= 1 && j >= 1 && board1[i][j] == 1) // TARH KASHTI
             {
-                setTextColor(13, 0);
+                setTextColor(Col, 0);
                 printf("o  ");
                 setTextColor(15, 0);
             }
             else if (i >= 1 && j >= 1 && board1[i][j] == 2) // TARH KASHTI
             {
-                setTextColor(13, 0);
+                setTextColor(Col, 0);
                 printf("<  ");
                 setTextColor(15, 0);
             }
             else if (i >= 1 && j >= 1 && board1[i][j] == -2) // TARH KASHTI
             {
-                setTextColor(13, 0);
+                setTextColor(Col, 0);
                 printf(">  ");
                 setTextColor(15, 0);
             }
             else if (i >= 1 && j >= 1 && board1[i][j] == 3) // TARH KASHTI
             {
-                setTextColor(13, 0);
+                setTextColor(Col, 0);
                 printf("^  ");
                 setTextColor(15, 0);
             }
             else if (i >= 1 && j >= 1 && board1[i][j] == -3) // TARH KASHTI
             {
-                setTextColor(13, 0);
+                setTextColor(Col, 0);
                 printf("V  ");
                 setTextColor(15, 0);
             }
@@ -301,36 +305,6 @@ int Print_TwoBoard(int board1[][100], int board2[][100], int Size, char name[], 
             {
                 setTextColor(9, 0);
                 printf("~  ");
-                setTextColor(15, 0);
-            }
-            else if (i >= 1 && j >= 1 && board2[i][j] == 1) // TARH KASHTI
-            {
-                setTextColor(13, 0);
-                printf("o  ");
-                setTextColor(15, 0);
-            }
-            else if (i >= 1 && j >= 1 && board2[i][j] == 2) // TARH KASHTI
-            {
-                setTextColor(13, 0);
-                printf("<  ");
-                setTextColor(15, 0);
-            }
-            else if (i >= 1 && j >= 1 && board2[i][j] == -2) // TARH KASHTI
-            {
-                setTextColor(13, 0);
-                printf(">  ");
-                setTextColor(15, 0);
-            }
-            else if (i >= 1 && j >= 1 && board2[i][j] == 3) // TARH KASHTI
-            {
-                setTextColor(13, 0);
-                printf("^  ");
-                setTextColor(15, 0);
-            }
-            else if (i >= 1 && j >= 1 && board2[i][j] == -3) // TARH KASHTI
-            {
-                setTextColor(13, 0);
-                printf("V  ");
                 setTextColor(15, 0);
             }
             else if (i >= 1 && j >= 1 && board2[i][j] == 10) // TARH KASHTI
@@ -432,24 +406,6 @@ void place_boat(int board[][100], int const_board[][100], int x, int y, char pos
                 }
             }
         }
-        // else
-        // {
-        //     for (int i = 0; i < 3; i++)
-        //     {
-        //         if(i == 0)
-        //         {
-        //             board[x][y - i] = -2; // -2 = ˃
-        //         }
-        //         else if(i == 2)
-        //         {
-        //             board[x][y - i] = 2; // 2 = ˂
-        //         }
-        //         else
-        //         {
-        //             board[x][y - i] = 1; // 1 = o
-        //         }
-        //     }
-        // }
     }
     else if (position == 'v' || position == 'V')
     {
@@ -474,29 +430,13 @@ void place_boat(int board[][100], int const_board[][100], int x, int y, char pos
                 }
             }
         }
-        // else
-        // {
-        //     for (int i = 0; i < 3; i++)
-        //     {
-        //         if(i == 0)
-        //         {
-        //             board[x - i][y] = -3; // -3 = ∨
-        //         }
-        //         else if (i == 2)
-        //         {
-        //             board[x - i][y] = 3; // 3 = ∧
-        //         }
-        //         else
-        //         {
-        //             board[x - i][y] = 1; // 1 = o
-        //         }
-        //     }
-        // }
     }
 }
 
 int main()
 {
+    int P1_col;
+    int P2_col;
     int SIZE;
     char player1[20];
     char player2[20];
@@ -573,8 +513,21 @@ int main()
         else
             break;
     }
-    printf("Please enter your name: ");
+    printf("Please enter your name : ");
     gets(player1);
+
+    printf("\nPlease choose a number of color : ");
+
+    setTextColor(4,0);
+    printf("\nRed = 4");
+    setTextColor(2,0);
+    printf("\nGreen = 2");
+    setTextColor(6,0);
+    printf("\nYellow = 6");
+    setTextColor(5,0);
+    printf("\nPurple = 5\n");
+    setTextColor(15,0);
+    scanf("%d",&P1_col);
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
     printf("Please enter the coordinates of your ships and their positions %s(x y (h/v)): \n", player1);
@@ -619,6 +572,19 @@ int main()
 
     printf("Please enter your name: ");
     gets(player2);
+
+    printf("\nPlease choose a number of color : ");
+
+    setTextColor(4,0);
+    printf("\nRed = 4");
+    setTextColor(2,0);
+    printf("\nGreen = 2");
+    setTextColor(6,0);
+    printf("\nYellow = 6");
+    setTextColor(5,0);
+    printf("\nPurple = 5\n");
+    setTextColor(15,0);
+    scanf("%d",&P2_col);
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
     printf("Please enter the coordinates of your ships and their positions %s(x y (h/v)): \n", player2);
@@ -704,7 +670,7 @@ int main()
     Delay(1000);
 
     // printe board FOCP1
-    Print_Board(BOARD_P1, SIZE, player1, Boat_Count);
+    Print_Board(BOARD_P1, SIZE, player1, Boat_Count, P1_col);
 
     printf("\n\n");
     Delay(3000);
@@ -801,7 +767,7 @@ int main()
             Delay(1000);
 
             // printe board FOCP1
-            Print_Board(BOARD_P1, SIZE, player1, Boat_Count);
+            Print_Board(BOARD_P1, SIZE, player1, Boat_Count, P1_col);
             break;
         }
         else if (temp1[0] == 'n')
@@ -841,7 +807,7 @@ int main()
     Delay(1000);
 
     // printe board FOCP2
-    Print_Board(BOARD_P2, SIZE, player2, Boat_Count);
+    Print_Board(BOARD_P2, SIZE, player2, Boat_Count, P2_col);
 
     printf("\n\n");
     Delay(3000);
@@ -931,7 +897,7 @@ int main()
             Delay(1000);
 
             // printe board FOCP2
-            Print_Board(BOARD_P2, SIZE, player2, Boat_Count);
+            Print_Board(BOARD_P2, SIZE, player2, Boat_Count, P2_col);
             break;
         }
         else if (temp1[0] == 'n')
@@ -1045,7 +1011,7 @@ int main()
         Line(7 * SIZE + 2 + 21);
         printf("\n");
 
-        Print_TwoBoard(BOARD_P1, BOARD_OPP_P1, SIZE, player1, RMN_Ships1);
+        Print_TwoBoard(BOARD_P1, BOARD_OPP_P1, SIZE, player1, RMN_Ships1, P1_col);
 
         if (BOARD_OPP_P1[x][y] == -10)
         {
@@ -1061,7 +1027,7 @@ int main()
         if (RMN_Ships2 == 0)
         {
             Delay(1500);
-            printf("%s WINS!", player1);
+            printf("\n%s WINS!", player1);
             break;
         }
 
@@ -1148,7 +1114,7 @@ int main()
         Line(7 * SIZE + 2 + 21);
         printf("\n");
 
-        Print_TwoBoard(BOARD_P2, BOARD_OPP_P2, SIZE, player2, RMN_Ships2);
+        Print_TwoBoard(BOARD_P2, BOARD_OPP_P2, SIZE, player2, RMN_Ships2, P2_col);
 
         if (BOARD_OPP_P2[x][y] == -10)
         {
