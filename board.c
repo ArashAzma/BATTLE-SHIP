@@ -516,8 +516,8 @@ int main()
     printf("Please enter your name : ");
     gets(player1);
 
-    printf("\nPlease choose a number of color : ");
-
+    printf("Please choose a number of color : ");
+    
     setTextColor(4,0);
     printf("\nRed = 4");
     setTextColor(2,0);
@@ -527,10 +527,31 @@ int main()
     setTextColor(5,0);
     printf("\nPurple = 5\n");
     setTextColor(15,0);
-    scanf("%d",&P1_col);
+
+    for (;;)
+    {
+        scanf("%s", temp1);
+        if (Check_Input(temp1) == 1)
+        {
+            Error(3);
+            continue;
+        }
+        else 
+        {
+            P1_col = StrToNum(temp1);
+        }
+        if (P1_col != 2 && P1_col != 4 && P1_col != 5 && P1_col != 6)
+        {
+            Error(3);
+        }
+        else
+        {
+            break;
+        }
+    }
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
-    printf("Please enter the coordinates of your ships and their positions %s(x y (h/v)): \n", player1);
+    printf("%s! Please enter the coordinates of your ships and their positions (x y (h/v)): \n", player1);
     for (int i = 1; i <= Boat_Count; i++)
     {
         for (;;)
@@ -573,7 +594,7 @@ int main()
     printf("Please enter your name: ");
     gets(player2);
 
-    printf("\nPlease choose a number of color : ");
+    printf("Please choose a number of color : ");
 
     setTextColor(4,0);
     printf("\nRed = 4");
@@ -584,10 +605,31 @@ int main()
     setTextColor(5,0);
     printf("\nPurple = 5\n");
     setTextColor(15,0);
-    scanf("%d",&P2_col);
+
+    for (;;)
+    {
+        scanf("%s", temp1);
+        if (Check_Input(temp1) == 1)
+        {
+            Error(3);
+            continue;
+        }
+        else 
+        {
+            P2_col = StrToNum(temp1);
+        }
+        if (P2_col != 2 && P2_col != 4 && P2_col != 5 && P2_col != 6)
+        {
+            Error(3);
+        }
+        else
+        {
+            break;
+        }
+    }
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
-    printf("Please enter the coordinates of your ships and their positions %s(x y (h/v)): \n", player2);
+    printf("%s! Please enter the coordinates of your ships and their positions (x y (h/v)): \n", player2);
     for (int i = 1; i <= Boat_Count; i++)
     {
         for (;;)
@@ -910,7 +952,7 @@ int main()
         }
     }
     Delay(3000);
-    printf("\n\n");
+    printf("\n");
     Line(SIZE * 3 + 1);
     printf("\n");
 
