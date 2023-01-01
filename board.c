@@ -4,9 +4,15 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#include <stdlib.h>
 
 #define COLOR_BOLD "\e[1m"
 #define COLOR_OFF "\e[m"
+
+void clrscr()
+{
+    system("@cls||clear");
+}
 
 int Space(int Count)
 {
@@ -518,6 +524,7 @@ int main()
     char player2[20];
     char position;
     char temp1[20], temp2[20], temp;
+    clrscr();
     printf("Please enter the length of board: ");
     for (;;)
     {
@@ -582,7 +589,7 @@ int main()
     printf("Please enter your name : ");
     gets(player1);
 
-    printf("Please choose a number of color : ");
+    printf("Choose your color : ");
 
     setTextColor(4, 0);
     printf("\nRed = 4");
@@ -623,15 +630,15 @@ int main()
     printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
 
     PrePlaceShip(SIZE, Boat_Count, BOARD_P1, BOARD_CONST_P1);
-
     Line(5);
     printf("\n");
-
     getchar();
+    Delay(2000);
+    clrscr();
     printf("Please enter your name: ");
     gets(player2);
 
-    printf("Please choose a number of color : ");
+    printf("Choose your color : ");
 
     setTextColor(4, 0);
     printf("\nRed = 4");
@@ -679,6 +686,7 @@ int main()
     Delay(1000);
 
     getchar();
+    clrscr();
     setTextColor(P1_col,0);
     printf("\n%s",player1);
     setTextColor(15,0);
@@ -719,22 +727,16 @@ int main()
                 for (int j = 0; j < SIZE + 1; j++)
                 {
                     BOARD_P1[i][j] = 0;
-                    // BOARD_P2[i][j] = 0;
                     BOARD_OPP_P1[i][j] = 0;
-                    // BOARD_OPP_P2[i][j] = 0;
                     BOARD_CONST_P1[i][j] = 0;
-                    // BOARD_CONST_P2[i][j] = 0;
                 }
             }
             //  VARED KARDANE SHOMARE OFOGHI
             for (int j = 1; j < SIZE + 1; j++)
             {
                 BOARD_P1[0][j] = j;
-                // BOARD_P2[0][j] = j;
                 BOARD_OPP_P1[0][j] = j;
-                // BOARD_OPP_P2[0][j] = j;
                 BOARD_CONST_P1[0][j] = j;
-                // BOARD_CONST_P2[0][j] = j;
             }
             // VARED KARDANE SHOMARE AMOODI
             for (int i = 1; i < SIZE + 1; i++)
@@ -823,8 +825,8 @@ int main()
     Line(SIZE * 3 + 1);
     printf("\n");
 
-    Delay(1000);
-
+    Delay(3000);
+    clrscr();
     setTextColor(P2_col,0);
     printf("\n%s",player2);
     setTextColor(15,0);
@@ -958,10 +960,11 @@ int main()
             Error(4);
         }
     }
-    Delay(3000);
+    Delay(2000);
     printf("\n");
     Line(SIZE * 3 + 1);
     printf("\n");
+    clrscr();
 
     int RMN_Ships1 = Boat_Count; // remaining ships for player 1
     int RMN_Ships2 = Boat_Count; // remaining ships for player 2
@@ -1086,9 +1089,9 @@ int main()
             break;
         }
 
-        Delay(1500);
+        Delay(4000);
         printf("\n");
-
+        clrscr();
         setTextColor(P2_col,0);
         printf("%s",player2);
         setTextColor(15,0);
@@ -1179,11 +1182,7 @@ int main()
             BOARD_OPP_P2[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
         }
 
-        Delay(1500);
-
-        printf("\n");
-        Line(7 * SIZE + 2 + 21);
-        printf("\n");
+        Delay(4500);
 
         if (RMN_Ships1 == 0)
         {
@@ -1194,7 +1193,7 @@ int main()
             printf(" WINS!");
             break;
         }
-
+        clrscr();
         Round++;
     }
 
