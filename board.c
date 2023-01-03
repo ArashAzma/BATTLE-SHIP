@@ -624,9 +624,9 @@ int main()
     }
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
-    setTextColor(P1_col,0);
-    printf("%s",player1);
-    setTextColor(15,0);
+    setTextColor(P1_col, 0);
+    printf("%s", player1);
+    setTextColor(15, 0);
     printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
 
     PrePlaceShip(SIZE, Boat_Count, BOARD_P1, BOARD_CONST_P1);
@@ -673,9 +673,9 @@ int main()
     }
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
-    setTextColor(P2_col,0);
-    printf("%s",player2);
-    setTextColor(15,0);
+    setTextColor(P2_col, 0);
+    printf("%s", player2);
+    setTextColor(15, 0);
     printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
 
     PrePlaceShip(SIZE, Boat_Count, BOARD_P2, BOARD_CONST_P2);
@@ -687,9 +687,9 @@ int main()
 
     getchar();
     clrscr();
-    setTextColor(P1_col,0);
-    printf("\n%s",player1);
-    setTextColor(15,0);
+    setTextColor(P1_col, 0);
+    printf("\n%s", player1);
+    setTextColor(15, 0);
     printf("! If you ready to see your final board , press ENTER : ");
 
     for (;;)
@@ -745,9 +745,9 @@ int main()
                 BOARD_OPP_P1[i][0] = i;
                 BOARD_CONST_P1[i][0] = i;
             }
-            setTextColor(P1_col,0);
-            printf("%s",player1);
-            setTextColor(15,0);
+            setTextColor(P1_col, 0);
+            printf("%s", player1);
+            setTextColor(15, 0);
             printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
             for (int i = 1; i <= Boat_Count; i++)
             {
@@ -784,9 +784,9 @@ int main()
                 }
             }
             getchar();
-            setTextColor(P1_col,0);
-            printf("\n%s",player1);
-            setTextColor(15,0);
+            setTextColor(P1_col, 0);
+            printf("\n%s", player1);
+            setTextColor(15, 0);
             printf("! If you ready to see your final board , press ENTER : ");
 
             for (;;)
@@ -827,9 +827,9 @@ int main()
 
     Delay(3000);
     clrscr();
-    setTextColor(P2_col,0);
-    printf("\n%s",player2);
-    setTextColor(15,0);
+    setTextColor(P2_col, 0);
+    printf("\n%s", player2);
+    setTextColor(15, 0);
     printf("! If you ready to see your final board , press ENTER : ");
 
     for (;;)
@@ -885,9 +885,9 @@ int main()
                 BOARD_OPP_P2[i][0] = i;
                 BOARD_CONST_P2[i][0] = i;
             }
-            setTextColor(P2_col,0);
-            printf("%s",player2);
-            setTextColor(15,0);
+            setTextColor(P2_col, 0);
+            printf("%s", player2);
+            setTextColor(15, 0);
             printf("Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
             for (int i = 1; i <= Boat_Count; i++)
             {
@@ -923,9 +923,9 @@ int main()
                 }
             }
             getchar();
-            setTextColor(P2_col,0);
-            printf("%s",player2);
-            setTextColor(15,0);
+            setTextColor(P2_col, 0);
+            printf("%s", player2);
+            setTextColor(15, 0);
             printf("! If you ready to see your final board , press ENTER : ");
 
             for (;;)
@@ -964,11 +964,14 @@ int main()
     printf("\n");
     Line(SIZE * 3 + 1);
     printf("\n");
+    Delay(3000);
     clrscr();
 
     int RMN_Ships1 = Boat_Count; // remaining ships for player 1
     int RMN_Ships2 = Boat_Count; // remaining ships for player 2
     int Round;
+    int P1_SW = 0;
+    int P2_SW = 0;
 
     // ghesmate entehayi bazi (hamle kardan be mape hamdige)
     for (Round = 1; RMN_Ships1 != 0 && RMN_Ships2 != 0;)
@@ -982,9 +985,9 @@ int main()
 
         Delay(1500);
 
-        setTextColor(P1_col,0);
-        printf("%s",player1);
-        setTextColor(15,0);
+        setTextColor(P1_col, 0);
+        printf("%s", player1);
+        setTextColor(15, 0);
         printf("! Enter a coordinate to attack : ");
 
         for (;;)
@@ -1020,10 +1023,12 @@ int main()
                 if (BOARD_P2[x - 1][y] == 10 && BOARD_P2[x + 1][y] == 10 && BOARD_CONST_P2[x - 1][y] == 3 && BOARD_CONST_P2[x + 1][y] == -3)
                 {
                     RMN_Ships2--;
+                    P2_SW = 1;
                 }
                 else if (BOARD_P2[x][y - 1] == 10 && BOARD_P2[x][y + 1] == 10 && BOARD_CONST_P2[x][y - 1] == 2 && BOARD_CONST_P2[x][y + 1] == -2)
                 {
                     RMN_Ships2--;
+                    P2_SW = 1;
                 }
             }
             else if (BOARD_P2[x][y] == 2)
@@ -1031,6 +1036,7 @@ int main()
                 if (BOARD_P2[x][y + 1] == 10 && BOARD_P2[x][y + 2] == 10 && BOARD_CONST_P2[x][y + 1] == 1 && BOARD_CONST_P2[x][y + 2] == -2)
                 {
                     RMN_Ships2--;
+                    P2_SW = 1;
                 }
             }
             else if (BOARD_P2[x][y] == -2)
@@ -1038,6 +1044,7 @@ int main()
                 if (BOARD_P2[x][y - 1] == 10 && BOARD_P2[x][y - 2] == 10 && BOARD_CONST_P2[x][y - 1] == 1 && BOARD_CONST_P2[x][y - 2] == 2)
                 {
                     RMN_Ships2--;
+                    P2_SW = 1;
                 }
             }
             else if (BOARD_P2[x][y] == 3)
@@ -1045,6 +1052,7 @@ int main()
                 if (BOARD_P2[x + 1][y] == 10 && BOARD_P2[x + 2][y] == 10 && BOARD_CONST_P2[x + 1][y] == 1 && BOARD_CONST_P2[x + 2][y] == -3)
                 {
                     RMN_Ships2--;
+                    P2_SW = 1;
                 }
             }
             else if (BOARD_P2[x][y] == -3)
@@ -1052,6 +1060,7 @@ int main()
                 if (BOARD_P2[x - 1][y] == 10 && BOARD_P2[x - 2][y] == 10 && BOARD_CONST_P2[x - 1][y] == 1 && BOARD_CONST_P2[x - 2][y] == 3)
                 {
                     RMN_Ships2--;
+                    P2_SW = 1;
                 }
             }
             BOARD_OPP_P1[x][y] = 10;
@@ -1068,12 +1077,22 @@ int main()
 
         Print_TwoBoard(BOARD_P1, BOARD_OPP_P1, SIZE, player1, RMN_Ships1, P1_col);
 
+        if (P1_SW == 1)
+        {
+            printf("\n\n");
+            Space((3 * SIZE + 1) + 4);
+            setTextColor(4,0);
+            printf("You lose a ship");
+            setTextColor(15,0);
+            P1_SW = 0;
+        }
+
         if (BOARD_OPP_P1[x][y] == -10)
         {
             BOARD_OPP_P1[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
         }
 
-        Delay(1500);
+        Delay(4500);
 
         printf("\n");
         Line(7 * SIZE + 2 + 21);
@@ -1082,19 +1101,20 @@ int main()
         if (RMN_Ships2 == 0)
         {
             Delay(1500);
-            setTextColor(P1_col,0);
-            printf("%s",player1);
-            setTextColor(15,0);
+            setTextColor(P1_col, 0);
+            printf("%s", player1);
+            setTextColor(15, 0);
             printf(" WINS!");
+            Delay(2500);
             break;
         }
 
         Delay(4000);
         printf("\n");
         clrscr();
-        setTextColor(P2_col,0);
-        printf("%s",player2);
-        setTextColor(15,0);
+        setTextColor(P2_col, 0);
+        printf("%s", player2);
+        setTextColor(15, 0);
         printf("! Enter a coordinate to attack : ");
 
         for (;;)
@@ -1129,10 +1149,12 @@ int main()
                 if (BOARD_P1[x - 1][y] == 10 && BOARD_P1[x + 1][y] == 10 && BOARD_CONST_P1[x - 1][y] == 3 && BOARD_CONST_P1[x + 1][y] == -3)
                 {
                     RMN_Ships1--;
+                    P1_SW = 1;
                 }
                 else if (BOARD_P1[x][y - 1] == 10 && BOARD_P1[x][y + 1] == 10 && BOARD_CONST_P1[x][y - 1] == 2 && BOARD_CONST_P1[x][y + 1] == -2)
                 {
                     RMN_Ships1--;
+                    P1_SW = 1;
                 }
             }
             else if (BOARD_P1[x][y] == 2)
@@ -1140,6 +1162,7 @@ int main()
                 if (BOARD_P1[x][y + 1] == 10 && BOARD_P1[x][y + 2] == 10 && BOARD_CONST_P1[x][y + 1] == 1 && BOARD_CONST_P1[x][y + 2] == -2)
                 {
                     RMN_Ships1--;
+                    P1_SW = 1;
                 }
             }
             else if (BOARD_P1[x][y] == -2)
@@ -1147,6 +1170,7 @@ int main()
                 if (BOARD_P1[x][y - 1] == 10 && BOARD_P1[x][y - 2] == 10 && BOARD_CONST_P1[x][y - 1] == 1 && BOARD_CONST_P1[x][y - 2] == 2)
                 {
                     RMN_Ships1--;
+                    P1_SW = 1;
                 }
             }
             else if (BOARD_P1[x][y] == 3)
@@ -1154,6 +1178,7 @@ int main()
                 if (BOARD_P1[x + 1][y] == 10 && BOARD_P1[x + 2][y] == 10 && BOARD_CONST_P1[x + 1][y] == 1 && BOARD_CONST_P1[x + 2][y] == -3)
                 {
                     RMN_Ships1--;
+                    P1_SW = 1;
                 }
             }
             else if (BOARD_P1[x][y] == -3)
@@ -1161,6 +1186,7 @@ int main()
                 if (BOARD_P1[x - 1][y] == 10 && BOARD_P1[x - 2][y] == 10 && BOARD_CONST_P1[x - 1][y] == 1 && BOARD_CONST_P1[x - 2][y] == 3)
                 {
                     RMN_Ships1--;
+                    P1_SW = 1;
                 }
             }
             BOARD_OPP_P2[x][y] = 10;
@@ -1177,6 +1203,16 @@ int main()
 
         Print_TwoBoard(BOARD_P2, BOARD_OPP_P2, SIZE, player2, RMN_Ships2, P2_col);
 
+        if (P2_SW == 1)
+        {
+            printf("\n\n");
+            Space((3 * SIZE + 1) + 4);
+            setTextColor(4,0);
+            printf("You lose a ship");
+            setTextColor(15,0);
+            P2_SW = 0;
+        }
+
         if (BOARD_OPP_P2[x][y] == -10)
         {
             BOARD_OPP_P2[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
@@ -1184,15 +1220,21 @@ int main()
 
         Delay(4500);
 
+        printf("\n");
+        Line(7 * SIZE + 2 + 21);
+        printf("\n");
+
         if (RMN_Ships1 == 0)
         {
             Delay(1500);
-            setTextColor(P2_col,0);
-            printf("%s",player2);
-            setTextColor(15,0);
+            setTextColor(P2_col, 0);
+            printf("%s", player2);
+            setTextColor(15, 0);
             printf(" WINS!");
+            Delay(2500);
             break;
         }
+        Delay(4000);
         clrscr();
         Round++;
     }
