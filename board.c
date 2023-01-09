@@ -8,8 +8,6 @@
 
 #define COLOR_BOLD "\e[1m"
 #define COLOR_OFF "\e[m"
-#define MAX_PLAYER_CHAR 20
-
 
 void clrscr()
 {
@@ -424,7 +422,7 @@ int check_place(int board[][100], int x, int y, char position, int size)
     return 0;
 }
 
-void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][100], FILE *input)
+void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][100])
 {
     char position;
     char temp1[10];
@@ -432,8 +430,36 @@ void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][1
     int x, y;
     for (int i = 1; i <= Boat_Count; i++)
     {
-        fscanf(input, "%d %d %c", &x, &y, &position);
-        place_boat(Board, ConstBoard, x, y, position, SIZE + 1);
+        for (;;)
+        {
+            scanf("%s %s %c", &temp1, &temp2, &position);
+            if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+            {
+                Error(3);
+            }
+            else
+            {
+                x = StrToNum(temp1);
+                y = StrToNum(temp2);
+                break;
+            }
+        }
+        if (position != 'v' && position != 'h' && position != 'V' && position != 'H')
+        {
+            Error(4);
+            i--;
+            continue;
+        }
+        else if (check_place(Board, x, y, position, SIZE + 1) == 1 || x > SIZE || y > SIZE || x < 1 || y < 1)
+        {
+            Error(6);
+            i--;
+            continue;
+        }
+        else
+        {
+            place_boat(Board, ConstBoard, x, y, position, SIZE + 1);
+        }
     }
 }
 
@@ -491,23 +517,32 @@ void place_boat(int board[][100], int const_board[][100], int x, int y, char pos
 
 int main()
 {
-    FILE *input;
-    input = fopen("input.txt", "rt");
-    if(!input)
-    {
-        printf("CAN'T OPEN FILE!");
-        return 0;
-    }
     int P1_col;
     int P2_col;
     int SIZE;
-    char player1[MAX_PLAYER_CHAR];
-    char player2[MAX_PLAYER_CHAR];
+    char player1[20];
+    char player2[20];
     char position;
-    char temp1[MAX_PLAYER_CHAR], temp2[MAX_PLAYER_CHAR], temp;
+    char temp1[20], temp2[20], temp;
     clrscr();
-    // printf("Please enter the length of board: ");
-    fscanf(input,"%d", &SIZE);
+    printf("Please enter the length of board: ");
+    for (;;)
+    {
+        scanf("%s", temp1);
+        if (StrToNum(temp1) < 3)
+        {
+            Error(1);
+        }
+        else if (Check_Input(temp1) == 1)
+        {
+            Error(2);
+        }
+        else
+        {
+            SIZE = StrToNum(temp1);
+            break;
+        }
+    }
     int BOARD_P1[SIZE + 1][100];
     int BOARD_P2[SIZE + 1][100];
     int BOARD_OPP_P1[SIZE + 1][100];
@@ -520,16 +555,137 @@ int main()
     PreBoard(SIZE, BOARD_P1, BOARD_P2, BOARD_OPP_P1, BOARD_OPP_P2, BOARD_CONST_P1, BOARD_CONST_P2);
 
     int Boat_Count;
-    fscanf(input, "%d", &Boat_Count);
-    fscanf(input, "%s", player1);
-    fscanf(input, "%d", &P1_col);
-    PrePlaceShip(SIZE, Boat_Count, BOARD_P1, BOARD_CONST_P1, input);
+    printf("Please enter the number of ships: ");
+    for (;;)
+    {
+        for (;;)
+        {
 
-    fscanf(input, "%s", player2);
-    fscanf(input, "%d", &P2_col);
-    PrePlaceShip(SIZE, Boat_Count, BOARD_P2, BOARD_CONST_P2, input);
-    fclose(input);
-    
+            scanf("%s", temp1);
+            if (Check_Input(temp1) == 1)
+            {
+                Error(2);
+            }
+            else if (StrToNum(temp1) < 1)
+            {
+                Error(3);
+            }
+            else
+            {
+                Boat_Count = StrToNum(temp1);
+                break;
+            }
+        }
+        getchar();
+        if (Boat_Count > SIZE * SIZE / 3)
+        {
+            Error(5);
+        }
+        else
+        {
+            break;
+        }
+    }
+    printf("Please enter your name : ");
+    gets(player1);
+
+    printf("Choose your color : ");
+
+    setTextColor(4, 0);
+    printf("\nRed = 4");
+    setTextColor(2, 0);
+    printf("\nGreen = 2");
+    setTextColor(6, 0);
+    printf("\nYellow = 6");
+    setTextColor(5, 0);
+    printf("\nPurple = 5\n");
+    setTextColor(15, 0);
+
+    for (;;) // check kardan voroodi dorost baraye rang
+    {
+        scanf("%s", temp1);
+        if (Check_Input(temp1) == 1)
+        {
+            Error(3);
+            continue;
+        }
+        else
+        {
+            P1_col = StrToNum(temp1);
+        }
+        if (P1_col != 2 && P1_col != 4 && P1_col != 5 && P1_col != 6)
+        {
+            Error(3);
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
+    setTextColor(P1_col, 0);
+    printf("%s", player1);
+    setTextColor(15, 0);
+    printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
+
+    PrePlaceShip(SIZE, Boat_Count, BOARD_P1, BOARD_CONST_P1);
+    Line(5);
+    printf("\n");
+    getchar();
+    Delay(2000);
+    clrscr();
+    printf("Please enter your name: ");
+    gets(player2);
+
+    printf("Choose your color : ");
+
+    setTextColor(4, 0);
+    printf("\nRed = 4");
+    setTextColor(2, 0);
+    printf("\nGreen = 2");
+    setTextColor(6, 0);
+    printf("\nYellow = 6");
+    setTextColor(5, 0);
+    printf("\nPurple = 5\n");
+    setTextColor(15, 0);
+
+    for (;;) // check kardan voroodi dorost baraye rang
+    {
+        scanf("%s", temp1);
+        if (Check_Input(temp1) == 1)
+        {
+            Error(3);
+            continue;
+        }
+        else
+        {
+            P2_col = StrToNum(temp1);
+        }
+        if (P2_col != 2 && P2_col != 4 && P2_col != 5 && P2_col != 6)
+        {
+            Error(3);
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
+    setTextColor(P2_col, 0);
+    printf("%s", player2);
+    setTextColor(15, 0);
+    printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
+
+    PrePlaceShip(SIZE, Boat_Count, BOARD_P2, BOARD_CONST_P2);
+
+    Line(5);
+    printf("\n");
+
+    Delay(1000);
+
+    getchar();
     clrscr();
     setTextColor(P1_col, 0);
     printf("\n%s", player1);
