@@ -439,6 +439,7 @@ void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][1
             }
             else
             {
+                printf("%d %d %c\n", x, y, position);
                 place_boat(Board, ConstBoard, x, y, position, SIZE + 1);
             }
         }
@@ -584,6 +585,7 @@ int main()
             }
             else
             {
+                clrscr();
                 break;
             }
         }
@@ -630,6 +632,7 @@ int main()
             }
             else
             {
+                clrscr();
                 break;
             }
         }
@@ -673,6 +676,10 @@ int main()
         {
             Save_Situ = 0;
         }
+        else
+        {
+            clrscr();
+        }
     }
     if (Save_Situ == 0)
     {
@@ -703,6 +710,7 @@ int main()
             }
             else
             {
+                clrscr();
                 break;
             }
         }
@@ -745,7 +753,11 @@ int main()
         getchar();
     }
 
-    Delay(2000);
+    if (Save_Situ == 0 || feof(SAVE) != 0)
+    {
+        Delay(2000);
+    }
+
     clrscr();
     printf("Please enter your name: ");
     if (Save_Situ == 1 && feof(SAVE) == 0)
@@ -754,6 +766,10 @@ int main()
         if (Save_Situ == 1 && feof(SAVE) != 0)
         {
             Save_Situ = 0;
+        }
+        else
+        {
+            clrscr();
         }
     }
     if (Save_Situ == 0)
@@ -785,6 +801,7 @@ int main()
             }
             else
             {
+                clrscr();
                 break;
             }
         }
@@ -823,100 +840,107 @@ int main()
     Line(5);
     printf("\n");
 
-    Delay(1000);
-
     if (Save_Situ == 0 || feof(SAVE) != 0)
     {
         getchar();
     }
 
-    clrscr();
-    setTextColor(P1_col, 0);
-    printf("\n%s", player1);
-    setTextColor(15, 0);
-    printf("! If you ready to see your final board , press ENTER : ");
-
-    for (;;)
+    if (Save_Situ == 0 || feof(SAVE) != 0)
     {
-        if (Save_Situ == 1 && feof(SAVE) == 0)
+        Delay(2000);
+    }
+
+    clrscr();
+
+    if (Save_Situ == 0 || feof(SAVE) != 0)
+    {
+        setTextColor(P1_col, 0);
+        printf("\n%s", player1);
+        setTextColor(15, 0);
+        printf("! If you ready to see your final board , press ENTER : ");
+
+        for (;;)
         {
-            break;
-        }
-        else
-        {
-            gets(temp1);
-            if (temp1[0] == 0)
+            if (Save_Situ == 1 && feof(SAVE) == 0)
             {
                 break;
             }
             else
             {
-                Error(4);
+                gets(temp1);
+                if (temp1[0] == 0)
+                {
+                    break;
+                }
+                else
+                {
+                    Error(4);
+                }
             }
         }
-    }
 
-    printf("\n");
-    Line(SIZE * 3 + 1);
-    printf("\n");
+        printf("\n");
+        Line(SIZE * 3 + 1);
+        printf("\n");
 
-    Delay(1000);
+        Delay(1000);
 
-    // printe board FOCP1
-    Print_Board(BOARD_P1, SIZE, player1, Boat_Count, P1_col);
+        // printe board FOCP1
+        Print_Board(BOARD_P1, SIZE, player1, Boat_Count, P1_col);
 
-    printf("\n");
-    Delay(3000);
-    
-    printf("\n");
-    Line(SIZE * 3 + 1);
-    printf("\n");
+        printf("\n");
+        Delay(3000);
 
-    Delay(3000);
-    clrscr();
-    setTextColor(P2_col, 0);
-    printf("\n%s", player2);
-    setTextColor(15, 0);
-    printf("! If you ready to see your final board , press ENTER : ");
+        printf("\n");
+        Line(SIZE * 3 + 1);
+        printf("\n");
 
-    for (;;)
-    {
-        if (Save_Situ == 1 && feof(SAVE) == 0)
+        Delay(3000);
+        clrscr();
+        setTextColor(P2_col, 0);
+        printf("\n%s", player2);
+        setTextColor(15, 0);
+        printf("! If you ready to see your final board , press ENTER : ");
+
+        for (;;)
         {
-            break;
-        }
-        else
-        {
-            gets(temp1);
-            if (temp1[0] == 0)
+            if (Save_Situ == 1 && feof(SAVE) == 0)
             {
                 break;
             }
             else
             {
-                Error(4);
+                gets(temp1);
+                if (temp1[0] == 0)
+                {
+                    break;
+                }
+                else
+                {
+                    Error(4);
+                }
             }
         }
+
+        printf("\n");
+        Line(SIZE * 3 + 1);
+        printf("\n");
+
+        Delay(1000);
+
+        // printe board FOCP2
+        Print_Board(BOARD_P2, SIZE, player2, Boat_Count, P2_col);
+
+        printf("\n");
+        Delay(3000);
+
+        printf("\n");
+        Line(SIZE * 3 + 1);
+        printf("\n");
+
+        Delay(3000);
+        clrscr();
     }
-
-    printf("\n");
-    Line(SIZE * 3 + 1);
-    printf("\n");
-
-    Delay(1000);
-
-    // printe board FOCP2
-    Print_Board(BOARD_P2, SIZE, player2, Boat_Count, P2_col);
-
-    printf("\n");
-    Delay(3000);
-    
-    printf("\n");
-    Line(SIZE * 3 + 1);
-    printf("\n");
-
-    Delay(3000);
-    clrscr();
 
     int RMN_Ships1 = Boat_Count; // remaining ships for player 1
     int RMN_Ships2 = Boat_Count; // remaining ships for player 2
@@ -927,14 +951,20 @@ int main()
     // ghesmate entehayi bazi (hamle kardan be mape hamdige)
     for (Round = 1; RMN_Ships1 != 0 && RMN_Ships2 != 0;)
     {
-        Delay(1500);
-        Space((3 * SIZE + 1) + 4);
+        if (Save_Situ == 0 || feof(SAVE) != 0)
+        {
+            Delay(1500);
+        }
 
+        Space((3 * SIZE + 1) + 4);
         setTextColor(4, 0);
         printf("ROUND%d\n\n", Round);
         setTextColor(15, 0);
 
-        Delay(1500);
+        if (Save_Situ == 0 || feof(SAVE) != 0)
+        {
+            Delay(1500);
+        }
 
         setTextColor(P1_col, 0);
         printf("%s", player1);
@@ -1042,16 +1072,19 @@ int main()
         Line(7 * SIZE + 2 + 21);
         printf("\n");
 
-        Print_TwoBoard(BOARD_P1, BOARD_OPP_P1, SIZE, player1, RMN_Ships1, P1_col);
-
-        if (P1_SW == 1)
+        if (Save_Situ == 0 || feof(SAVE) != 0)
         {
-            printf("\n\n");
-            Space((3 * SIZE + 1) + 4);
-            setTextColor(4, 0);
-            printf("You lose a ship");
-            setTextColor(15, 0);
-            P1_SW = 0;
+            Print_TwoBoard(BOARD_P1, BOARD_OPP_P1, SIZE, player1, RMN_Ships1, P1_col);
+
+            if (P1_SW == 1)
+            {
+                printf("\n\n");
+                Space((3 * SIZE + 1) + 4);
+                setTextColor(4, 0);
+                printf("You lose a ship");
+                setTextColor(15, 0);
+                P1_SW = 0;
+            }
         }
 
         if (BOARD_OPP_P1[x][y] == -10)
@@ -1059,11 +1092,14 @@ int main()
             BOARD_OPP_P1[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
         }
 
-        Delay(4500);
+        if (Save_Situ == 0 || feof(SAVE) != 0)
+        {
+            Delay(4500);
 
-        printf("\n");
-        Line(7 * SIZE + 2 + 21);
-        printf("\n");
+            printf("\n");
+            Line(7 * SIZE + 2 + 21);
+            printf("\n");
+        }
 
         if (RMN_Ships2 == 0)
         {
@@ -1076,9 +1112,14 @@ int main()
             break;
         }
 
-        Delay(4000);
-        printf("\n");
+        if (Save_Situ == 0 || feof(SAVE) != 0)
+        {
+            Delay(4000);
+            printf("\n");
+        }
+
         clrscr();
+
         setTextColor(P2_col, 0);
         printf("%s", player2);
         setTextColor(15, 0);
@@ -1185,16 +1226,19 @@ int main()
         Line(7 * SIZE + 2 + 21);
         printf("\n");
 
-        Print_TwoBoard(BOARD_P2, BOARD_OPP_P2, SIZE, player2, RMN_Ships2, P2_col);
-
-        if (P2_SW == 1)
+        if (Save_Situ == 0 || feof(SAVE) != 0)
         {
-            printf("\n\n");
-            Space((3 * SIZE + 1) + 4);
-            setTextColor(4, 0);
-            printf("You lose a ship");
-            setTextColor(15, 0);
-            P2_SW = 0;
+            Print_TwoBoard(BOARD_P2, BOARD_OPP_P2, SIZE, player2, RMN_Ships2, P2_col);
+
+            if (P2_SW == 1)
+            {
+                printf("\n\n");
+                Space((3 * SIZE + 1) + 4);
+                setTextColor(4, 0);
+                printf("You lose a ship");
+                setTextColor(15, 0);
+                P2_SW = 0;
+            }
         }
 
         if (BOARD_OPP_P2[x][y] == -10)
@@ -1202,11 +1246,14 @@ int main()
             BOARD_OPP_P2[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
         }
 
-        Delay(4500);
+        if (Save_Situ == 0 || feof(SAVE) != 0)
+        {
+            Delay(4500);
 
-        printf("\n");
-        Line(7 * SIZE + 2 + 21);
-        printf("\n");
+            printf("\n");
+            Line(7 * SIZE + 2 + 21);
+            printf("\n");
+        }
 
         if (RMN_Ships1 == 0)
         {
@@ -1218,7 +1265,11 @@ int main()
             Delay(2500);
             break;
         }
-        Delay(4000);
+
+        if (Save_Situ == 0 || feof(SAVE) != 0)
+        {
+            Delay(4000);
+        }
         clrscr();
         Round++;
     }
