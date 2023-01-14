@@ -10,6 +10,13 @@
 #define COLOR_OFF "\e[m"
 #define MAX_WORD_COUNT 20
 
+void print_image(FILE *fptr)
+{
+    char read_string[128];
+
+    while(fgets(read_string,sizeof(read_string),fptr) != NULL)
+        printf("%s",read_string);
+}
 void clrscr()
 {
     system("@cls||clear");
@@ -538,6 +545,13 @@ int main()
     FILE *SAVE;
     int Save_Situ = 0;
     int *Save_Situ_Ptr;
+    char *startup = "startup.txt";
+    FILE *fptr = NULL;
+    if((fptr = fopen(startup,"r")) == NULL)
+    {
+        fprintf(stderr,"error opening %s\n",startup);
+        return 1;
+    }
     int P1_col;
     int P2_col;
     int SIZE;
@@ -547,7 +561,9 @@ int main()
     char temp1[MAX_WORD_COUNT], temp2[MAX_WORD_COUNT];
     Save_Situ_Ptr = &Save_Situ;
     clrscr();
-    printf("Do you want to load your last game ? (y/n): ");
+    print_image(fptr);
+    Delay(2000);
+    printf("            Do you want to load your last game ? (y/n): ");
     for (;;)
     {
         gets(temp1);
@@ -1280,5 +1296,6 @@ int main()
         Round++;
     }
     fclose(SAVE);
+    fclose(startup);
     return 0;
 }
