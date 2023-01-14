@@ -422,7 +422,7 @@ int check_place(int board[][100], int x, int y, char position, int size)
     return 0;
 }
 
-void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][100], FILE *SAVE, int Save_Situ)
+void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][100], FILE *SAVE, int *Save_Situ)
 {
     char position;
     char temp1[10];
@@ -430,19 +430,19 @@ void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][1
     int x, y;
     for (int i = 1; i <= Boat_Count; i++)
     {
-        if (Save_Situ == 1 && feof(SAVE) == 0)
+        if (*(Save_Situ) == 1 && feof(SAVE) == 0)
         {
             fscanf(SAVE, "%d %d %c", &x, &y, &position);
-            if (Save_Situ == 1 && feof(SAVE) != 0)
+            if (*(Save_Situ) == 1 && feof(SAVE) != 0)
             {
-                Save_Situ = 0;
+                *(Save_Situ) = 0;
             }
             else
             {
                 place_boat(Board, ConstBoard, x, y, position, SIZE + 1);
             }
         }
-        if (Save_Situ == 0)
+        if (*(Save_Situ) == 0)
         {
             for (;;)
             {
@@ -535,6 +535,7 @@ int main()
 {
     FILE *SAVE;
     int Save_Situ = 0;
+    int *Save_Situ_Ptr;
     int P1_col;
     int P2_col;
     int SIZE;
@@ -542,6 +543,7 @@ int main()
     char player2[20];
     char position;
     char temp1[20], temp2[20];
+    Save_Situ_Ptr = &Save_Situ;
     clrscr();
     printf("Do you want to load your last game ? (y/n): ");
     for (;;)
@@ -734,13 +736,15 @@ int main()
     setTextColor(15, 0);
     printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
 
-    PrePlaceShip(SIZE, Boat_Count, BOARD_P1, BOARD_CONST_P1, SAVE, Save_Situ);
+    PrePlaceShip(SIZE, Boat_Count, BOARD_P1, BOARD_CONST_P1, SAVE, Save_Situ_Ptr);
     Line(5);
     printf("\n");
+
     if (Save_Situ == 0 || feof(SAVE) != 0)
     {
         getchar();
     }
+
     Delay(2000);
     clrscr();
     printf("Please enter your name: ");
@@ -814,7 +818,7 @@ int main()
     setTextColor(15, 0);
     printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
 
-    PrePlaceShip(SIZE, Boat_Count, BOARD_P2, BOARD_CONST_P2, SAVE, Save_Situ);
+    PrePlaceShip(SIZE, Boat_Count, BOARD_P2, BOARD_CONST_P2, SAVE, Save_Situ_Ptr);
 
     Line(5);
     printf("\n");
@@ -825,6 +829,7 @@ int main()
     {
         getchar();
     }
+
     clrscr();
     setTextColor(P1_col, 0);
     printf("\n%s", player1);
@@ -860,154 +865,9 @@ int main()
     // printe board FOCP1
     Print_Board(BOARD_P1, SIZE, player1, Boat_Count, P1_col);
 
-    printf("\n\n");
+    printf("\n");
     Delay(3000);
-    printf("Do you want to make changes to your board (y/n)? ");
-    for (;;)
-    {
-        if (Save_Situ == 1 && feof(SAVE) == 0)
-        {
-            fscanf(SAVE, "%s", temp1);
-            if (Save_Situ == 1 && feof(SAVE) != 0)
-            {
-                Save_Situ = 0;
-            }
-        }
-        if (Save_Situ == 0)
-        {
-            gets(temp1);
-        }
-        if (temp1[0] == 'y')
-        {
-            if (Save_Situ == 0)
-            {
-                fprintf(SAVE, "%c\n", temp1[0]);
-            }
-            for (int i = 0; i < SIZE + 1; i++)
-            {
-                for (int j = 0; j < SIZE + 1; j++)
-                {
-                    BOARD_P1[i][j] = 0;
-                    BOARD_OPP_P1[i][j] = 0;
-                    BOARD_CONST_P1[i][j] = 0;
-                }
-            }
-            //  VARED KARDANE SHOMARE OFOGHI
-            for (int j = 1; j < SIZE + 1; j++)
-            {
-                BOARD_P1[0][j] = j;
-                BOARD_OPP_P1[0][j] = j;
-                BOARD_CONST_P1[0][j] = j;
-            }
-            // VARED KARDANE SHOMARE AMOODI
-            for (int i = 1; i < SIZE + 1; i++)
-            {
-                BOARD_P1[i][0] = i;
-                BOARD_OPP_P1[i][0] = i;
-                BOARD_CONST_P1[i][0] = i;
-            }
-            setTextColor(P1_col, 0);
-            printf("%s", player1);
-            setTextColor(15, 0);
-            printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
-            for (int i = 1; i <= Boat_Count; i++)
-            {
-                if (Save_Situ == 1 && feof(SAVE) == 0)
-                {
-                    fscanf(SAVE, "%d %d %c", &x, &y, &position);
-                    if (Save_Situ == 1 && feof(SAVE) != 0)
-                    {
-                        Save_Situ = 0;
-                    }
-                    else
-                    {
-                        place_boat(BOARD_P1, BOARD_CONST_P1, x, y, position, SIZE + 1);
-                    }
-                }
-                if (Save_Situ == 0)
-                {
-                    for (;;)
-                    {
-                        scanf("%s %s %c", &temp1, &temp2, &position);
-                        if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
-                        {
-                            Error(3);
-                        }
-                        else
-                        {
-                            x = StrToNum(temp1);
-                            y = StrToNum(temp2);
-                            break;
-                        }
-                    }
-                    if (position != 'v' && position != 'h' && position != 'V' && position != 'H')
-                    {
-                        Error(4);
-                        i--;
-                        continue;
-                    }
-                    else if (check_place(BOARD_P1, x, y, position, SIZE + 1) == 1 || x > SIZE || y > SIZE || x < 1 || y < 1)
-                    {
-                        Error(6);
-                        i--;
-                        continue;
-                    }
-                    else
-                    {
-                        fprintf(SAVE, "%d %d %c\n", x, y, position);
-                        place_boat(BOARD_P1, BOARD_CONST_P1, x, y, position, SIZE + 1);
-                    }
-                }
-            }
-            getchar();
-            setTextColor(P1_col, 0);
-            printf("\n%s", player1);
-            setTextColor(15, 0);
-            printf("! If you ready to see your final board , press ENTER : ");
-
-            for (;;)
-            {
-                if (Save_Situ == 1 && feof(SAVE) == 0)
-                {
-                    break;
-                }
-                else
-                {
-                    gets(temp1);
-                    if (temp1[0] == 0)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        Error(4);
-                    }
-                }
-            }
-
-            printf("\n");
-            Line(SIZE * 3 + 1);
-            printf("\n");
-
-            Delay(1000);
-
-            // printe board FOCP1
-            Print_Board(BOARD_P1, SIZE, player1, Boat_Count, P1_col);
-            break;
-        }
-        else if (temp1[0] == 'n')
-        {
-            if (Save_Situ == 0)
-            {
-                fprintf(SAVE, "%c\n", temp1[0]);
-            }
-            break;
-        }
-        else
-        {
-            Error(4);
-        }
-    }
+    
     printf("\n");
     Line(SIZE * 3 + 1);
     printf("\n");
@@ -1048,158 +908,13 @@ int main()
     // printe board FOCP2
     Print_Board(BOARD_P2, SIZE, player2, Boat_Count, P2_col);
 
-    printf("\n\n");
+    printf("\n");
     Delay(3000);
-    printf("Do you want to make changes to your board (y/n)? ");
-    for (;;)
-    {
-        if (Save_Situ == 1 && feof(SAVE) == 0)
-        {
-            fscanf(SAVE, "%s", temp1);
-            if (Save_Situ == 1 && feof(SAVE) != 0)
-            {
-                Save_Situ = 0;
-            }
-        }
-        if (Save_Situ == 0)
-        {
-            gets(temp1);
-        }
-        if (temp1[0] == 'y')
-        {
-            if (Save_Situ == 0)
-            {
-                fprintf(SAVE, "%c\n", temp1[0]);
-            }
-            for (int i = 0; i < SIZE + 1; i++)
-            {
-                for (int j = 0; j < SIZE + 1; j++)
-                {
-                    BOARD_P2[i][j] = 0;
-                    BOARD_OPP_P2[i][j] = 0;
-                    BOARD_CONST_P2[i][j] = 0;
-                }
-            }
-            //  VARED KARDANE SHOMARE OFOGHI
-            for (int j = 1; j < SIZE + 1; j++)
-            {
-                BOARD_P2[0][j] = j;
-                BOARD_OPP_P2[0][j] = j;
-                BOARD_CONST_P2[0][j] = j;
-            }
-            // VARED KARDANE SHOMARE AMOODI
-            for (int i = 1; i < SIZE + 1; i++)
-            {
-                BOARD_P2[i][0] = i;
-                BOARD_OPP_P2[i][0] = i;
-                BOARD_CONST_P2[i][0] = i;
-            }
-            setTextColor(P2_col, 0);
-            printf("%s", player2);
-            setTextColor(15, 0);
-            printf("Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
-            for (int i = 1; i <= Boat_Count; i++)
-            {
-                if (Save_Situ == 1 && feof(SAVE) == 0)
-                {
-                    fscanf(SAVE, "%d %d %c", &x, &y, &position);
-                    if (Save_Situ == 1 && feof(SAVE) != 0)
-                    {
-                        Save_Situ = 0;
-                    }
-                    else
-                    {
-                        place_boat(BOARD_P2, BOARD_CONST_P2, x, y, position, SIZE + 1);
-                    }
-                }
-                if (Save_Situ == 0)
-                {
-                    for (;;)
-                    {
-                        scanf("%s %s %c", &temp1, &temp2, &position);
-                        if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
-                        {
-                            Error(3);
-                        }
-                        else
-                        {
-                            x = StrToNum(temp1);
-                            y = StrToNum(temp2);
-                            break;
-                        }
-                    }
-                    if (position != 'v' && position != 'h' && position != 'V' && position != 'H')
-                    {
-                        Error(4);
-                        i--;
-                        continue;
-                    }
-                    else if (check_place(BOARD_P2, x, y, position, SIZE + 1) == 1 || x > SIZE || y > SIZE || x < 1 || y < 1)
-                    {
-                        Error(6);
-                        i--;
-                        continue;
-                    }
-                    else
-                    {
-                        fprintf(SAVE, "%d %d %c\n", x, y, position);
-                        place_boat(BOARD_P2, BOARD_CONST_P2, x, y, position, SIZE + 1);
-                    }
-                }
-            }
-            getchar();
-            setTextColor(P2_col, 0);
-            printf("%s", player2);
-            setTextColor(15, 0);
-            printf("! If you ready to see your final board , press ENTER : ");
-
-            for (;;)
-            {
-                if (Save_Situ == 1 && feof(SAVE) == 0)
-                {
-                    break;
-                }
-                else
-                {
-                    gets(temp1);
-                    if (temp1[0] == 0)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        Error(4);
-                    }
-                }
-            }
-
-            printf("\n");
-            Line(SIZE * 3 + 1);
-            printf("\n");
-
-            Delay(1000);
-
-            // printe board FOCP2
-            Print_Board(BOARD_P2, SIZE, player2, Boat_Count, P2_col);
-            break;
-        }
-        else if (temp1[0] == 'n')
-        {
-            if (Save_Situ == 0)
-            {
-                fprintf(SAVE, "%c\n", temp1[0]);
-            }
-            break;
-        }
-        else
-        {
-            Error(4);
-        }
-    }
-    Delay(2000);
+    
     printf("\n");
     Line(SIZE * 3 + 1);
     printf("\n");
+
     Delay(3000);
     clrscr();
 
