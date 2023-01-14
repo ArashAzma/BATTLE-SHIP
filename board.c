@@ -8,6 +8,7 @@
 
 #define COLOR_BOLD "\e[1m"
 #define COLOR_OFF "\e[m"
+#define MAX_WORD_COUNT 20
 
 void clrscr()
 {
@@ -540,10 +541,10 @@ int main()
     int P1_col;
     int P2_col;
     int SIZE;
-    char player1[20];
-    char player2[20];
+    char player1[MAX_WORD_COUNT];
+    char player2[MAX_WORD_COUNT];
     char position;
-    char temp1[20], temp2[20];
+    char temp1[MAX_WORD_COUNT], temp2[MAX_WORD_COUNT];
     Save_Situ_Ptr = &Save_Situ;
     clrscr();
     printf("Do you want to load your last game ? (y/n): ");
@@ -564,15 +565,20 @@ int main()
             Error(4);
         }
     }
+    clrscr();
     if (Save_Situ == 0)
     {
-        SAVE = fopen("C:\\Users\\PARSA-PC\\Project_term1\\BattleShip\\save.txt", "wt");
+        SAVE = fopen("save.txt", "wt");
     }
     else if (Save_Situ == 1)
     {
-        SAVE = fopen("C:\\Users\\PARSA-PC\\Project_term1\\BattleShip\\save.txt", "r+t");
+        SAVE = fopen("save.txt", "r+t");
     }
-    clrscr();
+    if(!SAVE)
+    {
+        printf("CAN'T OPEN FILE !");
+        return 0;
+    }
     printf("Please enter the length of board: ");
     for (;;)
     {
@@ -671,7 +677,7 @@ int main()
     printf("Please enter your name : ");
     if (Save_Situ == 1 && feof(SAVE) == 0)
     {
-        fscanf(SAVE, "%s", player1);
+        fscanf(SAVE, " %[^\n]s", player1);
         if (Save_Situ == 1 && feof(SAVE) != 0)
         {
             Save_Situ = 0;
@@ -762,7 +768,7 @@ int main()
     printf("Please enter your name: ");
     if (Save_Situ == 1 && feof(SAVE) == 0)
     {
-        fscanf(SAVE, "%s", player2);
+        fscanf(SAVE, " %[^\n]s", player2);
         if (Save_Situ == 1 && feof(SAVE) != 0)
         {
             Save_Situ = 0;
