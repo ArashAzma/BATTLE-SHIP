@@ -202,6 +202,12 @@ int Print_Board(int board[][100], int Size, char name[], int NumOfShips, int Col
                 printf("o  ");
                 setTextColor(15, 0);
             }
+            else if (i >= 1 && j >= 1 && board[i][j] == -1) // TARH KASHTI
+            {
+                setTextColor(Col, 0);
+                printf("+  ");
+                setTextColor(15, 0);
+            }
             else if (i >= 1 && j >= 1 && board[i][j] == 2) // TARH KASHTI
             {
                 setTextColor(Col, 0);
@@ -224,6 +230,18 @@ int Print_Board(int board[][100], int Size, char name[], int NumOfShips, int Col
             {
                 setTextColor(Col, 0);
                 printf("V  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board[i][j] == 4) // TARH KASHTI
+            {
+                setTextColor(Col, 0);
+                printf("/  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board[i][j] == -4) // TARH KASHTI
+            {
+                setTextColor(Col, 0);
+                printf("\\  ");
                 setTextColor(15, 0);
             }
             else
@@ -285,6 +303,12 @@ int Print_TwoBoard(int board1[][100], int board2[][100], int Size, char name[], 
                 printf("o  ");
                 setTextColor(15, 0);
             }
+            else if (i >= 1 && j >= 1 && board1[i][j] == -1) // TARH KASHTI
+            {
+                setTextColor(Col, 0);
+                printf("+  ");
+                setTextColor(15, 0);
+            }
             else if (i >= 1 && j >= 1 && board1[i][j] == 2) // TARH KASHTI
             {
                 setTextColor(Col, 0);
@@ -307,6 +331,18 @@ int Print_TwoBoard(int board1[][100], int board2[][100], int Size, char name[], 
             {
                 setTextColor(Col, 0);
                 printf("V  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board1[i][j] == 4) // TARH KASHTI
+            {
+                setTextColor(Col, 0);
+                printf("/  ");
+                setTextColor(15, 0);
+            }
+            else if (i >= 1 && j >= 1 && board1[i][j] == -4) // TARH KASHTI
+            {
+                setTextColor(Col, 0);
+                printf("\\  ");
                 setTextColor(15, 0);
             }
             else if (i >= 1 && j >= 1 && board1[i][j] == 10) // TARH KASHTI
@@ -383,17 +419,20 @@ int Print_TwoBoard(int board1[][100], int board2[][100], int Size, char name[], 
     }
 }
 
-int check_place(int board[][100], int x, int y, char position, int size)
+int check_place(int board[][100], int x, int y, char position, int size, int length, int width)
 {
     if (position == 'h' || position == 'H')
     {
-        if (y < size - 2)
+        if (y < size - width + 1 && x < size - length + 1)
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < length; i++)
             {
-                if (board[x][y + i] == 1 || board[x][y + i] == 2 || board[x][y + i] == -2 || board[x][y + i] == 3 || board[x][y + i] == -3)
+                for (int j = 0; j < width; j++)
                 {
-                    return 1;
+                    if (board[x + i][y + j] == 1 || board[x + i][y + j] == 2 || board[x + i][y + j] == -2 || board[x + i][y + j] == 3 || board[x + i][y + j] == -3 || board[x + i][y + j] == 4 || board[x + i][y + j] == -4)
+                    {
+                        return 1;
+                    }
                 }
             }
         }
@@ -404,13 +443,16 @@ int check_place(int board[][100], int x, int y, char position, int size)
     }
     else if (position == 'v' || position == 'V')
     {
-        if (x < size - 2)
+        if (y < size - width + 1 && x < size - length + 1)
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < width; i++)
             {
-                if (board[x + i][y] == 1 || board[x + i][y] == 2 || board[x + i][y] == -2 || board[x + i][y] == 3 || board[x + i][y] == -3)
+                for (int j = 0; j < length; j++)
                 {
-                    return 1;
+                    if (board[x + i][y + j] == 1 || board[x + i][y + j] == 2 || board[x + i][y + j] == -2 || board[x + i][y + j] == 3 || board[x + i][y + j] == -3 || board[x + i][y + j] == 4 || board[x + i][y + j] == -4)
+                    {
+                        return 1;
+                    }
                 }
             }
         }
@@ -422,7 +464,7 @@ int check_place(int board[][100], int x, int y, char position, int size)
     return 0;
 }
 
-void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][100])
+void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][100], int length, int width)
 {
     char position;
     char temp1[10];
@@ -450,7 +492,7 @@ void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][1
             i--;
             continue;
         }
-        else if (check_place(Board, x, y, position, SIZE + 1) == 1 || x > SIZE || y > SIZE || x < 1 || y < 1)
+        else if (check_place(Board, x, y, position, SIZE + 1, length, width) == 1 || x > SIZE || y > SIZE || x < 1 || y < 1)
         {
             Error(6);
             i--;
@@ -458,57 +500,179 @@ void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][1
         }
         else
         {
-            place_boat(Board, ConstBoard, x, y, position, SIZE + 1);
+            place_boat(Board, ConstBoard, x, y, position, SIZE + 1, length, width);
         }
     }
 }
 
-void place_boat(int board[][100], int const_board[][100], int x, int y, char position, int size)
+void place_boat(int board[][100], int const_board[][100], int x, int y, char position, int size, int length, int width)
 {
     if (position == 'h' || position == 'H')
     {
-        if (y < size - 2)
+        for (int i = 0; i < length; i++)
         {
-            for (int i = 0; i < 3; i++)
+            for (int j = 0; j < width; j++)
             {
-                if (i == 0)
+                if (length == 1 && width == 1)
                 {
-                    board[x][y + i] = 2; // 2 = ˂
-                    const_board[x][y + i] = 2;
+                    board[x + i][y + j] = -1; // -1 = +
+                    const_board[x + i][y + j] = -1;
                 }
-                else if (i == 2)
+                else if (length == 1)
                 {
-                    board[x][y + i] = -2; // -2 = ˃
-                    const_board[x][y + i] = -2;
+                    if (j == 0)
+                    {
+                        board[x + i][y + j] = 2; // 2 = <
+                        const_board[x + i][y + j] = 2;
+                    }
+                    else if (j == width - 1)
+                    {
+                        board[x + i][y + j] = -2; // -2 = >
+                        const_board[x + i][y + j] = -2;
+                    }
+                    else
+                    {
+                        board[x + i][y + j] = 1; // 1 = o
+                        const_board[x + i][y + j] = 1;
+                    }
+                }
+                else if (width == 1)
+                {
+                    if (i == 0)
+                    {
+                        board[x + i][y + j] = 3; // 3 = ∧
+                        const_board[x + i][y + j] = 3;
+                    }
+                    else if (i == length - 1)
+                    {
+                        board[x + i][y + j] = -3; // -3 = ∨
+                        const_board[x + i][y + j] = -3;
+                    }
+                    else
+                    {
+                        board[x + i][y + j] = 1; // 1 = o
+                        const_board[x + i][y + j] = 1;
+                    }
+                }
+                else if ((i == 0 && j == 0) || (i == length - 1 && j == width - 1))
+                {
+                    board[x + i][y + j] = 4; // 4 = /
+                    const_board[x + i][y + j] = 4;
+                }
+                else if ((i == 0 && j == width - 1) || (i == length - 1 && j == 0))
+                {
+                    board[x + i][y + j] = -4; // -4 = back slash
+                    const_board[x + i][y + j] = -4;
+                }
+                else if (j == 0)
+                {
+                    board[x + i][y + j] = 2; // 2 = <
+                    const_board[x + i][y + j] = 2;
+                }
+                else if (j == width - 1)
+                {
+                    board[x + i][y + j] = -2; // -2 = >
+                    const_board[x + i][y + j] = -2;
+                }
+                else if (i == 0)
+                {
+                    board[x + i][y + j] = 3; // 3 = ∧
+                    const_board[x + i][y + j] = 3;
+                }
+                else if (i == length - 1)
+                {
+                    board[x + i][y + j] = -3; // -3 = ∨
+                    const_board[x + i][y + j] = -3;
                 }
                 else
                 {
-                    board[x][y + i] = 1; // 1 = o
-                    const_board[x][y + i] = 1;
+                    board[x + i][y + j] = 1; // 1 = o
+                    const_board[x + i][y + j] = 1;
                 }
             }
         }
     }
     else if (position == 'v' || position == 'V')
     {
-        if (x < size - 2)
+        for (int i = 0; i < width; i++)
         {
-            for (int i = 0; i < 3; i++)
+            for (int j = 0; j < length; j++)
             {
-                if (i == 0)
+                if (length == 1 && width == 1)
                 {
-                    board[x + i][y] = 3; // 3 = ∧
-                    const_board[x + i][y] = 3;
+                    board[x + i][y + j] = -1; // -1 = +
+                    const_board[x + i][y + j] = -1;
                 }
-                else if (i == 2)
+                else if (width == 1)
                 {
-                    board[x + i][y] = -3; // -3 = ∨
-                    const_board[x + i][y] = -3;
+                    if (j == 0)
+                    {
+                        board[x + i][y + j] = 2; // 2 = <
+                        const_board[x + i][y + j] = 2;
+                    }
+                    else if (j == length - 1)
+                    {
+                        board[x + i][y + j] = -2; // -2 = >
+                        const_board[x + i][y + j] = -2;
+                    }
+                    else
+                    {
+                        board[x + i][y + j] = 1; // 1 = o
+                        const_board[x + i][y + j] = 1;
+                    }
+                }
+                else if (length == 1)
+                {
+                    if (i == 0)
+                    {
+                        board[x + i][y + j] = 3; // 3 = ∧
+                        const_board[x + i][y + j] = 3;
+                    }
+                    else if (i == width - 1)
+                    {
+                        board[x + i][y + j] = -3; // -3 = ∨
+                        const_board[x + i][y + j] = -3;
+                    }
+                    else
+                    {
+                        board[x + i][y + j] = 1; // 1 = o
+                        const_board[x + i][y + j] = 1;
+                    }
+                }
+                else if ((i == 0 && j == 0) || (i == width - 1 && j == length - 1))
+                {
+                    board[x + i][y + j] = 4; // 4 = /
+                    const_board[x + i][y + j] = 4;
+                }
+                else if ((i == 0 && j == length - 1) || (i == width - 1 && j == 0))
+                {
+                    board[x + i][y + j] = -4; // -4 = back slash
+                    const_board[x + i][y + j] = -4;
+                }
+                else if (j == 0)
+                {
+                    board[x + i][y + j] = 2; // 2 = <
+                    const_board[x + i][y + j] = 2;
+                }
+                else if (j == length - 1)
+                {
+                    board[x + i][y + j] = -2; // -2 = >
+                    const_board[x + i][y + j] = -2;
+                }
+                else if (i == 0)
+                {
+                    board[x + i][y + j] = 3; // 3 = ∧
+                    const_board[x + i][y + j] = 3;
+                }
+                else if (i == width - 1)
+                {
+                    board[x + i][y + j] = -3; // -3 = ∨
+                    const_board[x + i][y + j] = -3;
                 }
                 else
                 {
-                    board[x + i][y] = 1; // 1 = o
-                    const_board[x + i][y] = 1;
+                    board[x + i][y + j] = 1; // 1 = o
+                    const_board[x + i][y + j] = 1;
                 }
             }
         }
@@ -523,7 +687,7 @@ int main()
     char player1[20];
     char player2[20];
     char position;
-    char temp1[20], temp2[20], temp;
+    char temp1[20], temp2[20], temp3[20];
     clrscr();
     printf("Please enter the length of board: ");
     for (;;)
@@ -551,11 +715,16 @@ int main()
     int BOARD_CONST_P2[SIZE + 1][100];
     int x = 0;
     int y = 0;
+    int length;
+    int width;
 
     PreBoard(SIZE, BOARD_P1, BOARD_P2, BOARD_OPP_P1, BOARD_OPP_P2, BOARD_CONST_P1, BOARD_CONST_P2);
 
     int Boat_Count;
-    printf("Please enter the number of ships: ");
+    int All_Ships;
+    int Temp_All_Ships;
+
+    printf("Please enter the number of total space for all ships: ");
     for (;;)
     {
         for (;;)
@@ -572,12 +741,12 @@ int main()
             }
             else
             {
-                Boat_Count = StrToNum(temp1);
+                All_Ships = StrToNum(temp1);
                 break;
             }
         }
         getchar();
-        if (Boat_Count > SIZE * SIZE / 3)
+        if (All_Ships > SIZE * SIZE)
         {
             Error(5);
         }
@@ -586,6 +755,7 @@ int main()
             break;
         }
     }
+
     printf("Please enter your name : ");
     gets(player1);
 
@@ -624,12 +794,67 @@ int main()
     }
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
-    setTextColor(P1_col, 0);
-    printf("%s", player1);
-    setTextColor(15, 0);
-    printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
+    Temp_All_Ships = All_Ships;
+    do
+    {
+        setTextColor(P1_col, 0);
+        printf("%s", player1);
+        setTextColor(15, 0);
+        printf("! Please enter length and width of your ship and the number of it: \n");
 
-    PrePlaceShip(SIZE, Boat_Count, BOARD_P1, BOARD_CONST_P1);
+        for (;;)
+        {
+            scanf("%s %s %s", temp1, temp2, temp3);
+            if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1 || Check_Input(temp3) == 1)
+            {
+                Error(3);
+                continue;
+            }
+            else
+            {
+                length = StrToNum(temp1);
+                width = StrToNum(temp2);
+                Boat_Count = StrToNum(temp3);
+            }
+            if (length * width * Boat_Count > Temp_All_Ships || length < 1 || width < 1 || Boat_Count < 1 || length > SIZE || width > SIZE)
+            {
+                Error(3);
+                continue;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        setTextColor(P1_col, 0);
+        printf("%s", player1);
+        setTextColor(15, 0);
+        printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
+
+        PrePlaceShip(SIZE, Boat_Count, BOARD_P1, BOARD_CONST_P1, length, width);
+
+        Temp_All_Ships -= length * width * Boat_Count;
+
+        printf("Do you want to put another ship ? (y/n): ");
+        for (;;)
+        {
+            scanf("%s", temp1);
+            if (temp1[0] == 'y')
+            {
+                break;
+            }
+            else if (temp1[0] == 'n')
+            {
+                break;
+            }
+            else
+            {
+                Error(4);
+            }
+        }
+    } while (temp1[0] == 'y' && Temp_All_Ships != 0);
+
     Line(5);
     printf("\n");
     getchar();
@@ -673,12 +898,68 @@ int main()
     }
 
     // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
-    setTextColor(P2_col, 0);
-    printf("%s", player2);
-    setTextColor(15, 0);
-    printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
 
-    PrePlaceShip(SIZE, Boat_Count, BOARD_P2, BOARD_CONST_P2);
+    Temp_All_Ships = All_Ships;
+
+    do
+    {
+        setTextColor(P2_col, 0);
+        printf("%s", player2);
+        setTextColor(15, 0);
+        printf("! Please enter length and width of your ship and the number of it: \n");
+
+        for (;;)
+        {
+            scanf("%s %s %s", temp1, temp2, temp3);
+            if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1 || Check_Input(temp3) == 1)
+            {
+                Error(3);
+                continue;
+            }
+            else
+            {
+                length = StrToNum(temp1);
+                width = StrToNum(temp2);
+                Boat_Count = StrToNum(temp3);
+            }
+            if (length * width * Boat_Count > Temp_All_Ships || length < 1 || width < 1 || Boat_Count < 1 || length > SIZE || width > SIZE)
+            {
+                Error(3);
+                continue;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        setTextColor(P2_col, 0);
+        printf("%s", player2);
+        setTextColor(15, 0);
+        printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
+
+        PrePlaceShip(SIZE, Boat_Count, BOARD_P2, BOARD_CONST_P2, length, width);
+
+        Temp_All_Ships -= length * width * Boat_Count;
+
+        printf("Do you want to put another ship ? (y/n): ");
+        for (;;)
+        {
+            scanf("%s", temp1);
+            if (temp1[0] == 'y')
+            {
+                break;
+            }
+            else if (temp1[0] == 'n')
+            {
+                break;
+            }
+            else
+            {
+                Error(4);
+            }
+        }
+    } while (temp1[0] == 'y' && Temp_All_Ships != 0);
 
     Line(5);
     printf("\n");
@@ -715,7 +996,7 @@ int main()
     Print_Board(BOARD_P1, SIZE, player1, Boat_Count, P1_col);
 
     Delay(3000);
-    
+
     printf("\n");
     Line(SIZE * 3 + 1);
     printf("\n");
@@ -750,7 +1031,7 @@ int main()
     Print_Board(BOARD_P2, SIZE, player2, Boat_Count, P2_col);
 
     Delay(3000);
-    
+
     Delay(2000);
     printf("\n");
     Line(SIZE * 3 + 1);
@@ -872,9 +1153,9 @@ int main()
         {
             printf("\n\n");
             Space((3 * SIZE + 1) + 4);
-            setTextColor(4,0);
+            setTextColor(4, 0);
             printf("You lose a ship");
-            setTextColor(15,0);
+            setTextColor(15, 0);
             P1_SW = 0;
         }
 
@@ -998,9 +1279,9 @@ int main()
         {
             printf("\n\n");
             Space((3 * SIZE + 1) + 4);
-            setTextColor(4,0);
+            setTextColor(4, 0);
             printf("You lose a ship");
-            setTextColor(15,0);
+            setTextColor(15, 0);
             P2_SW = 0;
         }
 
