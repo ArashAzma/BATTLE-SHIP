@@ -429,7 +429,7 @@ int check_place(int board[][100], int x, int y, char position, int size, int len
             {
                 for (int j = 0; j < width; j++)
                 {
-                    if (board[x + i][y + j] == 1 || board[x + i][y + j] == 2 || board[x + i][y + j] == -2 || board[x + i][y + j] == 3 || board[x + i][y + j] == -3 || board[x + i][y + j] == 4 || board[x + i][y + j] == -4)
+                    if (board[x + i][y + j] == 1 || board[x + i][y + j] == -1 || board[x + i][y + j] == 2 || board[x + i][y + j] == -2 || board[x + i][y + j] == 3 || board[x + i][y + j] == -3 || board[x + i][y + j] == 4 || board[x + i][y + j] == -4)
                     {
                         return 1;
                     }
@@ -443,13 +443,13 @@ int check_place(int board[][100], int x, int y, char position, int size, int len
     }
     else if (position == 'v' || position == 'V')
     {
-        if (y < size - width + 1 && x < size - length + 1)
+        if (y < size - length + 1 && x < size - width + 1)
         {
             for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < length; j++)
                 {
-                    if (board[x + i][y + j] == 1 || board[x + i][y + j] == 2 || board[x + i][y + j] == -2 || board[x + i][y + j] == 3 || board[x + i][y + j] == -3 || board[x + i][y + j] == 4 || board[x + i][y + j] == -4)
+                    if (board[x + i][y + j] == 1 || board[x + i][y + j] == -1 || board[x + i][y + j] == 2 || board[x + i][y + j] == -2 || board[x + i][y + j] == 3 || board[x + i][y + j] == -3 || board[x + i][y + j] == 4 || board[x + i][y + j] == -4)
                     {
                         return 1;
                     }
