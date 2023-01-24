@@ -8,6 +8,8 @@
 
 #define COLOR_BOLD "\e[1m"
 #define COLOR_OFF "\e[m"
+#define Missed -10  
+#define Clashed 10
 
 void clrscr()
 {
@@ -464,7 +466,20 @@ int check_place(int board[][100], int x, int y, char position, int size, int len
     return 0;
 }
 
-void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][100], int length, int width)
+struct Boats_Cords
+{
+    int x;
+    int y;
+    int length;
+    int width;
+    char position;
+    int situ;
+};
+struct Boats_Cords P1_boats[100];
+struct Boats_Cords P2_boats[100];
+
+
+void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][100], int length, int width, int player, int *player_cur_boat_count)
 {
     char position;
     char temp1[10];
@@ -501,6 +516,24 @@ void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][1
         else
         {
             place_boat(Board, ConstBoard, x, y, position, SIZE + 1, length, width);
+            if(player ==1)
+            {
+                P1_boats[*player_cur_boat_count].x = x;
+                P1_boats[*player_cur_boat_count].y = y;
+                P1_boats[*player_cur_boat_count].length = length;
+                P1_boats[*player_cur_boat_count].width = width;
+                P1_boats[*player_cur_boat_count].position = position;
+                (*player_cur_boat_count) ++;
+            }
+            else if(player == 2)
+            {
+                P2_boats[*player_cur_boat_count].x = x;
+                P2_boats[*player_cur_boat_count].y = y;
+                P2_boats[*player_cur_boat_count].length = length;
+                P2_boats[*player_cur_boat_count].width = width;
+                P2_boats[*player_cur_boat_count].position = position;
+                (*player_cur_boat_count) ++;
+            }
         }
     }
 }
@@ -679,6 +712,60 @@ void place_boat(int board[][100], int const_board[][100], int x, int y, char pos
     }
 }
 
+int check_remaining_boats(int board[][100], int player_cur_boat_count, int *remaining_boat)
+{
+    for(int i=0; i<player_cur_boat_count; i++)
+    {
+        int sw=0;
+        int x = P1_boats[i].x;
+        int y = P1_boats[i].y;
+        int length = P1_boats[i].length;
+        int width = P1_boats[i].width;
+        char type = P1_boats[i].position;
+        if (type =='h' || type =='H')
+        {
+            for(int k=x; k<length + x && P1_boats[i].situ ==0; k++)
+            {
+                for(int j=y; k<width + y; j++)
+                {
+                    if(board[k][j] != 10)
+                    {
+                        sw =1;
+                        break;            
+                    }
+                }
+                if(sw==1) break;
+            }
+            if (sw==0)
+            {
+                (*remaining_boat) --;
+                return 1;
+            }
+        }
+        else if (type =='v' || type =='V')
+        {
+            for(int k=x; k<width + x && P1_boats[i].situ ==0; k++)
+            {
+                for(int j=y; k<length + y; j++)
+                {
+                    if(board[k][j] != 10)
+                    {
+                        sw =1;
+                        break;            
+                    }
+                }
+                if(sw==1) break;
+            }
+            if (sw==0)
+            {
+                (*remaining_boat) --;
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
 int main()
 {
     int P1_col;
@@ -688,6 +775,13 @@ int main()
     char player2[20];
     char position;
     char temp1[20], temp2[20], temp3[20];
+    for(int i=0; i<100; i++)
+    {
+        P1_boats[i].situ=0;
+        P2_boats[i].situ=0;
+    }
+    // struct Boats_Cords P1_boats[100];
+    // struct Boats_Cords P2_boats[100];
     clrscr();
     printf("Please enter the length of board: ");
     for (;;)
@@ -723,6 +817,8 @@ int main()
     int Boat_Count;
     int All_Ships;
     int Temp_All_Ships;
+    int Total_Boats_P1 =0;
+    int Total_Boats_P2 =0;
 
     printf("Please enter the number of total space for all ships: ");
     for (;;)
@@ -832,29 +928,34 @@ int main()
         setTextColor(15, 0);
         printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
 
-        PrePlaceShip(SIZE, Boat_Count, BOARD_P1, BOARD_CONST_P1, length, width);
+        PrePlaceShip(SIZE, Boat_Count, BOARD_P1, BOARD_CONST_P1, length, width, 1, &Total_Boats_P1);
 
         Temp_All_Ships -= length * width * Boat_Count;
-
-        printf("Do you want to put another ship ? (y/n): ");
-        for (;;)
+        if(Temp_All_Ships != 0)
         {
-            scanf("%s", temp1);
-            if (temp1[0] == 'y')
+            printf("Do you want to put another ship ? (y/n): ");
+            for (;;)
             {
-                break;
-            }
-            else if (temp1[0] == 'n')
-            {
-                break;
-            }
-            else
-            {
-                Error(4);
+                scanf("%s", temp1);
+                if (temp1[0] == 'y')
+                {
+                    break;
+                }
+                else if (temp1[0] == 'n')
+                {
+                    break;
+                }
+                else
+                {
+                    Error(4);
+                }
             }
         }
     } while (temp1[0] == 'y' && Temp_All_Ships != 0);
-
+    // for(int i=0; i<Total_Boats_P1; i++)
+    // {
+    //     printf("\n%d %d || %d %d\n", P1_boats->x, P1_boats->y, P1_boats->length, P1_boats->width);
+    // }
     Line(5);
     printf("\n");
     getchar();
@@ -897,10 +998,8 @@ int main()
         }
     }
 
-    // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
-
+    // gereftan mokhtasat kashtiha va alamat gozari 
     Temp_All_Ships = All_Ships;
-
     do
     {
         setTextColor(P2_col, 0);
@@ -938,25 +1037,28 @@ int main()
         setTextColor(15, 0);
         printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
 
-        PrePlaceShip(SIZE, Boat_Count, BOARD_P2, BOARD_CONST_P2, length, width);
+        PrePlaceShip(SIZE, Boat_Count, BOARD_P2, BOARD_CONST_P2, length, width, 2, &Total_Boats_P2);
 
         Temp_All_Ships -= length * width * Boat_Count;
 
-        printf("Do you want to put another ship ? (y/n): ");
-        for (;;)
+        if(Temp_All_Ships != 0)
         {
-            scanf("%s", temp1);
-            if (temp1[0] == 'y')
+            printf("Do you want to put another ship ? (y/n): ");
+            for (;;)
             {
-                break;
-            }
-            else if (temp1[0] == 'n')
-            {
-                break;
-            }
-            else
-            {
-                Error(4);
+                scanf("%s", temp1);
+                if (temp1[0] == 'y')
+                {
+                    break;
+                }
+                else if (temp1[0] == 'n')
+                {
+                    break;
+                }
+                else
+                {
+                    Error(4);
+                }
             }
         }
     } while (temp1[0] == 'y' && Temp_All_Ships != 0);
@@ -1046,8 +1148,9 @@ int main()
     int P2_SW = 0;
 
     // ghesmate entehayi bazi (hamle kardan be mape hamdige)
-    for (Round = 1; RMN_Ships1 != 0 && RMN_Ships2 != 0;)
+    for (Round = 1; RMN_Ships1 != 0 && RMN_Ships2 != 0;)/////////////////////////////////////////////////////////////////////////////////////////////
     {
+        int print;
         Delay(1500);
         Space((3 * SIZE + 1) + 4);
 
@@ -1077,7 +1180,7 @@ int main()
                 {
                     Error(7);
                 }
-                else if (BOARD_P2[x][y] == 10)
+                else if (BOARD_P2[x][y] == Clashed)
                 {
                     Error(8);
                 }
@@ -1087,60 +1190,16 @@ int main()
                 }
             }
         }
-
-        if (BOARD_P2[x][y] == 1 || BOARD_P2[x][y] == 2 || BOARD_P2[x][y] == -2 || BOARD_P2[x][y] == 3 || BOARD_P2[x][y] == -3)
+        
+        if (BOARD_P2[x][y] == 1 || BOARD_P2[x][y] == -1 || BOARD_P2[x][y] == 2 || BOARD_P2[x][y] == -2 || BOARD_P2[x][y] == 3 || BOARD_P2[x][y] == -3 || BOARD_P2[x][y] == 4 || BOARD_P2[x][y] == -4)
         {
-            if (BOARD_P2[x][y] == 1)
-            {
-                if (BOARD_P2[x - 1][y] == 10 && BOARD_P2[x + 1][y] == 10 && BOARD_CONST_P2[x - 1][y] == 3 && BOARD_CONST_P2[x + 1][y] == -3)
-                {
-                    RMN_Ships2--;
-                    P2_SW = 1;
-                }
-                else if (BOARD_P2[x][y - 1] == 10 && BOARD_P2[x][y + 1] == 10 && BOARD_CONST_P2[x][y - 1] == 2 && BOARD_CONST_P2[x][y + 1] == -2)
-                {
-                    RMN_Ships2--;
-                    P2_SW = 1;
-                }
-            }
-            else if (BOARD_P2[x][y] == 2)
-            {
-                if (BOARD_P2[x][y + 1] == 10 && BOARD_P2[x][y + 2] == 10 && BOARD_CONST_P2[x][y + 1] == 1 && BOARD_CONST_P2[x][y + 2] == -2)
-                {
-                    RMN_Ships2--;
-                    P2_SW = 1;
-                }
-            }
-            else if (BOARD_P2[x][y] == -2)
-            {
-                if (BOARD_P2[x][y - 1] == 10 && BOARD_P2[x][y - 2] == 10 && BOARD_CONST_P2[x][y - 1] == 1 && BOARD_CONST_P2[x][y - 2] == 2)
-                {
-                    RMN_Ships2--;
-                    P2_SW = 1;
-                }
-            }
-            else if (BOARD_P2[x][y] == 3)
-            {
-                if (BOARD_P2[x + 1][y] == 10 && BOARD_P2[x + 2][y] == 10 && BOARD_CONST_P2[x + 1][y] == 1 && BOARD_CONST_P2[x + 2][y] == -3)
-                {
-                    RMN_Ships2--;
-                    P2_SW = 1;
-                }
-            }
-            else if (BOARD_P2[x][y] == -3)
-            {
-                if (BOARD_P2[x - 1][y] == 10 && BOARD_P2[x - 2][y] == 10 && BOARD_CONST_P2[x - 1][y] == 1 && BOARD_CONST_P2[x - 2][y] == 3)
-                {
-                    RMN_Ships2--;
-                    P2_SW = 1;
-                }
-            }
-            BOARD_OPP_P1[x][y] = 10;
-            BOARD_P2[x][y] = 10;
+            BOARD_OPP_P1[x][y] = Clashed;
+            BOARD_P2[x][y] = Clashed;
+            print = check_remaining_boats(BOARD_P2, Total_Boats_P2, &RMN_Ships2);
         }
         else
         {
-            BOARD_OPP_P1[x][y] = -10;
+            BOARD_OPP_P1[x][y] = Missed;
         }
 
         printf("\n");
@@ -1148,15 +1207,15 @@ int main()
         printf("\n");
 
         Print_TwoBoard(BOARD_P1, BOARD_OPP_P1, SIZE, player1, RMN_Ships1, P1_col);
-
-        if (P1_SW == 1)
+        
+        if (print == 1)
         {
             printf("\n\n");
             Space((3 * SIZE + 1) + 4);
             setTextColor(4, 0);
             printf("You lose a ship");
             setTextColor(15, 0);
-            P1_SW = 0;
+            print =0;
         }
 
         if (BOARD_OPP_P1[x][y] == -10)
@@ -1214,59 +1273,15 @@ int main()
                 }
             }
         }
-        if (BOARD_P1[x][y] == 1 || BOARD_P1[x][y] == 2 || BOARD_P1[x][y] == -2 || BOARD_P1[x][y] == 3 || BOARD_P1[x][y] == -3)
+        if (BOARD_P1[x][y] == 1 || BOARD_P1[x][y] == -1 || BOARD_P1[x][y] == 2 || BOARD_P1[x][y] == -2 || BOARD_P1[x][y] == 3 || BOARD_P1[x][y] == -3 || BOARD_P1[x][y] == 4 || BOARD_P1[x][y] == -4)
         {
-            if (BOARD_P1[x][y] == 1)
-            {
-                if (BOARD_P1[x - 1][y] == 10 && BOARD_P1[x + 1][y] == 10 && BOARD_CONST_P1[x - 1][y] == 3 && BOARD_CONST_P1[x + 1][y] == -3)
-                {
-                    RMN_Ships1--;
-                    P1_SW = 1;
-                }
-                else if (BOARD_P1[x][y - 1] == 10 && BOARD_P1[x][y + 1] == 10 && BOARD_CONST_P1[x][y - 1] == 2 && BOARD_CONST_P1[x][y + 1] == -2)
-                {
-                    RMN_Ships1--;
-                    P1_SW = 1;
-                }
-            }
-            else if (BOARD_P1[x][y] == 2)
-            {
-                if (BOARD_P1[x][y + 1] == 10 && BOARD_P1[x][y + 2] == 10 && BOARD_CONST_P1[x][y + 1] == 1 && BOARD_CONST_P1[x][y + 2] == -2)
-                {
-                    RMN_Ships1--;
-                    P1_SW = 1;
-                }
-            }
-            else if (BOARD_P1[x][y] == -2)
-            {
-                if (BOARD_P1[x][y - 1] == 10 && BOARD_P1[x][y - 2] == 10 && BOARD_CONST_P1[x][y - 1] == 1 && BOARD_CONST_P1[x][y - 2] == 2)
-                {
-                    RMN_Ships1--;
-                    P1_SW = 1;
-                }
-            }
-            else if (BOARD_P1[x][y] == 3)
-            {
-                if (BOARD_P1[x + 1][y] == 10 && BOARD_P1[x + 2][y] == 10 && BOARD_CONST_P1[x + 1][y] == 1 && BOARD_CONST_P1[x + 2][y] == -3)
-                {
-                    RMN_Ships1--;
-                    P1_SW = 1;
-                }
-            }
-            else if (BOARD_P1[x][y] == -3)
-            {
-                if (BOARD_P1[x - 1][y] == 10 && BOARD_P1[x - 2][y] == 10 && BOARD_CONST_P1[x - 1][y] == 1 && BOARD_CONST_P1[x - 2][y] == 3)
-                {
-                    RMN_Ships1--;
-                    P1_SW = 1;
-                }
-            }
-            BOARD_OPP_P2[x][y] = 10;
-            BOARD_P1[x][y] = 10;
+            BOARD_OPP_P2[x][y] = Clashed;
+            BOARD_P1[x][y] = Clashed;
+            print = check_remaining_boats(BOARD_P1, Total_Boats_P1, &RMN_Ships1);
         }
         else
         {
-            BOARD_OPP_P2[x][y] = -10;
+            BOARD_OPP_P2[x][y] = Missed;
         }
 
         printf("\n");
@@ -1275,17 +1290,17 @@ int main()
 
         Print_TwoBoard(BOARD_P2, BOARD_OPP_P2, SIZE, player2, RMN_Ships2, P2_col);
 
-        if (P2_SW == 1)
+        if (print == 1)
         {
             printf("\n\n");
             Space((3 * SIZE + 1) + 4);
             setTextColor(4, 0);
             printf("You lose a ship");
             setTextColor(15, 0);
-            P2_SW = 0;
+            print = 0;
         }
 
-        if (BOARD_OPP_P2[x][y] == -10)
+        if (BOARD_OPP_P2[x][y] == Missed)
         {
             BOARD_OPP_P2[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
         }
