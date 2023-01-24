@@ -712,56 +712,117 @@ void place_boat(int board[][100], int const_board[][100], int x, int y, char pos
     }
 }
 
-int check_remaining_boats(int board[][100], int player_cur_boat_count, int *remaining_boat)
+int check_remaining_boats(int board[][100], int player_cur_boat_count, int *remaining_boat, int player)
 {
     for(int i=0; i<player_cur_boat_count; i++)
     {
         int sw=0;
-        int x = P1_boats[i].x;
-        int y = P1_boats[i].y;
-        int length = P1_boats[i].length;
-        int width = P1_boats[i].width;
-        char type = P1_boats[i].position;
-        if (type =='h' || type =='H')
+        int x;
+        int y;
+        int length;
+        int width;
+        char type;
+        if (player == 1)
         {
-            for(int k=x; k<length + x && P1_boats[i].situ ==0; k++)
+            x = P1_boats[i].x;
+            y = P1_boats[i].y;
+            length = P1_boats[i].length;
+            width = P1_boats[i].width;
+            type = P1_boats[i].position;
+            if (type =='h' || type =='H')
             {
-                for(int j=y; k<width + y; j++)
+                for(int k=x; k<length + x && P1_boats[i].situ ==0; k++)
                 {
-                    if(board[k][j] != 10)
+                    for(int j=y; k<width + y; j++)
                     {
-                        sw =1;
-                        break;            
+                        if(board[k][j] != 10)
+                        {
+                            sw =1;
+                            break;            
+                        }
                     }
+                    if(sw==1) break;
                 }
-                if(sw==1) break;
+                if (sw==0 && P1_boats[i].situ ==0)
+                {
+                    (*remaining_boat) --;
+                    P1_boats[i].situ ==1;
+                    return 1;
+                }
             }
-            if (sw==0)
+            else if (type =='v' || type =='V')
             {
-                (*remaining_boat) --;
-                return 1;
+                for(int k=x; k<width + x && P1_boats[i].situ ==0; k++)
+                {
+                    for(int j=y; k<length + y; j++)
+                    {
+                        if(board[k][j] != 10)
+                        {
+                            sw =1;
+                            break;            
+                        }
+                    }
+                    if(sw==1) break;
+                }
+                if (sw==0 && P1_boats[i].situ ==0)
+                {
+                    (*remaining_boat) --;
+                    P1_boats[i].situ ==1;
+                    return 1;
+                }
             }
         }
-        else if (type =='v' || type =='V')
+        else if (player == 2)
         {
-            for(int k=x; k<width + x && P1_boats[i].situ ==0; k++)
+            x = P2_boats[i].x;
+            y = P2_boats[i].y;
+            length = P2_boats[i].length;
+            width = P2_boats[i].width;
+            type = P2_boats[i].position;
+            if (type =='h' || type =='H')
             {
-                for(int j=y; k<length + y; j++)
+                for(int k=x; k<length + x && P2_boats[i].situ ==0; k++)
                 {
-                    if(board[k][j] != 10)
+                    for(int j=y; k<width + y; j++)
                     {
-                        sw =1;
-                        break;            
+                        if(board[k][j] != 10)
+                        {
+                            sw =1;
+                            break;            
+                        }
                     }
+                    if(sw==1) break;
                 }
-                if(sw==1) break;
+                if (sw==0 && P2_boats[i].situ ==0)
+                {
+                    (*remaining_boat) --;
+                    P1_boats[i].situ ==1;
+                    return 1;
+                }
             }
-            if (sw==0)
+            else if (type =='v' || type =='V')
             {
-                (*remaining_boat) --;
-                return 1;
+                for(int k=x; k<width + x && P2_boats[i].situ ==0; k++)
+                {
+                    for(int j=y; k<length + y; j++)
+                    {
+                        if(board[k][j] != 10)
+                        {
+                            sw =1;
+                            break;            
+                        }
+                    }
+                    if(sw==1) break;
+                }
+                if (sw==0 && P2_boats[i].situ ==0)
+                {
+                    (*remaining_boat) --;
+                    P2_boats[i].situ ==1;
+                    return 1;
+                }
             }
         }
+        
     }
     return 0;
 }
@@ -1195,7 +1256,7 @@ int main()
         {
             BOARD_OPP_P1[x][y] = Clashed;
             BOARD_P2[x][y] = Clashed;
-            print = check_remaining_boats(BOARD_P2, Total_Boats_P2, &RMN_Ships2);
+            print = check_remaining_boats(BOARD_P2, Total_Boats_P2, &RMN_Ships2, 2);
         }
         else
         {
@@ -1277,7 +1338,7 @@ int main()
         {
             BOARD_OPP_P2[x][y] = Clashed;
             BOARD_P1[x][y] = Clashed;
-            print = check_remaining_boats(BOARD_P1, Total_Boats_P1, &RMN_Ships1);
+            print = check_remaining_boats(BOARD_P1, Total_Boats_P1, &RMN_Ships1, 2);
         }
         else
         {
