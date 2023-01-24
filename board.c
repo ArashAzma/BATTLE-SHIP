@@ -180,9 +180,9 @@ int Print_Board(int board[][100], int Size, char name[], int NumOfShips, int Col
     setTextColor(15, 0);
     printf(COLOR_OFF "Number Of Ships: %d\n\n\n", NumOfShips);
     Space(5 * Size / 4 - 2);
-    Delay(1000);
+    // Delay(1000);
     printf("Your Board :\n\n");
-    Delay(1000);
+    // Delay(1000);
     for (int i = 0; i < Size + 1; i++)
     {
         for (int j = 0; j < Size + 1; j++)
@@ -278,11 +278,11 @@ int Print_TwoBoard(int board1[][100], int board2[][100], int Size, char name[], 
     Space((3 * Size + 1) + 4);
     printf(COLOR_OFF "Number Of Ships: %d\n\n\n", NumOfShips);
     Space(5 * Size / 4 - 2);
-    Delay(1000);
+    // Delay(1000);
     printf("Your Board :");
     Space(3 * Size + 8);
     printf("Your OPP's Board :\n\n");
-    Delay(1000);
+    // Delay(1000);
     for (int i = 0; i < Size + 1; i++)
     {
         // PRINT BOARD AVAL
@@ -477,7 +477,6 @@ struct Boats_Cords
 };
 struct Boats_Cords P1_boats[100];
 struct Boats_Cords P2_boats[100];
-
 
 void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][100], int length, int width, int player, int *player_cur_boat_count)
 {
@@ -722,6 +721,11 @@ int check_remaining_boats(int board[][100], int player_cur_boat_count, int *rema
         int length;
         int width;
         char type;
+        int situation = P1_boats[i].situ;
+        if (situation==1)
+        {
+            continue;
+        }
         if (player == 1)
         {
             x = P1_boats[i].x;
@@ -731,9 +735,10 @@ int check_remaining_boats(int board[][100], int player_cur_boat_count, int *rema
             type = P1_boats[i].position;
             if (type =='h' || type =='H')
             {
-                for(int k=x; k<length + x && P1_boats[i].situ ==0; k++)
+                printf("\n XXX\n");
+                for(int k=x; k<length + x; k++)
                 {
-                    for(int j=y; k<width + y; j++)
+                    for(int j=y; j<width + y; j++)
                     {
                         if(board[k][j] != 10)
                         {
@@ -746,7 +751,7 @@ int check_remaining_boats(int board[][100], int player_cur_boat_count, int *rema
                 if (sw==0 && P1_boats[i].situ ==0)
                 {
                     (*remaining_boat) --;
-                    P1_boats[i].situ ==1;
+                    P1_boats[i].situ =1;
                     return 1;
                 }
             }
@@ -754,7 +759,7 @@ int check_remaining_boats(int board[][100], int player_cur_boat_count, int *rema
             {
                 for(int k=x; k<width + x && P1_boats[i].situ ==0; k++)
                 {
-                    for(int j=y; k<length + y; j++)
+                    for(int j=y; j<length + y; j++)
                     {
                         if(board[k][j] != 10)
                         {
@@ -767,7 +772,7 @@ int check_remaining_boats(int board[][100], int player_cur_boat_count, int *rema
                 if (sw==0 && P1_boats[i].situ ==0)
                 {
                     (*remaining_boat) --;
-                    P1_boats[i].situ ==1;
+                    P1_boats[i].situ =1;
                     return 1;
                 }
             }
@@ -779,11 +784,16 @@ int check_remaining_boats(int board[][100], int player_cur_boat_count, int *rema
             length = P2_boats[i].length;
             width = P2_boats[i].width;
             type = P2_boats[i].position;
+            int situation = P2_boats[i].situ;
+            if (situation==1)
+            {
+                continue;
+            }
             if (type =='h' || type =='H')
             {
-                for(int k=x; k<length + x && P2_boats[i].situ ==0; k++)
+                for(int k=x; k<length + x; k++)
                 {
-                    for(int j=y; k<width + y; j++)
+                    for(int j=y; j<width + y; j++)
                     {
                         if(board[k][j] != 10)
                         {
@@ -796,7 +806,7 @@ int check_remaining_boats(int board[][100], int player_cur_boat_count, int *rema
                 if (sw==0 && P2_boats[i].situ ==0)
                 {
                     (*remaining_boat) --;
-                    P1_boats[i].situ ==1;
+                    P2_boats[i].situ =1;
                     return 1;
                 }
             }
@@ -804,7 +814,7 @@ int check_remaining_boats(int board[][100], int player_cur_boat_count, int *rema
             {
                 for(int k=x; k<width + x && P2_boats[i].situ ==0; k++)
                 {
-                    for(int j=y; k<length + y; j++)
+                    for(int j=y; j<length + y; j++)
                     {
                         if(board[k][j] != 10)
                         {
@@ -817,7 +827,7 @@ int check_remaining_boats(int board[][100], int player_cur_boat_count, int *rema
                 if (sw==0 && P2_boats[i].situ ==0)
                 {
                     (*remaining_boat) --;
-                    P2_boats[i].situ ==1;
+                    P2_boats[i].situ =1;
                     return 1;
                 }
             }
@@ -843,7 +853,7 @@ int main()
     }
     // struct Boats_Cords P1_boats[100];
     // struct Boats_Cords P2_boats[100];
-    clrscr();
+    // clrscr();
     printf("Please enter the length of board: ");
     for (;;)
     {
@@ -1020,8 +1030,8 @@ int main()
     Line(5);
     printf("\n");
     getchar();
-    Delay(2000);
-    clrscr();
+    // Delay(2000);
+    // clrscr();
     printf("Please enter your name: ");
     gets(player2);
 
@@ -1127,10 +1137,10 @@ int main()
     Line(5);
     printf("\n");
 
-    Delay(1000);
+    // Delay(1000);
 
     getchar();
-    clrscr();
+    // clrscr();
     setTextColor(P1_col, 0);
     printf("\n%s", player1);
     setTextColor(15, 0);
@@ -1153,18 +1163,18 @@ int main()
     Line(SIZE * 3 + 1);
     printf("\n");
 
-    Delay(1000);
+    // Delay(1000);
 
     // printe board FOCP1
     Print_Board(BOARD_P1, SIZE, player1, Boat_Count, P1_col);
 
-    Delay(3000);
+    // Delay(3000);
 
     printf("\n");
     Line(SIZE * 3 + 1);
     printf("\n");
 
-    Delay(3000);
+    // Delay(3000);
     clrscr();
     setTextColor(P2_col, 0);
     printf("\n%s", player2);
@@ -1188,19 +1198,19 @@ int main()
     Line(SIZE * 3 + 1);
     printf("\n");
 
-    Delay(1000);
+    // Delay(1000);
 
     // printe board FOCP2
     Print_Board(BOARD_P2, SIZE, player2, Boat_Count, P2_col);
 
-    Delay(3000);
+    // Delay(3000);
 
-    Delay(2000);
+    // Delay(2000);
     printf("\n");
     Line(SIZE * 3 + 1);
     printf("\n");
-    Delay(3000);
-    clrscr();
+    // Delay(3000);
+    // clrscr();
 
     int RMN_Ships1 = Boat_Count; // remaining ships for player 1
     int RMN_Ships2 = Boat_Count; // remaining ships for player 2
@@ -1212,14 +1222,14 @@ int main()
     for (Round = 1; RMN_Ships1 != 0 && RMN_Ships2 != 0;)/////////////////////////////////////////////////////////////////////////////////////////////
     {
         int print;
-        Delay(1500);
+        // Delay(1500);
         Space((3 * SIZE + 1) + 4);
 
         setTextColor(4, 0);
         printf("ROUND%d\n\n", Round);
         setTextColor(15, 0);
 
-        Delay(1500);
+        // Delay(1500);
 
         setTextColor(P1_col, 0);
         printf("%s", player1);
@@ -1256,6 +1266,7 @@ int main()
         {
             BOARD_OPP_P1[x][y] = Clashed;
             BOARD_P2[x][y] = Clashed;
+            // printf("%d\n", Total_Boats_P2);
             print = check_remaining_boats(BOARD_P2, Total_Boats_P2, &RMN_Ships2, 2);
         }
         else
@@ -1284,7 +1295,7 @@ int main()
             BOARD_OPP_P1[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
         }
 
-        Delay(4500);
+        // Delay(4500);
 
         printf("\n");
         Line(7 * SIZE + 2 + 21);
@@ -1292,18 +1303,18 @@ int main()
 
         if (RMN_Ships2 == 0)
         {
-            Delay(1500);
+            // Delay(1500);
             setTextColor(P1_col, 0);
             printf("%s", player1);
             setTextColor(15, 0);
             printf(" WINS!");
-            Delay(2500);
+            // Delay(2500);
             break;
         }
 
-        Delay(4000);
+        // Delay(4000);
         printf("\n");
-        clrscr();
+        // clrscr();
         setTextColor(P2_col, 0);
         printf("%s", player2);
         setTextColor(15, 0);
@@ -1366,7 +1377,7 @@ int main()
             BOARD_OPP_P2[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
         }
 
-        Delay(4500);
+        // Delay(4500);
 
         printf("\n");
         Line(7 * SIZE + 2 + 21);
@@ -1374,16 +1385,16 @@ int main()
 
         if (RMN_Ships1 == 0)
         {
-            Delay(1500);
+            // Delay(1500);
             setTextColor(P2_col, 0);
             printf("%s", player2);
             setTextColor(15, 0);
             printf(" WINS!");
-            Delay(2500);
+            // Delay(2500);
             break;
         }
-        Delay(4000);
-        clrscr();
+        // Delay(4000);
+        // clrscr();
         Round++;
     }
 
