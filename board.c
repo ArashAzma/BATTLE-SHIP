@@ -8,8 +8,9 @@
 
 #define COLOR_BOLD "\e[1m"
 #define COLOR_OFF "\e[m"
-#define Missed -10  
+#define Missed -10
 #define Clashed 10
+#define MAXIMUM_PLAYER_COUNT 20
 
 void clrscr()
 {
@@ -118,6 +119,18 @@ int Error(int Err_Num)
     {
         setTextColor(4, 0);
         printf("YOU HAVE ALREADY ATTACKED HERE!\n");
+        setTextColor(15, 0);
+    }
+    else if (Err_Num == 9)
+    {
+        setTextColor(4, 0);
+        printf("YOU CAN'T REPAIR HERE!\n");
+        setTextColor(15, 0);
+    }
+    else if (Err_Num == 10)
+    {
+        setTextColor(4, 0);
+        printf("THE BOAT HAS SUNKEN COMPLETLY!!!\n");
         setTextColor(15, 0);
     }
 }
@@ -515,23 +528,23 @@ void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][1
         else
         {
             place_boat(Board, ConstBoard, x, y, position, SIZE + 1, length, width);
-            if(player ==1)
+            if (player == 1)
             {
                 P1_boats[*player_cur_boat_count].x = x;
                 P1_boats[*player_cur_boat_count].y = y;
                 P1_boats[*player_cur_boat_count].length = length;
                 P1_boats[*player_cur_boat_count].width = width;
                 P1_boats[*player_cur_boat_count].position = position;
-                (*player_cur_boat_count) ++;
+                (*player_cur_boat_count)++;
             }
-            else if(player == 2)
+            else if (player == 2)
             {
                 P2_boats[*player_cur_boat_count].x = x;
                 P2_boats[*player_cur_boat_count].y = y;
                 P2_boats[*player_cur_boat_count].length = length;
                 P2_boats[*player_cur_boat_count].width = width;
                 P2_boats[*player_cur_boat_count].position = position;
-                (*player_cur_boat_count) ++;
+                (*player_cur_boat_count)++;
             }
         }
     }
@@ -713,66 +726,68 @@ void place_boat(int board[][100], int const_board[][100], int x, int y, char pos
 
 int check_remaining_boats(int board[][100], int player_cur_boat_count, int *remaining_boat, int player)
 {
-    for(int i=0; i<player_cur_boat_count; i++)
+    for (int i = 0; i < player_cur_boat_count; i++)
     {
-        int sw=0;
+        int sw = 0;
         int x;
         int y;
         int length;
         int width;
         char type;
-        int situation = P1_boats[i].situ;
-        if (situation==1)
-        {
-            continue;
-        }
         if (player == 1)
         {
+            int situation = P1_boats[i].situ;
+            if (situation == 1)
+            {
+                continue;
+            }
             x = P1_boats[i].x;
             y = P1_boats[i].y;
             length = P1_boats[i].length;
             width = P1_boats[i].width;
             type = P1_boats[i].position;
-            if (type =='h' || type =='H')
+            if (type == 'h' || type == 'H')
             {
                 printf("\n XXX\n");
-                for(int k=x; k<length + x; k++)
+                for (int k = x; k < length + x; k++)
                 {
-                    for(int j=y; j<width + y; j++)
+                    for (int j = y; j < width + y; j++)
                     {
-                        if(board[k][j] != 10)
+                        if (board[k][j] != 10)
                         {
-                            sw =1;
-                            break;            
+                            sw = 1;
+                            break;
                         }
                     }
-                    if(sw==1) break;
+                    if (sw == 1)
+                        break;
                 }
-                if (sw==0 && P1_boats[i].situ ==0)
+                if (sw == 0 && P1_boats[i].situ == 0)
                 {
-                    (*remaining_boat) --;
-                    P1_boats[i].situ =1;
+                    (*remaining_boat)--;
+                    P1_boats[i].situ = 1;
                     return 1;
                 }
             }
-            else if (type =='v' || type =='V')
+            else if (type == 'v' || type == 'V')
             {
-                for(int k=x; k<width + x && P1_boats[i].situ ==0; k++)
+                for (int k = x; k < width + x && P1_boats[i].situ == 0; k++)
                 {
-                    for(int j=y; j<length + y; j++)
+                    for (int j = y; j < length + y; j++)
                     {
-                        if(board[k][j] != 10)
+                        if (board[k][j] != 10)
                         {
-                            sw =1;
-                            break;            
+                            sw = 1;
+                            break;
                         }
                     }
-                    if(sw==1) break;
+                    if (sw == 1)
+                        break;
                 }
-                if (sw==0 && P1_boats[i].situ ==0)
+                if (sw == 0 && P1_boats[i].situ == 0)
                 {
-                    (*remaining_boat) --;
-                    P1_boats[i].situ =1;
+                    (*remaining_boat)--;
+                    P1_boats[i].situ = 1;
                     return 1;
                 }
             }
@@ -785,56 +800,179 @@ int check_remaining_boats(int board[][100], int player_cur_boat_count, int *rema
             width = P2_boats[i].width;
             type = P2_boats[i].position;
             int situation = P2_boats[i].situ;
-            if (situation==1)
+            if (situation == 1)
             {
                 continue;
             }
-            if (type =='h' || type =='H')
+            if (type == 'h' || type == 'H')
             {
-                for(int k=x; k<length + x; k++)
+                for (int k = x; k < length + x; k++)
                 {
-                    for(int j=y; j<width + y; j++)
+                    for (int j = y; j < width + y; j++)
                     {
-                        if(board[k][j] != 10)
+                        if (board[k][j] != 10)
                         {
-                            sw =1;
-                            break;            
+                            sw = 1;
+                            break;
                         }
                     }
-                    if(sw==1) break;
+                    if (sw == 1)
+                        break;
                 }
-                if (sw==0 && P2_boats[i].situ ==0)
+                if (sw == 0 && P2_boats[i].situ == 0)
                 {
-                    (*remaining_boat) --;
-                    P2_boats[i].situ =1;
+                    (*remaining_boat)--;
+                    P2_boats[i].situ = 1;
                     return 1;
                 }
             }
-            else if (type =='v' || type =='V')
+            else if (type == 'v' || type == 'V')
             {
-                for(int k=x; k<width + x && P2_boats[i].situ ==0; k++)
+                for (int k = x; k < width + x && P2_boats[i].situ == 0; k++)
                 {
-                    for(int j=y; j<length + y; j++)
+                    for (int j = y; j < length + y; j++)
                     {
-                        if(board[k][j] != 10)
+                        if (board[k][j] != 10)
                         {
-                            sw =1;
-                            break;            
+                            sw = 1;
+                            break;
                         }
                     }
-                    if(sw==1) break;
+                    if (sw == 1)
+                        break;
                 }
-                if (sw==0 && P2_boats[i].situ ==0)
+                if (sw == 0 && P2_boats[i].situ == 0)
                 {
-                    (*remaining_boat) --;
-                    P2_boats[i].situ =1;
+                    (*remaining_boat)--;
+                    P2_boats[i].situ = 1;
                     return 1;
                 }
             }
         }
-        
     }
     return 0;
+}
+
+int repair(int board[][100], int const_board[][100], int BOARD_OPP[][100], int Total_boats, int X, int Y, int player)
+{
+    for (int i = 0; i < Total_boats; i++)
+    {
+        int x;
+        int y;
+        int length;
+        int width;
+        char type;
+        if (player == 1)
+        {
+            int situation = P1_boats[i].situ;
+            x = P1_boats[i].x;
+            y = P1_boats[i].y;
+            length = P1_boats[i].length;
+            width = P1_boats[i].width;
+            type = P1_boats[i].position;
+            if (type == 'h' || type == 'H')
+            {
+                for (int k = x; k < length + x; k++)
+                {
+                    for (int j = y; j < width + y; j++)
+                    {
+                        if (k == X && j == Y)
+                        {
+                            if (situation == 1)
+                            {
+                                return 0;
+                            }
+                            else
+                            {
+                                int temp = const_board[X][Y];
+                                board[X][Y] = temp;
+                                BOARD_OPP[X][Y] = 0;
+                                return 1;
+                            }
+                        }
+                    }
+                }
+            }
+            else if (type == 'v' || type == 'V')
+            {
+                for (int k = x; k < width + x && P1_boats[i].situ == 0; k++)
+                {
+                    for (int j = y; j < length + y; j++)
+                    {
+                        if (k == X && j == Y)
+                        {
+                            if (situation == 1)
+                            {
+                                return 0;
+                            }
+                            else
+                            {
+                                int temp = const_board[X][Y];
+                                board[X][Y] = temp;
+                                BOARD_OPP[X][Y] = 0;
+                                return 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else if (player == 2)
+        {
+            x = P2_boats[i].x;
+            y = P2_boats[i].y;
+            length = P2_boats[i].length;
+            width = P2_boats[i].width;
+            type = P2_boats[i].position;
+            int situation = P2_boats[i].situ;
+            if (type == 'h' || type == 'H')
+            {
+                for (int k = x; k < length + x; k++)
+                {
+                    for (int j = y; j < width + y; j++)
+                    {
+                        if (k == X && j == Y)
+                        {
+                            if (situation == 1)
+                            {
+                                return 0;
+                            }
+                            else
+                            {
+                                int temp = const_board[X][Y];
+                                board[X][Y] = temp;
+                                BOARD_OPP[X][Y] = 0;
+                                return 1;
+                            }
+                        }
+                    }
+                }
+            }
+            else if (type == 'v' || type == 'V')
+            {
+                for (int k = x; k < width + x && P2_boats[i].situ == 0; k++)
+                {
+                    for (int j = y; j < length + y; j++)
+                    {
+                        if (k == X && j == Y)
+                        {
+                            if (situation == 1)
+                            {
+                                return 0;
+                            }
+                            else
+                            {
+                                int temp = const_board[X][Y];
+                                board[X][Y] = temp;
+                                BOARD_OPP[X][Y] = 0;
+                                return 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 int main()
@@ -842,17 +980,15 @@ int main()
     int P1_col;
     int P2_col;
     int SIZE;
-    char player1[20];
-    char player2[20];
+    char player1[MAXIMUM_PLAYER_COUNT];
+    char player2[MAXIMUM_PLAYER_COUNT];
     char position;
-    char temp1[20], temp2[20], temp3[20];
-    for(int i=0; i<100; i++)
+    char temp1[MAXIMUM_PLAYER_COUNT], temp2[MAXIMUM_PLAYER_COUNT], temp3[MAXIMUM_PLAYER_COUNT];
+    for (int i = 0; i < 100; i++)
     {
-        P1_boats[i].situ=0;
-        P2_boats[i].situ=0;
+        P1_boats[i].situ = 0;
+        P2_boats[i].situ = 0;
     }
-    // struct Boats_Cords P1_boats[100];
-    // struct Boats_Cords P2_boats[100];
     // clrscr();
     printf("Please enter the length of board: ");
     for (;;)
@@ -882,14 +1018,16 @@ int main()
     int y = 0;
     int length;
     int width;
+    int repair_p1;
+    int repair_p2;
 
     PreBoard(SIZE, BOARD_P1, BOARD_P2, BOARD_OPP_P1, BOARD_OPP_P2, BOARD_CONST_P1, BOARD_CONST_P2);
 
     int Boat_Count;
     int All_Ships;
     int Temp_All_Ships;
-    int Total_Boats_P1 =0;
-    int Total_Boats_P2 =0;
+    int Total_Boats_P1 = 0;
+    int Total_Boats_P2 = 0;
 
     printf("Please enter the number of total space for all ships: ");
     for (;;)
@@ -922,7 +1060,10 @@ int main()
             break;
         }
     }
-
+    printf("Please enter the amount of alowed repairs: ");
+    scanf("%d", &repair_p1);
+    repair_p2 = repair_p1;
+    getchar();
     printf("Please enter your name : ");
     gets(player1);
 
@@ -960,7 +1101,7 @@ int main()
         }
     }
 
-    // gereftan mokhtasat kashtiha va alamat gozari (bedoone zakhire sazi)
+    // gereftan mokhtasat kashtiha va alamat gozari
     Temp_All_Ships = All_Ships;
     do
     {
@@ -1002,7 +1143,7 @@ int main()
         PrePlaceShip(SIZE, Boat_Count, BOARD_P1, BOARD_CONST_P1, length, width, 1, &Total_Boats_P1);
 
         Temp_All_Ships -= length * width * Boat_Count;
-        if(Temp_All_Ships != 0)
+        if (Temp_All_Ships != 0)
         {
             printf("Do you want to put another ship ? (y/n): ");
             for (;;)
@@ -1023,10 +1164,7 @@ int main()
             }
         }
     } while (temp1[0] == 'y' && Temp_All_Ships != 0);
-    // for(int i=0; i<Total_Boats_P1; i++)
-    // {
-    //     printf("\n%d %d || %d %d\n", P1_boats->x, P1_boats->y, P1_boats->length, P1_boats->width);
-    // }
+
     Line(5);
     printf("\n");
     getchar();
@@ -1069,7 +1207,7 @@ int main()
         }
     }
 
-    // gereftan mokhtasat kashtiha va alamat gozari 
+    // gereftan mokhtasat kashtiha va alamat gozari
     Temp_All_Ships = All_Ships;
     do
     {
@@ -1112,7 +1250,7 @@ int main()
 
         Temp_All_Ships -= length * width * Boat_Count;
 
-        if(Temp_All_Ships != 0)
+        if (Temp_All_Ships != 0)
         {
             printf("Do you want to put another ship ? (y/n): ");
             for (;;)
@@ -1175,7 +1313,7 @@ int main()
     printf("\n");
 
     // Delay(3000);
-    clrscr();
+    // clrscr();
     setTextColor(P2_col, 0);
     printf("\n%s", player2);
     setTextColor(15, 0);
@@ -1219,9 +1357,10 @@ int main()
     int P2_SW = 0;
 
     // ghesmate entehayi bazi (hamle kardan be mape hamdige)
-    for (Round = 1; RMN_Ships1 != 0 && RMN_Ships2 != 0;)/////////////////////////////////////////////////////////////////////////////////////////////
+    for (Round = 1; RMN_Ships1 != 0 && RMN_Ships2 != 0;) /////////////////////////////////////////////////////////////////////////////////////////////
     {
         int print;
+        int att_or_rep;
         // Delay(1500);
         Space((3 * SIZE + 1) + 4);
 
@@ -1232,54 +1371,97 @@ int main()
         // Delay(1500);
 
         setTextColor(P1_col, 0);
-        printf("%s", player1);
+        printf("%s ", player1);
         setTextColor(15, 0);
-        printf("! Enter a coordinate to attack : ");
-
-        for (;;)
+        if (repair_p1 != 0)
         {
-            scanf("%s %s", &temp1, &temp2);
-            if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+            printf("Do you want to attack(1) or repair(2)?  (1/2)\n");
+            scanf("%d", &att_or_rep);
+        }
+        if (att_or_rep == 1 || repair_p1 == 0)
+        {
+            printf("! Enter a coordinate to attack : ");
+
+            for (;;)
             {
-                Error(3);
-            }
-            else
-            {
-                x = StrToNum(temp1);
-                y = StrToNum(temp2);
-                if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                scanf("%s %s", &temp1, &temp2);
+                if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
                 {
-                    Error(7);
-                }
-                else if (BOARD_P2[x][y] == Clashed)
-                {
-                    Error(8);
+                    Error(3);
                 }
                 else
                 {
+                    x = StrToNum(temp1);
+                    y = StrToNum(temp2);
+                    if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                    {
+                        Error(7);
+                    }
+                    else if (BOARD_P2[x][y] == Clashed)
+                    {
+                        Error(8);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            if (BOARD_P2[x][y] == 1 || BOARD_P2[x][y] == -1 || BOARD_P2[x][y] == 2 || BOARD_P2[x][y] == -2 || BOARD_P2[x][y] == 3 || BOARD_P2[x][y] == -3 || BOARD_P2[x][y] == 4 || BOARD_P2[x][y] == -4)
+            {
+                BOARD_OPP_P1[x][y] = Clashed;
+                BOARD_P2[x][y] = Clashed;
+                // print = check_remaining_boats(BOARD_P2, Total_Boats_P2, &RMN_Ships2, 2);
+            }
+            else
+            {
+                BOARD_OPP_P1[x][y] = Missed;
+            }
+        }
+        else if (att_or_rep == 2)
+        {
+            printf("! Enter a coordinate to repair : ");
+
+            for (;;)
+            {
+                scanf("%s %s", &temp1, &temp2);
+                if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+                {
+                    Error(3);
+                }
+                else
+                {
+                    x = StrToNum(temp1);
+                    y = StrToNum(temp2);
+                    if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                    {
+                        Error(7);
+                    }
+                    else if (BOARD_P1[x][y] != 10)
+                    {
+                        Error(9);
+                    }
+                }
+                int rep = repair(BOARD_P1, BOARD_CONST_P1, BOARD_OPP_P2, Total_Boats_P1, x, y, 1);
+                if (rep == 0) // kashti ghargh shode ast
+                {
+                    Error(10);
+                }
+                else if (rep == 1)
+                {
+                    repair_p1--;
                     break;
                 }
             }
         }
-        
-        if (BOARD_P2[x][y] == 1 || BOARD_P2[x][y] == -1 || BOARD_P2[x][y] == 2 || BOARD_P2[x][y] == -2 || BOARD_P2[x][y] == 3 || BOARD_P2[x][y] == -3 || BOARD_P2[x][y] == 4 || BOARD_P2[x][y] == -4)
-        {
-            BOARD_OPP_P1[x][y] = Clashed;
-            BOARD_P2[x][y] = Clashed;
-            // printf("%d\n", Total_Boats_P2);
-            print = check_remaining_boats(BOARD_P2, Total_Boats_P2, &RMN_Ships2, 2);
-        }
-        else
-        {
-            BOARD_OPP_P1[x][y] = Missed;
-        }
-
+        print = check_remaining_boats(BOARD_P2, Total_Boats_P2, &RMN_Ships2, 2);
         printf("\n");
         Line(7 * SIZE + 2 + 21);
         printf("\n");
 
         Print_TwoBoard(BOARD_P1, BOARD_OPP_P1, SIZE, player1, RMN_Ships1, P1_col);
-        
+
         if (print == 1)
         {
             printf("\n\n");
@@ -1287,7 +1469,7 @@ int main()
             setTextColor(4, 0);
             printf("You lose a ship");
             setTextColor(15, 0);
-            print =0;
+            print = 0;
         }
 
         if (BOARD_OPP_P1[x][y] == -10)
@@ -1316,46 +1498,91 @@ int main()
         printf("\n");
         // clrscr();
         setTextColor(P2_col, 0);
-        printf("%s", player2);
+        printf("%s ", player2);
         setTextColor(15, 0);
-        printf("! Enter a coordinate to attack : ");
-
-        for (;;)
+        if (repair_p2 != 0)
         {
-            scanf("%s %s", &temp1, &temp2);
-            if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+            printf("Do you want to attack(1) or repair(2)?  (1/2)\n");
+            scanf("%d", &att_or_rep);
+        }
+        if (att_or_rep == 1 || repair_p2 == 0)
+        {
+
+            printf("! Enter a coordinate to attack : ");
+
+            for (;;)
             {
-                Error(3);
-            }
-            else
-            {
-                x = StrToNum(temp1);
-                y = StrToNum(temp2);
-                if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                scanf("%s %s", &temp1, &temp2);
+                if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
                 {
-                    Error(7);
-                }
-                else if (BOARD_P1[x][y] == 10)
-                {
-                    Error(8);
+                    Error(3);
                 }
                 else
                 {
+                    x = StrToNum(temp1);
+                    y = StrToNum(temp2);
+                    if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                    {
+                        Error(7);
+                    }
+                    else if (BOARD_P1[x][y] == 10)
+                    {
+                        Error(8);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            if (BOARD_P1[x][y] == 1 || BOARD_P1[x][y] == -1 || BOARD_P1[x][y] == 2 || BOARD_P1[x][y] == -2 || BOARD_P1[x][y] == 3 || BOARD_P1[x][y] == -3 || BOARD_P1[x][y] == 4 || BOARD_P1[x][y] == -4)
+            {
+                BOARD_OPP_P2[x][y] = Clashed;
+                BOARD_P1[x][y] = Clashed;
+                // print = check_remaining_boats(BOARD_P1, Total_Boats_P1, &RMN_Ships1, 2);
+            }
+            else
+            {
+                BOARD_OPP_P2[x][y] = Missed;
+            }
+        }
+        else if (att_or_rep == 2)
+        {
+            printf("! Enter a coordinate to repair : ");
+
+            for (;;)
+            {
+                scanf("%s %s", &temp1, &temp2);
+                if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+                {
+                    Error(3);
+                }
+                else
+                {
+                    x = StrToNum(temp1);
+                    y = StrToNum(temp2);
+                    if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                    {
+                        Error(7);
+                    }
+                    else if (BOARD_P2[x][y] != 10)
+                    {
+                        Error(9);
+                    }
+                }
+                int rep = repair(BOARD_P2, BOARD_CONST_P2, BOARD_OPP_P1, Total_Boats_P2, x, y, 2);
+                if (rep == 0) // kashti ghargh shode ast
+                {
+                    Error(10);
+                }
+                else if (rep == 1)
+                {
+                    repair_p2--;
                     break;
                 }
             }
         }
-        if (BOARD_P1[x][y] == 1 || BOARD_P1[x][y] == -1 || BOARD_P1[x][y] == 2 || BOARD_P1[x][y] == -2 || BOARD_P1[x][y] == 3 || BOARD_P1[x][y] == -3 || BOARD_P1[x][y] == 4 || BOARD_P1[x][y] == -4)
-        {
-            BOARD_OPP_P2[x][y] = Clashed;
-            BOARD_P1[x][y] = Clashed;
-            print = check_remaining_boats(BOARD_P1, Total_Boats_P1, &RMN_Ships1, 2);
-        }
-        else
-        {
-            BOARD_OPP_P2[x][y] = Missed;
-        }
-
+        print = check_remaining_boats(BOARD_P1, Total_Boats_P1, &RMN_Ships1, 2);
         printf("\n");
         Line(7 * SIZE + 2 + 21);
         printf("\n");
