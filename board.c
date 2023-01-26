@@ -72,6 +72,9 @@ int Error(int Err_Num)
     // Error 5 : NO SPACE FOR ALL SHIPS!
     // Error 6 : YOU CANT PLACE HERE!
     // Error 7 : YOU CANT ATTACK HERE!
+    // Error 8 : YOU HAVE ALREADY ATTACKED HERE!
+    // Error 9 : YOU CAN'T REPAIR HERE!
+    // Error 10 : THE BOAT HAS SUNKEN COMPLETLY!
 
     if (Err_Num == 1)
     {
@@ -130,7 +133,7 @@ int Error(int Err_Num)
     else if (Err_Num == 10)
     {
         setTextColor(4, 0);
-        printf("THE BOAT HAS SUNKEN COMPLETLY!!!\n");
+        printf("THE BOAT HAS SUNKEN COMPLETLY!\n");
         setTextColor(15, 0);
     }
 }
@@ -1371,16 +1374,40 @@ int main()
 
         // Delay(1500);
 
-        setTextColor(P1_col, 0);
-        printf("%s ", player1);
-        setTextColor(15, 0);
         if (repair_p1 != 0)
         {
-            printf("Do you want to attack(1) or repair(2)?  (1/2)\n");
-            scanf("%d", &att_or_rep);
+            setTextColor(P1_col, 0);
+            printf("%s ", player1);
+            setTextColor(15, 0);
+            printf("! Do you want to attack(1) or repair(2)?  (1/2)\n");
+            for (;;)
+            {
+                scanf("%s", &temp1);
+                if (Check_Input(temp1) == 1)
+                {
+                    Error(2);
+                    continue;
+                }
+                else
+                {
+                    att_or_rep = StrToNum(temp1);
+                }
+                if (att_or_rep != 1 && att_or_rep != 2)
+                {
+                    Error(3);
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
         if (att_or_rep == 1 || repair_p1 == 0)
         {
+            setTextColor(P1_col, 0);
+            printf("%s ", player1);
+            setTextColor(15, 0);
             printf("! Enter a coordinate to attack : ");
 
             for (;;)
@@ -1421,6 +1448,9 @@ int main()
         }
         else if (att_or_rep == 2)
         {
+            setTextColor(P1_col, 0);
+            printf("%s ", player1);
+            setTextColor(15, 0);
             printf("! Enter a coordinate to repair : ");
 
             for (;;)
@@ -1429,6 +1459,7 @@ int main()
                 if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
                 {
                     Error(3);
+                    continue;
                 }
                 else
                 {
@@ -1436,17 +1467,20 @@ int main()
                     y = StrToNum(temp2);
                     if (x < 1 || y < 1 || x > SIZE || y > SIZE)
                     {
-                        Error(7);
+                        Error(9);
+                        continue;
                     }
                     else if (BOARD_P1[x][y] != 10)
                     {
                         Error(9);
+                        continue;
                     }
                 }
                 int rep = repair(BOARD_P1, BOARD_CONST_P1, BOARD_OPP_P2, Total_Boats_P1, x, y, 1);
                 if (rep == 0) // kashti ghargh shode ast
                 {
                     Error(10);
+                    continue;
                 }
                 else if (rep == 1)
                 {
@@ -1475,7 +1509,7 @@ int main()
         {
             printf("\n\n");
             Space((3 * SIZE + 1) + 4);
-            setTextColor(4, 0);
+            setTextColor(2, 0);
             printf("You sinked a ship");
             setTextColor(15, 0);
         }
@@ -1505,17 +1539,41 @@ int main()
         // Delay(4000);
         printf("\n");
         // clrscr();
-        setTextColor(P2_col, 0);
-        printf("%s ", player2);
-        setTextColor(15, 0);
+
         if (repair_p2 != 0)
         {
-            printf("Do you want to attack(1) or repair(2)?  (1/2)\n");
-            scanf("%d", &att_or_rep);
+            setTextColor(P2_col, 0);
+            printf("%s ", player2);
+            setTextColor(15, 0);
+            printf("! Do you want to attack(1) or repair(2)?  (1/2)\n");
+            for (;;)
+            {
+                scanf("%s", &temp1);
+                if (Check_Input(temp1) == 1)
+                {
+                    Error(2);
+                    continue;
+                }
+                else
+                {
+                    att_or_rep = StrToNum(temp1);
+                }
+                if (att_or_rep != 1 && att_or_rep != 2)
+                {
+                    Error(3);
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
         if (att_or_rep == 1 || repair_p2 == 0)
         {
-
+            setTextColor(P2_col, 0);
+            printf("%s ", player2);
+            setTextColor(15, 0);
             printf("! Enter a coordinate to attack : ");
 
             for (;;)
@@ -1556,6 +1614,9 @@ int main()
         }
         else if (att_or_rep == 2)
         {
+            setTextColor(P2_col, 0);
+            printf("%s ", player2);
+            setTextColor(15, 0);
             printf("! Enter a coordinate to repair : ");
 
             for (;;)
@@ -1564,6 +1625,7 @@ int main()
                 if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
                 {
                     Error(3);
+                    continue;
                 }
                 else
                 {
@@ -1571,17 +1633,20 @@ int main()
                     y = StrToNum(temp2);
                     if (x < 1 || y < 1 || x > SIZE || y > SIZE)
                     {
-                        Error(7);
+                        Error(9);
+                        continue;
                     }
                     else if (BOARD_P2[x][y] != 10)
                     {
                         Error(9);
+                        continue;
                     }
                 }
                 int rep = repair(BOARD_P2, BOARD_CONST_P2, BOARD_OPP_P1, Total_Boats_P2, x, y, 2);
                 if (rep == 0) // kashti ghargh shode ast
                 {
                     Error(10);
+                    continue;
                 }
                 else if (rep == 1)
                 {
@@ -1610,7 +1675,7 @@ int main()
         {
             printf("\n\n");
             Space((3 * SIZE + 1) + 4);
-            setTextColor(4, 0);
+            setTextColor(2, 0);
             printf("You sinked a ship");
             setTextColor(15, 0);
         }
