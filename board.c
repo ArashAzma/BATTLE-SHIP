@@ -748,7 +748,6 @@ int check_remaining_boats(int board[][100], int player_cur_boat_count, int *rema
             type = P1_boats[i].position;
             if (type == 'h' || type == 'H')
             {
-                printf("\n XXX\n");
                 for (int k = x; k < length + x; k++)
                 {
                     for (int j = y; j < width + y; j++)
@@ -1304,7 +1303,7 @@ int main()
     // Delay(1000);
 
     // printe board FOCP1
-    Print_Board(BOARD_P1, SIZE, player1, Boat_Count, P1_col);
+    Print_Board(BOARD_P1, SIZE, player1, Total_Boats_P1, P1_col);
 
     // Delay(3000);
 
@@ -1339,7 +1338,7 @@ int main()
     // Delay(1000);
 
     // printe board FOCP2
-    Print_Board(BOARD_P2, SIZE, player2, Boat_Count, P2_col);
+    Print_Board(BOARD_P2, SIZE, player2, Total_Boats_P2, P2_col);
 
     // Delay(3000);
 
@@ -1350,8 +1349,8 @@ int main()
     // Delay(3000);
     // clrscr();
 
-    int RMN_Ships1 = Boat_Count; // remaining ships for player 1
-    int RMN_Ships2 = Boat_Count; // remaining ships for player 2
+    int RMN_Ships1 = Total_Boats_P1; // remaining ships for player 1
+    int RMN_Ships2 = Total_Boats_P2; // remaining ships for player 2
     int Round;
     int P1_SW = 0;
     int P2_SW = 0;
@@ -1582,7 +1581,7 @@ int main()
                 }
             }
         }
-        print = check_remaining_boats(BOARD_P1, Total_Boats_P1, &RMN_Ships1, 2);
+        print = check_remaining_boats(BOARD_P1, Total_Boats_P1, &RMN_Ships1, 1);
         printf("\n");
         Line(7 * SIZE + 2 + 21);
         printf("\n");
