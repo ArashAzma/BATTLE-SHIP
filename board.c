@@ -822,7 +822,7 @@ int check_remaining_boats(int board[][100], int player_cur_boat_count, int *rema
                 {
                     (*remaining_boat)--;
                     P2_boats[i].situ = 1;
-                    return 1;
+                    return 2;
                 }
             }
             else if (type == 'v' || type == 'V')
@@ -844,7 +844,7 @@ int check_remaining_boats(int board[][100], int player_cur_boat_count, int *rema
                 {
                     (*remaining_boat)--;
                     P2_boats[i].situ = 1;
-                    return 1;
+                    return 2;
                 }
             }
         }
@@ -1355,10 +1355,12 @@ int main()
     int P1_SW = 0;
     int P2_SW = 0;
 
+    int sink_p1_boat;
+    int sink_p2_boat;
     // ghesmate entehayi bazi (hamle kardan be mape hamdige)
     for (Round = 1; RMN_Ships1 != 0 && RMN_Ships2 != 0;) /////////////////////////////////////////////////////////////////////////////////////////////
     {
-        int print;
+        // int print;
         int att_or_rep;
         // Delay(1500);
         Space((3 * SIZE + 1) + 4);
@@ -1411,7 +1413,6 @@ int main()
             {
                 BOARD_OPP_P1[x][y] = Clashed;
                 BOARD_P2[x][y] = Clashed;
-                // print = check_remaining_boats(BOARD_P2, Total_Boats_P2, &RMN_Ships2, 2);
             }
             else
             {
@@ -1454,21 +1455,29 @@ int main()
                 }
             }
         }
-        print = check_remaining_boats(BOARD_P2, Total_Boats_P2, &RMN_Ships2, 2);
+        sink_p2_boat = check_remaining_boats(BOARD_P2, Total_Boats_P2, &RMN_Ships2, 2);
         printf("\n");
         Line(7 * SIZE + 2 + 21);
         printf("\n");
 
         Print_TwoBoard(BOARD_P1, BOARD_OPP_P1, SIZE, player1, RMN_Ships1, P1_col);
 
-        if (print == 1)
+        if (sink_p1_boat == 1)
         {
             printf("\n\n");
             Space((3 * SIZE + 1) + 4);
             setTextColor(4, 0);
-            printf("You lose a ship");
+            printf("You lost a ship");
             setTextColor(15, 0);
-            print = 0;
+            sink_p1_boat = 0;
+        }
+        if (sink_p2_boat == 2)
+        {
+            printf("\n\n");
+            Space((3 * SIZE + 1) + 4);
+            setTextColor(4, 0);
+            printf("You sinked a ship");
+            setTextColor(15, 0);
         }
 
         if (BOARD_OPP_P1[x][y] == -10)
@@ -1581,21 +1590,29 @@ int main()
                 }
             }
         }
-        print = check_remaining_boats(BOARD_P1, Total_Boats_P1, &RMN_Ships1, 1);
+        sink_p1_boat = check_remaining_boats(BOARD_P1, Total_Boats_P1, &RMN_Ships1, 1);
         printf("\n");
         Line(7 * SIZE + 2 + 21);
         printf("\n");
 
         Print_TwoBoard(BOARD_P2, BOARD_OPP_P2, SIZE, player2, RMN_Ships2, P2_col);
 
-        if (print == 1)
+        if (sink_p2_boat == 2)
         {
             printf("\n\n");
             Space((3 * SIZE + 1) + 4);
             setTextColor(4, 0);
-            printf("You lose a ship");
+            printf("You lost a ship");
             setTextColor(15, 0);
-            print = 0;
+            sink_p2_boat = 0;
+        }
+        if (sink_p1_boat == 1)
+        {
+            printf("\n\n");
+            Space((3 * SIZE + 1) + 4);
+            setTextColor(4, 0);
+            printf("You sinked a ship");
+            setTextColor(15, 0);
         }
 
         if (BOARD_OPP_P2[x][y] == Missed)
