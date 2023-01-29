@@ -1063,7 +1063,28 @@ int main()
         }
     }
     printf("Please enter the amount of alowed repairs: ");
-    scanf("%d", &repair_p1);
+    for (;;)
+    {
+        scanf("%s", &temp1);
+        if (Check_Input(temp1) == 1)
+        {
+            Error(3);
+            continue;
+        }
+        else
+        {
+            repair_p1 = StrToNum(temp1);
+        }
+        if (repair_p1 < 0)
+        {
+            Error(3);
+            continue;
+        }
+        else
+        {
+            break;
+        }
+    }
     repair_p2 = repair_p1;
     getchar();
     printf("Please enter your name : ");
