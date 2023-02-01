@@ -16,7 +16,6 @@ void clrscr()
 {
     system("@cls||clear");
 }
-
 int Space(int Count)
 {
     int i;
@@ -25,7 +24,6 @@ int Space(int Count)
         printf(" ");
     }
 }
-
 // TABE BARAYE KHAT KESHI BE TOOLE VOOROODIE (length)
 int Line(int length)
 {
@@ -35,7 +33,6 @@ int Line(int length)
         printf("=");
     }
 }
-
 // TABE BARAYE CHECK KARDANE VOOROODI KE FAGHAT ADAD BASHE
 int Check_Input(char Str[])
 {
@@ -49,7 +46,6 @@ int Check_Input(char Str[])
     }
     return 0;
 }
-
 // TABE BARAYE TABDIL STRING BE ADAD
 int StrToNum(char Str[])
 {
@@ -62,7 +58,6 @@ int StrToNum(char Str[])
     }
     return (sum);
 }
-
 int Error(int Err_Num)
 {
     // Error 1 : ITS NOT ENOUGH FOR LENGTH!
@@ -137,7 +132,6 @@ int Error(int Err_Num)
         setTextColor(15, 0);
     }
 }
-
 // TABE TAGHIR RANG
 void setTextColor(int textColor, int backColor)
 {
@@ -482,19 +476,7 @@ int check_place(int board[][100], int x, int y, char position, int size, int len
     return 0;
 }
 
-struct Boats_Cords
-{
-    int x;
-    int y;
-    int length;
-    int width;
-    char position;
-    int situ;
-};
-struct Boats_Cords P1_boats[100];
-struct Boats_Cords P2_boats[100];
-
-void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][100], int length, int width, int player, int *player_cur_boat_count)
+void PrePlaceShip(int SIZE, int Boat_Count, int Board1[][100], int ConstBoard1[][100], int Board2[][100], int ConstBoard2[][100], int length, int width, int player, int *player_cur_boat_count, int bot)
 {
     char position;
     char temp1[10];
@@ -522,7 +504,7 @@ void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][1
             i--;
             continue;
         }
-        else if (check_place(Board, x, y, position, SIZE + 1, length, width) == 1 || x > SIZE || y > SIZE || x < 1 || y < 1)
+        else if (check_place(Board1, x, y, position, SIZE + 1, length, width) == 1 || x > SIZE || y > SIZE || x < 1 || y < 1)
         {
             Error(6);
             i--;
@@ -530,7 +512,7 @@ void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][1
         }
         else
         {
-            place_boat(Board, ConstBoard, x, y, position, SIZE + 1, length, width);
+            place_boat(Board1, ConstBoard1, x, y, position, SIZE + 1, length, width);
             if (player == 1)
             {
                 P1_boats[*player_cur_boat_count].x = x;
@@ -538,6 +520,29 @@ void PrePlaceShip(int SIZE, int Boat_Count, int Board[][100], int ConstBoard[][1
                 P1_boats[*player_cur_boat_count].length = length;
                 P1_boats[*player_cur_boat_count].width = width;
                 P1_boats[*player_cur_boat_count].position = position;
+                if(bot)
+                {
+                    int i, j, p;
+                    P2_boats[*player_cur_boat_count].length = length;
+                    P2_boats[*player_cur_boat_count].width = width;
+                    i = rand() %(SIZE-1+1)+1;
+                    j = rand() %(SIZE-1+1)+1;
+                    p = rand() % 2;
+                    if (p==0)
+                    {
+                        P2_boats[*player_cur_boat_count].position = 'h';
+                    }
+                    else P2_boats[*player_cur_boat_count].position = 'v';
+                    while(check_place(Board2, i, j, position, SIZE+1, length, width)==1)
+                    {
+                        i = rand() %(SIZE-1+1)+1;
+                        j = rand() %(SIZE-1+1)+1;
+                    }
+                    P2_boats[*player_cur_boat_count].x = i;
+                    P2_boats[*player_cur_boat_count].y = j;
+                    place_boat(Board2, ConstBoard2, i, j, position, SIZE + 1, length, width);
+                }
+
                 (*player_cur_boat_count)++;
             }
             else if (player == 2)
@@ -977,8 +982,71 @@ int repair(int board[][100], int const_board[][100], int BOARD_OPP[][100], int T
     }
 }
 
+int random_place_x_aft(int i, int size)// HAVASET BE ZARBE KHRDN BSHE
+{
+    int x[3] = {0};
+    if(i-1>=1) x[0] = i-1;
+    x[1] = i;
+    if(i+1 <= size) x[2] = i+1;
+    int answ = x[rand()%(3)];
+    while (answ == 0)
+    {
+        answ = x[rand()%(3)];
+    }
+    return answ;
+}
+
+int random_place_y_aft(int j, int size)// HAVASET BE ZARBE KHRDN BSHE
+{
+    int y[3] = {0};
+    if(j-1>=1) y[0] = j-1;
+    y[1] = j;
+    if(j+1 <= size) y[2] = j+1;
+    int answ = y[rand()%(3)];
+    while (answ == 0)
+    {
+        answ = y[rand()%(3)];
+    }
+    return answ;
+}
+
+int random_place(int size, int board[][100])
+{
+    int x, y;
+    x = rand() %(size-1+1)+1;
+    y = rand() %(size-1+1)+1;
+    while(board[x][y] == 10)
+    {
+        x = rand() %(size-1+1)+1;
+        y = rand() %(size-1+1)+1;
+    }
+    int answ = (x*10)+y;
+    return answ;
+}
+
+struct Boats_Cords
+{
+    int x;
+    int y;
+    int length;
+    int width;
+    char position;
+    int situ;
+};
+struct Boats_Cords P1_boats[100];
+struct Boats_Cords P2_boats[100];
+
+struct attacked_coard
+{
+    int x; 
+    int y;
+};
+struct attacked_coard attacked_places[100];
+
 int main()
 {
+    int play_robot =1;
+    int attack_bot_count =-1;
     int P1_col;
     int P2_col;
     int SIZE;
@@ -1057,10 +1125,7 @@ int main()
         {
             Error(5);
         }
-        else
-        {
-            break;
-        }
+        else break;
     }
     printf("Please enter the amount of alowed repairs: ");
     for (;;)
@@ -1080,10 +1145,7 @@ int main()
             Error(3);
             continue;
         }
-        else
-        {
-            break;
-        }
+        else break;
     }
     repair_p2 = repair_p1;
     getchar();
@@ -1118,10 +1180,7 @@ int main()
         {
             Error(3);
         }
-        else
-        {
-            break;
-        }
+        else break;
     }
 
     // gereftan mokhtasat kashtiha va alamat gozari
@@ -1152,10 +1211,7 @@ int main()
                 Error(3);
                 continue;
             }
-            else
-            {
-                break;
-            }
+            else break;
         }
 
         setTextColor(P1_col, 0);
@@ -1163,7 +1219,7 @@ int main()
         setTextColor(15, 0);
         printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
 
-        PrePlaceShip(SIZE, Boat_Count, BOARD_P1, BOARD_CONST_P1, length, width, 1, &Total_Boats_P1);
+        PrePlaceShip(SIZE, Boat_Count, BOARD_P1, BOARD_CONST_P1, BOARD_P2, BOARD_CONST_P2, length, width, 1, &Total_Boats_P1, play_robot);
 
         Temp_All_Ships -= length * width * Boat_Count;
         if (Temp_All_Ships != 0)
@@ -1172,18 +1228,9 @@ int main()
             for (;;)
             {
                 scanf("%s", temp1);
-                if (temp1[0] == 'y')
-                {
-                    break;
-                }
-                else if (temp1[0] == 'n')
-                {
-                    break;
-                }
-                else
-                {
-                    Error(4);
-                }
+                if (temp1[0] == 'y') break;
+                else if (temp1[0] == 'n') break;
+                else Error(4);
             }
         }
     } while (temp1[0] == 'y' && Temp_All_Ships != 0);
@@ -1193,114 +1240,102 @@ int main()
     getchar();
     // Delay(2000);
     // clrscr();
-    printf("Please enter your name: ");
-    gets(player2);
-
-    printf("Choose your color : ");
-
-    setTextColor(4, 0);
-    printf("\nRed = 4");
-    setTextColor(2, 0);
-    printf("\nGreen = 2");
-    setTextColor(6, 0);
-    printf("\nYellow = 6");
-    setTextColor(5, 0);
-    printf("\nPurple = 5\n");
-    setTextColor(15, 0);
-
-    for (;;) // check kardan voroodi dorost baraye rang
+    if(play_robot == 1)
     {
-        scanf("%s", temp1);
-        if (Check_Input(temp1) == 1)
-        {
-            Error(3);
-            continue;
-        }
-        else
-        {
-            P2_col = StrToNum(temp1);
-        }
-        if (P2_col != 2 && P2_col != 4 && P2_col != 5 && P2_col != 6)
-        {
-            Error(3);
-        }
-        else
-        {
-            break;
-        }
+        strcpy(player2, "KOSKHOL");
+        P2_col = 4;
+        Total_Boats_P2 = Total_Boats_P1;
     }
-
-    // gereftan mokhtasat kashtiha va alamat gozari
-    Temp_All_Ships = All_Ships;
-    do
+    else
     {
-        setTextColor(P2_col, 0);
-        printf("%s", player2);
-        setTextColor(15, 0);
-        printf("! Please enter length and width of your ship and the number of it: \n");
+        printf("Please enter your name: ");
+        gets(player2);
 
-        for (;;)
+        printf("Choose your color : ");
+
+        setTextColor(4, 0);
+        printf("\nRed = 4");
+        setTextColor(2, 0);
+        printf("\nGreen = 2");
+        setTextColor(6, 0);
+        printf("\nYellow = 6");
+        setTextColor(5, 0);
+        printf("\nPurple = 5\n");
+        setTextColor(15, 0);
+
+        for (;;) // check kardan voroodi dorost baraye rang
         {
-            scanf("%s %s %s", temp1, temp2, temp3);
-            if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1 || Check_Input(temp3) == 1)
+            scanf("%s", temp1);
+            if (Check_Input(temp1) == 1)
             {
                 Error(3);
                 continue;
             }
-            else
-            {
-                length = StrToNum(temp1);
-                width = StrToNum(temp2);
-                Boat_Count = StrToNum(temp3);
-            }
-            if (length * width * Boat_Count > Temp_All_Ships || length < 1 || width < 1 || Boat_Count < 1 || length > SIZE || width > SIZE)
-            {
-                Error(3);
-                continue;
-            }
-            else
-            {
-                break;
-            }
+            else P2_col = StrToNum(temp1);
+            if (P2_col != 2 && P2_col != 4 && P2_col != 5 && P2_col != 6) Error(3);
+            else break;
         }
-
-        setTextColor(P2_col, 0);
-        printf("%s", player2);
-        setTextColor(15, 0);
-        printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
-
-        PrePlaceShip(SIZE, Boat_Count, BOARD_P2, BOARD_CONST_P2, length, width, 2, &Total_Boats_P2);
-
-        Temp_All_Ships -= length * width * Boat_Count;
-
-        if (Temp_All_Ships != 0)
+        // gereftan mokhtasat kashtiha va alamat gozari
+        Temp_All_Ships = All_Ships;
+        do
         {
-            printf("Do you want to put another ship ? (y/n): ");
+            setTextColor(P2_col, 0);
+            printf("%s", player2);
+            setTextColor(15, 0);
+            printf("! Please enter length and width of your ship and the number of it: \n");
+
             for (;;)
             {
-                scanf("%s", temp1);
-                if (temp1[0] == 'y')
+                scanf("%s %s %s", temp1, temp2, temp3);
+                if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1 || Check_Input(temp3) == 1)
                 {
-                    break;
-                }
-                else if (temp1[0] == 'n')
-                {
-                    break;
+                    Error(3);
+                    continue;
                 }
                 else
                 {
-                    Error(4);
+                    length = StrToNum(temp1);
+                    width = StrToNum(temp2);
+                    Boat_Count = StrToNum(temp3);
+                }
+                if (length * width * Boat_Count > Temp_All_Ships || length < 1 || width < 1 || Boat_Count < 1 || length > SIZE || width > SIZE)
+                {
+                    Error(3);
+                    continue;
+                }
+                else break;
+            }
+
+            setTextColor(P2_col, 0);
+            printf("%s", player2);
+            setTextColor(15, 0);
+            printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
+
+            PrePlaceShip(SIZE, Boat_Count, BOARD_P2, BOARD_CONST_P2, BOARD_P1, BOARD_CONST_P1, length, width, 2, &Total_Boats_P2, play_robot);
+
+            Temp_All_Ships -= length * width * Boat_Count;
+
+            if (Temp_All_Ships != 0)
+            {
+                printf("Do you want to put another ship ? (y/n): ");
+                for (;;)
+                {
+                    scanf("%s", temp1);
+                    if (temp1[0] == 'y') break;
+                    else if (temp1[0] == 'n') break;
+                    else Error(4);
                 }
             }
-        }
-    } while (temp1[0] == 'y' && Temp_All_Ships != 0);
+        } while (temp1[0] == 'y' && Temp_All_Ships != 0);
+        getchar();
+    }
+
 
     Line(5);
     printf("\n");
 
     // Delay(1000);
 
-    getchar();
     // clrscr();
     setTextColor(P1_col, 0);
     printf("\n%s", player1);
@@ -1310,14 +1345,8 @@ int main()
     for (;;)
     {
         gets(temp1);
-        if (temp1[0] == 0)
-        {
-            break;
-        }
-        else
-        {
-            Error(4);
-        }
+        if (temp1[0] == 0) break;
+        else Error(4);
     }
 
     printf("\n");
@@ -1337,21 +1366,17 @@ int main()
 
     // Delay(3000);
     // clrscr();
-    setTextColor(P2_col, 0);
-    printf("\n%s", player2);
-    setTextColor(15, 0);
-    printf("! If you ready to see your final board , press ENTER : ");
-
-    for (;;)
+    if(play_robot!=1)
     {
-        gets(temp1);
-        if (temp1[0] == 0)
+        setTextColor(P2_col, 0);
+        printf("\n%s", player2);
+        setTextColor(15, 0);
+        printf("! If you ready to see your final board , press ENTER : ");
+        for (;;)
         {
-            break;
-        }
-        else
-        {
-            Error(4);
+            gets(temp1);
+            if (temp1[0] == 0) break;
+            else Error(4);
         }
     }
 
@@ -1382,9 +1407,10 @@ int main()
     int sink_p1_boat;
     int sink_p2_boat;
     // ghesmate entehayi bazi (hamle kardan be mape hamdige)
+    int bot_hit = 0;
+    int x_hit, y_hit; 
     for (Round = 1; RMN_Ships1 != 0 && RMN_Ships2 != 0;) /////////////////////////////////////////////////////////////////////////////////////////////
     {
-        // int print;
         int att_or_rep;
         // Delay(1500);
         Space((3 * SIZE + 1) + 4);
@@ -1409,19 +1435,13 @@ int main()
                     Error(2);
                     continue;
                 }
-                else
-                {
-                    att_or_rep = StrToNum(temp1);
-                }
+                else att_or_rep = StrToNum(temp1);
                 if (att_or_rep != 1 && att_or_rep != 2)
                 {
                     Error(3);
                     continue;
                 }
-                else
-                {
-                    break;
-                }
+                else break;
             }
         }
         if (att_or_rep == 1 || repair_p1 == 0)
@@ -1434,26 +1454,14 @@ int main()
             for (;;)
             {
                 scanf("%s %s", &temp1, &temp2);
-                if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
-                {
-                    Error(3);
-                }
+                if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1) Error(3);
                 else
                 {
                     x = StrToNum(temp1);
                     y = StrToNum(temp2);
-                    if (x < 1 || y < 1 || x > SIZE || y > SIZE)
-                    {
-                        Error(7);
-                    }
-                    else if (BOARD_P2[x][y] == Clashed)
-                    {
-                        Error(8);
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    if (x < 1 || y < 1 || x > SIZE || y > SIZE) Error(7);
+                    else if (BOARD_P2[x][y] == Clashed) Error(8);
+                    else break;
                 }
             }
 
@@ -1560,119 +1568,176 @@ int main()
         // Delay(4000);
         printf("\n");
         // clrscr();
-
-        if (repair_p2 != 0)
+        if(play_robot==1)////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         {
-            setTextColor(P2_col, 0);
-            printf("%s ", player2);
-            setTextColor(15, 0);
-            printf("! Do you want to attack(1) or repair(2)?  (1/2)\n");
-            for (;;)
+            if(bot_hit == 0)
             {
-                scanf("%s", &temp1);
-                if (Check_Input(temp1) == 1)
+                int sw=0;
+                attack_bot_count ++;
+                while(sw==0)
                 {
-                    Error(2);
-                    continue;
-                }
-                else
-                {
-                    att_or_rep = StrToNum(temp1);
-                }
-                if (att_or_rep != 1 && att_or_rep != 2)
-                {
-                    Error(3);
-                    continue;
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-        if (att_or_rep == 1 || repair_p2 == 0)
-        {
-            setTextColor(P2_col, 0);
-            printf("%s ", player2);
-            setTextColor(15, 0);
-            printf("! Enter a coordinate to attack : ");
-
-            for (;;)
-            {
-                scanf("%s %s", &temp1, &temp2);
-                if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
-                {
-                    Error(3);
-                }
-                else
-                {
-                    x = StrToNum(temp1);
-                    y = StrToNum(temp2);
-                    if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                    int xy = random_place(SIZE, BOARD_OPP_P2);
+                    x = xy/10; y = xy%10;
+                    if(attack_bot_count==0)
                     {
-                        Error(7);
-                    }
-                    else if (BOARD_P1[x][y] == 10)
-                    {
-                        Error(8);
-                    }
-                    else
-                    {
+                        attacked_places[attack_bot_count].x = x;
+                        attacked_places[attack_bot_count].y = y;      
                         break;
                     }
+                    for(int i=0; i<attack_bot_count; i++)
+                    {
+                        if (x!=attacked_places[i].x || y!=attacked_places[i].y) sw=1;
+                        else if (x==attacked_places[i].x && y==attacked_places[i].y)
+                        {
+                            sw=0;
+                            break;
+                        }
+                    }
                 }
-            }
-            if (BOARD_P1[x][y] == 1 || BOARD_P1[x][y] == -1 || BOARD_P1[x][y] == 2 || BOARD_P1[x][y] == -2 || BOARD_P1[x][y] == 3 || BOARD_P1[x][y] == -3 || BOARD_P1[x][y] == 4 || BOARD_P1[x][y] == -4)
-            {
-                BOARD_OPP_P2[x][y] = Clashed;
-                BOARD_P1[x][y] = Clashed;
-                // print = check_remaining_boats(BOARD_P1, Total_Boats_P1, &RMN_Ships1, 2);
+                if(attack_bot_count != 0)
+                {
+                    attacked_places[attack_bot_count].x = x;
+                    attacked_places[attack_bot_count].y = y;
+                }
             }
             else
             {
-                BOARD_OPP_P2[x][y] = Missed;
+                int sw=0;
+                attack_bot_count ++;
+                while(sw==0)
+                {
+                    x = random_place_x_aft(x_hit, SIZE);
+                    y = random_place_y_aft(y_hit, SIZE);
+                    while(BOARD_OPP_P2[x][y] ==10)
+                    {
+                        x = random_place_x_aft(x_hit, SIZE);
+                        y = random_place_y_aft(y_hit, SIZE);
+                    }
+                    for(int i=0; i<attack_bot_count; i++)
+                    {
+                        if (x!=attacked_places[i].x || y!=attacked_places[i].y) sw=1;
+                        else if (x==attacked_places[i].x && y==attacked_places[i].y)
+                        {
+                            sw=0;
+                            break;
+                        }
+                    }
+                }
+                attacked_places[attack_bot_count].x = x;
+                attacked_places[attack_bot_count].y = y;
             }
-        }
-        else if (att_or_rep == 2)
-        {
-            setTextColor(P2_col, 0);
-            printf("%s ", player2);
-            setTextColor(15, 0);
-            printf("! Enter a coordinate to repair : ");
-
-            for (;;)
+            
+            if (BOARD_P1[x][y] == 1 || BOARD_P1[x][y] == -1 || BOARD_P1[x][y] == 2 || BOARD_P1[x][y] == -2 || BOARD_P1[x][y] == 3 || BOARD_P1[x][y] == -3 || BOARD_P1[x][y] == 4 || BOARD_P1[x][y] == -4)
+                {
+                    BOARD_OPP_P2[x][y] = Clashed;
+                    BOARD_P1[x][y] = Clashed;
+                    x_hit=x;
+                    y_hit=y;
+                    bot_hit = 1;
+                }
+            else
             {
-                scanf("%s %s", &temp1, &temp2);
-                if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+                BOARD_OPP_P2[x][y] = Missed;
+                bot_hit = 0;
+            } 
+        }
+        else
+        {
+            if (repair_p2 != 0)
+            {
+                setTextColor(P2_col, 0);
+                printf("%s ", player2);
+                setTextColor(15, 0);
+                printf("! Do you want to attack(1) or repair(2)?  (1/2)\n");
+                for (;;)
                 {
-                    Error(3);
-                    continue;
-                }
-                else
-                {
-                    x = StrToNum(temp1);
-                    y = StrToNum(temp2);
-                    if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                    scanf("%s", &temp1);
+                    if (Check_Input(temp1) == 1)
                     {
-                        Error(9);
+                        Error(2);
                         continue;
                     }
-                    else if (BOARD_P2[x][y] != 10)
+                    else
                     {
-                        Error(9);
+                        att_or_rep = StrToNum(temp1);
+                    }
+                    if (att_or_rep != 1 && att_or_rep != 2)
+                    {
+                        Error(3);
                         continue;
                     }
+                    else break;
                 }
-                int rep = repair(BOARD_P2, BOARD_CONST_P2, BOARD_OPP_P1, Total_Boats_P2, x, y, 2);
-                if (rep == 0) // kashti ghargh shode ast
+            }
+
+            if (att_or_rep == 1 || repair_p2 == 0)
+            {
+                setTextColor(P2_col, 0);
+                printf("%s ", player2);
+                setTextColor(15, 0);
+                printf("! Enter a coordinate to attack : ");
+
+                for (;;)
                 {
-                    Error(10);
-                    continue;
+                    scanf("%s %s", &temp1, &temp2);
+                    if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1) Error(3);
+                    else
+                    {
+                        x = StrToNum(temp1);
+                        y = StrToNum(temp2);
+                        if (x < 1 || y < 1 || x > SIZE || y > SIZE) Error(7);
+                        else if (BOARD_P1[x][y] == 10) Error(8);
+                        else break;
+                    }
                 }
-                else if (rep == 1)
+                if (BOARD_P1[x][y] == 1 || BOARD_P1[x][y] == -1 || BOARD_P1[x][y] == 2 || BOARD_P1[x][y] == -2 || BOARD_P1[x][y] == 3 || BOARD_P1[x][y] == -3 || BOARD_P1[x][y] == 4 || BOARD_P1[x][y] == -4)
                 {
-                    repair_p2--;
-                    break;
+                    BOARD_OPP_P2[x][y] = Clashed;
+                    BOARD_P1[x][y] = Clashed;
+                }
+                else BOARD_OPP_P2[x][y] = Missed;
+            }
+            else if (att_or_rep == 2)
+            {
+                setTextColor(P2_col, 0);
+                printf("%s ", player2);
+                setTextColor(15, 0);
+                printf("! Enter a coordinate to repair : ");
+
+                for (;;)
+                {
+                    scanf("%s %s", &temp1, &temp2);
+                    if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+                    {
+                        Error(3);
+                        continue;
+                    }
+                    else
+                    {
+                        x = StrToNum(temp1);
+                        y = StrToNum(temp2);
+                        if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                        {
+                            Error(9);
+                            continue;
+                        }
+                        else if (BOARD_P2[x][y] != 10)
+                        {
+                            Error(9);
+                            continue;
+                        }
+                    }
+                    int rep = repair(BOARD_P2, BOARD_CONST_P2, BOARD_OPP_P1, Total_Boats_P2, x, y, 2);
+                    if (rep == 0) // kashti ghargh shode ast
+                    {
+                        Error(10);
+                        continue;
+                    }
+                    else if (rep == 1)
+                    {
+                        repair_p2--;
+                        break;
+                    }
                 }
             }
         }
@@ -1726,6 +1791,5 @@ int main()
         // clrscr();
         Round++;
     }
-
     return 0;
 }
