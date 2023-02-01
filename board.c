@@ -11,6 +11,17 @@
 #define Missed -10
 #define Clashed 10
 #define MAXIMUM_PLAYER_COUNT 20
+struct Boats_Cords
+{
+    int x;
+    int y;
+    int length;
+    int width;
+    char position;
+    int situ;
+};
+struct Boats_Cords P1_boats[100];
+struct Boats_Cords P2_boats[100];
 
 void clrscr()
 {
@@ -1024,17 +1035,6 @@ int random_place(int size, int board[][100])
     return answ;
 }
 
-struct Boats_Cords
-{
-    int x;
-    int y;
-    int length;
-    int width;
-    char position;
-    int situ;
-};
-struct Boats_Cords P1_boats[100];
-struct Boats_Cords P2_boats[100];
 
 struct attacked_coard
 {
