@@ -536,14 +536,15 @@ void PrePlaceShip(int SIZE, int Boat_Count, int Board1[][100], int ConstBoard1[]
                     int i, j, p;
                     P2_boats[*player_cur_boat_count].length = length;
                     P2_boats[*player_cur_boat_count].width = width;
+                    P2_boats[*player_cur_boat_count].position = position;
                     i = rand() %(SIZE-1+1)+1;
                     j = rand() %(SIZE-1+1)+1;
                     p = rand() % 2;
-                    if (p==0)
-                    {
-                        P2_boats[*player_cur_boat_count].position = 'h';
-                    }
-                    else P2_boats[*player_cur_boat_count].position = 'v';
+                    // if (p==0)
+                    // {
+                    //     P2_boats[*player_cur_boat_count].position = 'h';
+                    // }
+                    // else P2_boats[*player_cur_boat_count].position = 'v';
                     while(check_place(Board2, i, j, position, SIZE+1, length, width)==1)
                     {
                         i = rand() %(SIZE-1+1)+1;
@@ -993,7 +994,7 @@ int repair(int board[][100], int const_board[][100], int BOARD_OPP[][100], int T
     }
 }
 
-int random_place_x_aft(int i, int size)// HAVASET BE ZARBE KHRDN BSHE
+int random_place_x_aft(int i, int size)
 {
     int x[3] = {0};
     if(i-1>=1) x[0] = i-1;
@@ -1007,7 +1008,7 @@ int random_place_x_aft(int i, int size)// HAVASET BE ZARBE KHRDN BSHE
     return answ;
 }
 
-int random_place_y_aft(int j, int size)// HAVASET BE ZARBE KHRDN BSHE
+int random_place_y_aft(int j, int size)
 {
     int y[3] = {0};
     if(j-1>=1) y[0] = j-1;
@@ -1034,7 +1035,6 @@ int random_place(int size, int board[][100])
     int answ = (x*10)+y;
     return answ;
 }
-
 
 struct attacked_coard
 {
