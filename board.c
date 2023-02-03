@@ -23,6 +23,13 @@ struct Boats_Cords
 struct Boats_Cords P1_boats[100];
 struct Boats_Cords P2_boats[100];
 
+struct attacked_coard
+{
+    int x;
+    int y;
+};
+struct attacked_coard attacked_places[100];
+
 void clrscr()
 {
     system("@cls||clear");
@@ -531,24 +538,24 @@ void PrePlaceShip(int SIZE, int Boat_Count, int Board1[][100], int ConstBoard1[]
                 P1_boats[*player_cur_boat_count].length = length;
                 P1_boats[*player_cur_boat_count].width = width;
                 P1_boats[*player_cur_boat_count].position = position;
-                if(bot)
+                if (bot)
                 {
                     int i, j, p;
                     P2_boats[*player_cur_boat_count].length = length;
                     P2_boats[*player_cur_boat_count].width = width;
                     P2_boats[*player_cur_boat_count].position = position;
-                    i = rand() %(SIZE-1+1)+1;
-                    j = rand() %(SIZE-1+1)+1;
+                    i = rand() % (SIZE - 1 + 1) + 1;
+                    j = rand() % (SIZE - 1 + 1) + 1;
                     p = rand() % 2;
                     // if (p==0)
                     // {
                     //     P2_boats[*player_cur_boat_count].position = 'h';
                     // }
                     // else P2_boats[*player_cur_boat_count].position = 'v';
-                    while(check_place(Board2, i, j, position, SIZE+1, length, width)==1)
+                    while (check_place(Board2, i, j, position, SIZE + 1, length, width) == 1)
                     {
-                        i = rand() %(SIZE-1+1)+1;
-                        j = rand() %(SIZE-1+1)+1;
+                        i = rand() % (SIZE - 1 + 1) + 1;
+                        j = rand() % (SIZE - 1 + 1) + 1;
                     }
                     P2_boats[*player_cur_boat_count].x = i;
                     P2_boats[*player_cur_boat_count].y = j;
@@ -997,13 +1004,15 @@ int repair(int board[][100], int const_board[][100], int BOARD_OPP[][100], int T
 int random_place_x_aft(int i, int size)
 {
     int x[3] = {0};
-    if(i-1>=1) x[0] = i-1;
+    if (i - 1 >= 1)
+        x[0] = i - 1;
     x[1] = i;
-    if(i+1 <= size) x[2] = i+1;
-    int answ = x[rand()%(3)];
+    if (i + 1 <= size)
+        x[2] = i + 1;
+    int answ = x[rand() % (3)];
     while (answ == 0)
     {
-        answ = x[rand()%(3)];
+        answ = x[rand() % (3)];
     }
     return answ;
 }
@@ -1011,13 +1020,15 @@ int random_place_x_aft(int i, int size)
 int random_place_y_aft(int j, int size)
 {
     int y[3] = {0};
-    if(j-1>=1) y[0] = j-1;
+    if (j - 1 >= 1)
+        y[0] = j - 1;
     y[1] = j;
-    if(j+1 <= size) y[2] = j+1;
-    int answ = y[rand()%(3)];
+    if (j + 1 <= size)
+        y[2] = j + 1;
+    int answ = y[rand() % (3)];
     while (answ == 0)
     {
-        answ = y[rand()%(3)];
+        answ = y[rand() % (3)];
     }
     return answ;
 }
@@ -1025,28 +1036,80 @@ int random_place_y_aft(int j, int size)
 int random_place(int size, int board[][100])
 {
     int x, y;
-    x = rand() %(size-1+1)+1;
-    y = rand() %(size-1+1)+1;
-    while(board[x][y] == 10)
+    x = rand() % (size - 1 + 1) + 1;
+    y = rand() % (size - 1 + 1) + 1;
+    while (board[x][y] == 10)
     {
-        x = rand() %(size-1+1)+1;
-        y = rand() %(size-1+1)+1;
+        x = rand() % (size - 1 + 1) + 1;
+        y = rand() % (size - 1 + 1) + 1;
     }
-    int answ = (x*10)+y;
+    int answ = (x * 10) + y;
     return answ;
 }
 
-struct attacked_coard
+void print_image(FILE *fptr)
 {
-    int x; 
-    int y;
-};
-struct attacked_coard attacked_places[100];
+    char read_string[128];
+
+    while (fgets(read_string, sizeof(read_string), fptr) != NULL)
+        printf("%s", read_string);
+}
+
+int MainMenu()
+{
+    char temp[5];
+    int number;
+    printf("\n\n");
+    Space(60);
+    printf("MAIN MENU\n\n");
+    Space(55);
+    printf("1. Play Multiplayer\n\n");
+    Space(55);
+    printf("2. Play With AI\n\n");
+    Space(55);
+    printf("3. Load Last Game\n\n");
+    for (;;)
+    {
+        Space(55);
+        scanf("%s", temp);
+        if (Check_Input(temp) == 1)
+        {
+            Space(55);
+            Error(2);
+            continue;
+        }
+        else
+        {
+            number = StrToNum(temp);
+        }
+        if (number != 1 && number != 2 && number != 3)
+        {
+            Space(55);
+            Error(3);
+            continue;
+        }
+        else
+        {
+            return (number);
+        }
+    }
+}
 
 int main()
 {
-    int play_robot =1;
-    int attack_bot_count =-1;
+    // clrscr();
+    char *startup = "startup.txt";
+    FILE *fptr = NULL;
+    if ((fptr = fopen(startup, "r")) == NULL)
+    {
+        fprintf(stderr, "error opening %s\n", startup);
+        return 1;
+    }
+    print_image(fptr);
+    fclose(fptr);
+    int Command = MainMenu();
+    int play_robot;
+    int attack_bot_count = -1;
     int P1_col;
     int P2_col;
     int SIZE;
@@ -1060,6 +1123,17 @@ int main()
         P2_boats[i].situ = 0;
     }
     // clrscr();
+    if (Command == 1)
+    {
+        play_robot = 0;
+    }
+    else if (Command == 2)
+    {
+        play_robot = 1;
+    }
+    else if (Command == 3)
+    {
+    }
     printf("Please enter the length of board: ");
     for (;;)
     {
@@ -1125,7 +1199,8 @@ int main()
         {
             Error(5);
         }
-        else break;
+        else
+            break;
     }
     printf("Please enter the amount of alowed repairs: ");
     for (;;)
@@ -1145,7 +1220,8 @@ int main()
             Error(3);
             continue;
         }
-        else break;
+        else
+            break;
     }
     repair_p2 = repair_p1;
     getchar();
@@ -1180,7 +1256,8 @@ int main()
         {
             Error(3);
         }
-        else break;
+        else
+            break;
     }
 
     // gereftan mokhtasat kashtiha va alamat gozari
@@ -1211,7 +1288,8 @@ int main()
                 Error(3);
                 continue;
             }
-            else break;
+            else
+                break;
         }
 
         setTextColor(P1_col, 0);
@@ -1228,9 +1306,12 @@ int main()
             for (;;)
             {
                 scanf("%s", temp1);
-                if (temp1[0] == 'y') break;
-                else if (temp1[0] == 'n') break;
-                else Error(4);
+                if (temp1[0] == 'y')
+                    break;
+                else if (temp1[0] == 'n')
+                    break;
+                else
+                    Error(4);
             }
         }
     } while (temp1[0] == 'y' && Temp_All_Ships != 0);
@@ -1240,7 +1321,7 @@ int main()
     getchar();
     // Delay(2000);
     // clrscr();
-    if(play_robot == 1)
+    if (play_robot == 1)
     {
         strcpy(player2, "KOSKHOL");
         P2_col = 4;
@@ -1271,9 +1352,12 @@ int main()
                 Error(3);
                 continue;
             }
-            else P2_col = StrToNum(temp1);
-            if (P2_col != 2 && P2_col != 4 && P2_col != 5 && P2_col != 6) Error(3);
-            else break;
+            else
+                P2_col = StrToNum(temp1);
+            if (P2_col != 2 && P2_col != 4 && P2_col != 5 && P2_col != 6)
+                Error(3);
+            else
+                break;
         }
         // gereftan mokhtasat kashtiha va alamat gozari
         Temp_All_Ships = All_Ships;
@@ -1303,7 +1387,8 @@ int main()
                     Error(3);
                     continue;
                 }
-                else break;
+                else
+                    break;
             }
 
             setTextColor(P2_col, 0);
@@ -1321,15 +1406,17 @@ int main()
                 for (;;)
                 {
                     scanf("%s", temp1);
-                    if (temp1[0] == 'y') break;
-                    else if (temp1[0] == 'n') break;
-                    else Error(4);
+                    if (temp1[0] == 'y')
+                        break;
+                    else if (temp1[0] == 'n')
+                        break;
+                    else
+                        Error(4);
                 }
             }
         } while (temp1[0] == 'y' && Temp_All_Ships != 0);
         getchar();
     }
-
 
     Line(5);
     printf("\n");
@@ -1345,8 +1432,10 @@ int main()
     for (;;)
     {
         gets(temp1);
-        if (temp1[0] == 0) break;
-        else Error(4);
+        if (temp1[0] == 0)
+            break;
+        else
+            Error(4);
     }
 
     printf("\n");
@@ -1366,7 +1455,7 @@ int main()
 
     // Delay(3000);
     // clrscr();
-    if(play_robot!=1)
+    if (play_robot != 1)
     {
         setTextColor(P2_col, 0);
         printf("\n%s", player2);
@@ -1375,8 +1464,10 @@ int main()
         for (;;)
         {
             gets(temp1);
-            if (temp1[0] == 0) break;
-            else Error(4);
+            if (temp1[0] == 0)
+                break;
+            else
+                Error(4);
         }
     }
 
@@ -1408,8 +1499,8 @@ int main()
     int sink_p2_boat;
     // ghesmate entehayi bazi (hamle kardan be mape hamdige)
     int bot_hit = 0;
-    int x_hit, y_hit; 
-    for (Round = 1; RMN_Ships1 != 0 && RMN_Ships2 != 0;) /////////////////////////////////////////////////////////////////////////////////////////////
+    int x_hit, y_hit;
+    for (Round = 1; RMN_Ships1 != 0 && RMN_Ships2 != 0;)
     {
         int att_or_rep;
         // Delay(1500);
@@ -1435,13 +1526,15 @@ int main()
                     Error(2);
                     continue;
                 }
-                else att_or_rep = StrToNum(temp1);
+                else
+                    att_or_rep = StrToNum(temp1);
                 if (att_or_rep != 1 && att_or_rep != 2)
                 {
                     Error(3);
                     continue;
                 }
-                else break;
+                else
+                    break;
             }
         }
         if (att_or_rep == 1 || repair_p1 == 0)
@@ -1454,14 +1547,18 @@ int main()
             for (;;)
             {
                 scanf("%s %s", &temp1, &temp2);
-                if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1) Error(3);
+                if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+                    Error(3);
                 else
                 {
                     x = StrToNum(temp1);
                     y = StrToNum(temp2);
-                    if (x < 1 || y < 1 || x > SIZE || y > SIZE) Error(7);
-                    else if (BOARD_P2[x][y] == Clashed) Error(8);
-                    else break;
+                    if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                        Error(7);
+                    else if (BOARD_P2[x][y] == Clashed)
+                        Error(8);
+                    else
+                        break;
                 }
             }
 
@@ -1568,33 +1665,35 @@ int main()
         // Delay(4000);
         printf("\n");
         // clrscr();
-        if(play_robot==1)////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        if (play_robot == 1)
         {
-            if(bot_hit == 0)
+            if (bot_hit == 0)
             {
-                int sw=0;
-                attack_bot_count ++;
-                while(sw==0)
+                int sw = 0;
+                attack_bot_count++;
+                while (sw == 0)
                 {
                     int xy = random_place(SIZE, BOARD_OPP_P2);
-                    x = xy/10; y = xy%10;
-                    if(attack_bot_count==0)
+                    x = xy / 10;
+                    y = xy % 10;
+                    if (attack_bot_count == 0)
                     {
                         attacked_places[attack_bot_count].x = x;
-                        attacked_places[attack_bot_count].y = y;      
+                        attacked_places[attack_bot_count].y = y;
                         break;
                     }
-                    for(int i=0; i<attack_bot_count; i++)
+                    for (int i = 0; i < attack_bot_count; i++)
                     {
-                        if (x!=attacked_places[i].x || y!=attacked_places[i].y) sw=1;
-                        else if (x==attacked_places[i].x && y==attacked_places[i].y)
+                        if (x != attacked_places[i].x || y != attacked_places[i].y)
+                            sw = 1;
+                        else if (x == attacked_places[i].x && y == attacked_places[i].y)
                         {
-                            sw=0;
+                            sw = 0;
                             break;
                         }
                     }
                 }
-                if(attack_bot_count != 0)
+                if (attack_bot_count != 0)
                 {
                     attacked_places[attack_bot_count].x = x;
                     attacked_places[attack_bot_count].y = y;
@@ -1602,23 +1701,24 @@ int main()
             }
             else
             {
-                int sw=0;
-                attack_bot_count ++;
-                while(sw==0)
+                int sw = 0;
+                attack_bot_count++;
+                while (sw == 0)
                 {
                     x = random_place_x_aft(x_hit, SIZE);
                     y = random_place_y_aft(y_hit, SIZE);
-                    while(BOARD_OPP_P2[x][y] ==10)
+                    while (BOARD_OPP_P2[x][y] == 10)
                     {
                         x = random_place_x_aft(x_hit, SIZE);
                         y = random_place_y_aft(y_hit, SIZE);
                     }
-                    for(int i=0; i<attack_bot_count; i++)
+                    for (int i = 0; i < attack_bot_count; i++)
                     {
-                        if (x!=attacked_places[i].x || y!=attacked_places[i].y) sw=1;
-                        else if (x==attacked_places[i].x && y==attacked_places[i].y)
+                        if (x != attacked_places[i].x || y != attacked_places[i].y)
+                            sw = 1;
+                        else if (x == attacked_places[i].x && y == attacked_places[i].y)
                         {
-                            sw=0;
+                            sw = 0;
                             break;
                         }
                     }
@@ -1626,20 +1726,20 @@ int main()
                 attacked_places[attack_bot_count].x = x;
                 attacked_places[attack_bot_count].y = y;
             }
-            
+
             if (BOARD_P1[x][y] == 1 || BOARD_P1[x][y] == -1 || BOARD_P1[x][y] == 2 || BOARD_P1[x][y] == -2 || BOARD_P1[x][y] == 3 || BOARD_P1[x][y] == -3 || BOARD_P1[x][y] == 4 || BOARD_P1[x][y] == -4)
-                {
-                    BOARD_OPP_P2[x][y] = Clashed;
-                    BOARD_P1[x][y] = Clashed;
-                    x_hit=x;
-                    y_hit=y;
-                    bot_hit = 1;
-                }
+            {
+                BOARD_OPP_P2[x][y] = Clashed;
+                BOARD_P1[x][y] = Clashed;
+                x_hit = x;
+                y_hit = y;
+                bot_hit = 1;
+            }
             else
             {
                 BOARD_OPP_P2[x][y] = Missed;
                 bot_hit = 0;
-            } 
+            }
         }
         else
         {
@@ -1666,7 +1766,8 @@ int main()
                         Error(3);
                         continue;
                     }
-                    else break;
+                    else
+                        break;
                 }
             }
 
@@ -1680,14 +1781,18 @@ int main()
                 for (;;)
                 {
                     scanf("%s %s", &temp1, &temp2);
-                    if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1) Error(3);
+                    if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+                        Error(3);
                     else
                     {
                         x = StrToNum(temp1);
                         y = StrToNum(temp2);
-                        if (x < 1 || y < 1 || x > SIZE || y > SIZE) Error(7);
-                        else if (BOARD_P1[x][y] == 10) Error(8);
-                        else break;
+                        if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                            Error(7);
+                        else if (BOARD_P1[x][y] == 10)
+                            Error(8);
+                        else
+                            break;
                     }
                 }
                 if (BOARD_P1[x][y] == 1 || BOARD_P1[x][y] == -1 || BOARD_P1[x][y] == 2 || BOARD_P1[x][y] == -2 || BOARD_P1[x][y] == 3 || BOARD_P1[x][y] == -3 || BOARD_P1[x][y] == 4 || BOARD_P1[x][y] == -4)
@@ -1695,7 +1800,8 @@ int main()
                     BOARD_OPP_P2[x][y] = Clashed;
                     BOARD_P1[x][y] = Clashed;
                 }
-                else BOARD_OPP_P2[x][y] = Missed;
+                else
+                    BOARD_OPP_P2[x][y] = Missed;
             }
             else if (att_or_rep == 2)
             {
