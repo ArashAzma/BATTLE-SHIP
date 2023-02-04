@@ -388,6 +388,12 @@ int Print_TwoBoard(int board1[][100], int board2[][100], int Size, char name[], 
                 printf("X  ");
                 setTextColor(15, 0);
             }
+            else if (i >= 1 && j >= 1 && board1[i][j] == -10) // TARH KASHTI
+            {
+                setTextColor(2, 0);
+                printf("?  ");
+                setTextColor(15, 0);
+            }
             else
             {
                 if (i == 0 && j > 9)
@@ -1769,7 +1775,6 @@ int main()
             Delay(3000);
             clrscr();
         }
-
     }
 
     int RMN_Ships1 = Total_Boats_P1; // remaining ships for player 1
@@ -1891,6 +1896,7 @@ int main()
             else
             {
                 BOARD_OPP_P1[x][y] = Missed;
+                BOARD_P2[x][y] = Missed;
             }
         }
         else if (att_or_rep == 2)
@@ -1965,6 +1971,17 @@ int main()
 
         Print_TwoBoard(BOARD_P1, BOARD_OPP_P1, SIZE, player1, RMN_Ships1, P1_col);
 
+        for (int i = 0; i < SIZE; i++)
+        {
+            for (int j = 0; j < SIZE; j++)
+            {
+                if (BOARD_P1[i][j] == Missed)
+                {
+                    BOARD_P1[i][j] = 0;
+                }
+            }
+        }
+
         if (sink_p1_boat == 1)
         {
             printf("\n\n");
@@ -1983,7 +2000,8 @@ int main()
             setTextColor(15, 0);
         }
 
-        if (BOARD_OPP_P1[x][y] == -10) BOARD_OPP_P1[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
+        if (BOARD_OPP_P1[x][y] == -10)
+            BOARD_OPP_P1[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
         // Delay(4500);
 
         printf("\n");
@@ -2077,6 +2095,7 @@ int main()
             else
             {
                 BOARD_OPP_P2[x][y] = Missed;
+                BOARD_P1[x][y] = Missed;
                 bot_hit = 0;
             }
         }
@@ -2178,7 +2197,10 @@ int main()
                     BOARD_P1[x][y] = Clashed;
                 }
                 else
+                {
                     BOARD_OPP_P2[x][y] = Missed;
+                    BOARD_P1[x][y] = Missed;
+                }
             }
             else if (att_or_rep == 2)
             {
@@ -2248,6 +2270,17 @@ int main()
             printf("\n");
 
             Print_TwoBoard(BOARD_P2, BOARD_OPP_P2, SIZE, player2, RMN_Ships2, P2_col);
+
+            for (int i = 0; i < SIZE; i++)
+            {
+                for (int j = 0; j < SIZE; j++)
+                {
+                    if (BOARD_P2[i][j] == Missed)
+                    {
+                        BOARD_P2[i][j] = 0;
+                    }
+                }
+            }
         }
         sink_p1_boat = check_remaining_boats(BOARD_P1, Total_Boats_P1, &RMN_Ships1, 1);
 
@@ -2269,7 +2302,9 @@ int main()
             setTextColor(15, 0);
         }
 
-        if (BOARD_OPP_P2[x][y] == Missed)  BOARD_OPP_P2[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
+        if (BOARD_OPP_P2[x][y] == Missed)
+            BOARD_OPP_P2[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
+
         // Delay(4500);
         if (!play_robot)
         {
