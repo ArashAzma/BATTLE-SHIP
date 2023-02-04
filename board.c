@@ -2101,6 +2101,7 @@ int main()
         }
         else
         {
+            clrscr();
             if (repair_p2 != 0)
             {
                 setTextColor(P2_col, 0);
@@ -2268,7 +2269,10 @@ int main()
             printf("\n");
             Line(7 * SIZE + 2 + 21);
             printf("\n");
-
+        }
+        sink_p1_boat = check_remaining_boats(BOARD_P1, Total_Boats_P1, &RMN_Ships1, 1);
+        if(!play_robot)
+        {
             Print_TwoBoard(BOARD_P2, BOARD_OPP_P2, SIZE, player2, RMN_Ships2, P2_col);
 
             for (int i = 0; i < SIZE; i++)
@@ -2282,7 +2286,6 @@ int main()
                 }
             }
         }
-        sink_p1_boat = check_remaining_boats(BOARD_P1, Total_Boats_P1, &RMN_Ships1, 1);
 
         if (sink_p2_boat == 2)
         {
@@ -2323,7 +2326,7 @@ int main()
             // Delay(2500);
             break;
         }
-        // Delay(4000);
+        Delay(4000);
         clrscr();
         Round++;
     }
