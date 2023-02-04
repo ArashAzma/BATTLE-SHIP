@@ -88,6 +88,7 @@ int Error(int Err_Num)
     // Error 8 : YOU HAVE ALREADY ATTACKED HERE!
     // Error 9 : YOU CAN'T REPAIR HERE!
     // Error 10 : THE BOAT HAS SUNKEN COMPLETLY!
+    // Error 11 : NO GAME HAVE BEEN SAVED IN THE PAST!
 
     if (Err_Num == 1)
     {
@@ -147,6 +148,12 @@ int Error(int Err_Num)
     {
         setTextColor(4, 0);
         printf("THE BOAT HAS SUNKEN COMPLETLY!\n");
+        setTextColor(15, 0);
+    }
+    else if (Err_Num == 11)
+    {
+        setTextColor(4, 0);
+        printf("NO GAME HAVE BEEN SAVED IN THE PAST!\n");
         setTextColor(15, 0);
     }
 }
@@ -494,7 +501,7 @@ int check_place(int board[][100], int x, int y, char position, int size, int len
     return 0;
 }
 
-void PrePlaceShip(int SIZE, int Boat_Count, int Board1[][100], int ConstBoard1[][100], int Board2[][100], int ConstBoard2[][100], int length, int width, int player, int *player_cur_boat_count, int bot)
+void PrePlaceShip(int SIZE, int Boat_Count, int Board1[][100], int ConstBoard1[][100], int Board2[][100], int ConstBoard2[][100], int length, int width, int player, int *player_cur_boat_count, int bot, FILE *LOAD, int *Load_Situ)
 {
     char position;
     char temp1[10];
@@ -504,16 +511,31 @@ void PrePlaceShip(int SIZE, int Boat_Count, int Board1[][100], int ConstBoard1[]
     {
         for (;;)
         {
-            scanf("%s %s %c", &temp1, &temp2, &position);
-            if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+            if (*(Load_Situ) == 1 && feof(LOAD) == 0)
             {
-                Error(3);
+                fscanf(LOAD, "%d %d %c", &x, &y, &position);
+                if (feof(LOAD) != 0)
+                {
+                    *(Load_Situ) = 0;
+                }
+                else
+                {
+                    break;
+                }
             }
-            else
+            if (*(Load_Situ) == 0)
             {
-                x = StrToNum(temp1);
-                y = StrToNum(temp2);
-                break;
+                scanf("%s %s %c", &temp1, &temp2, &position);
+                if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+                {
+                    Error(3);
+                }
+                else
+                {
+                    x = StrToNum(temp1);
+                    y = StrToNum(temp2);
+                    break;
+                }
             }
         }
         if (position != 'v' && position != 'h' && position != 'V' && position != 'H')
@@ -530,6 +552,11 @@ void PrePlaceShip(int SIZE, int Boat_Count, int Board1[][100], int ConstBoard1[]
         }
         else
         {
+            if (*(Load_Situ) == 0)
+            {
+                fprintf(LOAD, "%d %d %c\n", x, y, position);
+                fflush(LOAD);
+            }
             place_boat(Board1, ConstBoard1, x, y, position, SIZE + 1, length, width);
             if (player == 1)
             {
@@ -1060,21 +1087,21 @@ int MainMenu()
     char temp[5];
     int number;
     printf("\n\n");
-    Space(60);
+    Space(85);
     printf("MAIN MENU\n\n");
-    Space(55);
+    Space(80);
     printf("1. Play Multiplayer\n\n");
-    Space(55);
+    Space(80);
     printf("2. Play With AI\n\n");
-    Space(55);
+    Space(80);
     printf("3. Load Last Game\n\n");
     for (;;)
     {
-        Space(55);
+        Space(80);
         scanf("%s", temp);
         if (Check_Input(temp) == 1)
         {
-            Space(55);
+            Space(80);
             Error(2);
             continue;
         }
@@ -1084,7 +1111,7 @@ int MainMenu()
         }
         if (number != 1 && number != 2 && number != 3)
         {
-            Space(55);
+            Space(80);
             Error(3);
             continue;
         }
@@ -1117,6 +1144,8 @@ int main()
     char player2[MAXIMUM_PLAYER_COUNT];
     char position;
     char temp1[MAXIMUM_PLAYER_COUNT], temp2[MAXIMUM_PLAYER_COUNT], temp3[MAXIMUM_PLAYER_COUNT];
+    int Load_Situ;
+    FILE *LOAD;
     for (int i = 0; i < 100; i++)
     {
         P1_boats[i].situ = 0;
@@ -1126,30 +1155,91 @@ int main()
     if (Command == 1)
     {
         play_robot = 0;
+        Load_Situ = 0;
+        LOAD = fopen("Load.txt", "wt");
+        if (!LOAD)
+        {
+            printf("CANT OPEN FILE");
+            return 0;
+        }
+        fprintf(LOAD, "%d\n", Command);
     }
     else if (Command == 2)
     {
         play_robot = 1;
+        Load_Situ = 0;
+        LOAD = fopen("Load.txt", "wt");
+        if (!LOAD)
+        {
+            printf("CANT OPEN FILE");
+            return 0;
+        }
+        fprintf(LOAD, "%d\n", Command);
     }
     else if (Command == 3)
     {
+        Load_Situ = 1;
+        LOAD = fopen("Load.txt", "r+t");
+        if (!LOAD)
+        {
+            printf("CANT OPEN FILE");
+            return 0;
+        }
+        if (Load_Situ == 1 && feof(LOAD) == 0)
+        {
+            fscanf(LOAD, "%d", &Command);
+            if (feof(LOAD) != 0)
+            {
+                Load_Situ = 0;
+                Error(11);
+                return 0;
+            }
+            else
+            {
+                if (Command == 1)
+                {
+                    play_robot = 0;
+                }
+                else if (Command == 2)
+                {
+                    play_robot = 1;
+                }
+            }
+        }
     }
     printf("Please enter the length of board: ");
     for (;;)
     {
-        scanf("%s", temp1);
-        if (StrToNum(temp1) < 3)
+        if (Load_Situ == 1 && feof(LOAD) == 0)
         {
-            Error(1);
+            fscanf(LOAD, "%d", &SIZE);
+            if (feof(LOAD) != 0)
+            {
+                Load_Situ = 0;
+            }
+            else
+            {
+                break;
+            }
         }
-        else if (Check_Input(temp1) == 1)
+        if (Load_Situ == 0)
         {
-            Error(2);
-        }
-        else
-        {
-            SIZE = StrToNum(temp1);
-            break;
+            scanf("%s", temp1);
+            if (StrToNum(temp1) < 3)
+            {
+                Error(1);
+            }
+            else if (Check_Input(temp1) == 1)
+            {
+                Error(2);
+            }
+            else
+            {
+                SIZE = StrToNum(temp1);
+                fprintf(LOAD, "%d\n", SIZE);
+                fflush(LOAD);
+                break;
+            }
         }
     }
     int BOARD_P1[SIZE + 1][100];
@@ -1176,57 +1266,107 @@ int main()
     printf("Please enter the number of total space for all ships: ");
     for (;;)
     {
-        for (;;)
+        if (Load_Situ == 1 && feof(LOAD) == 0)
         {
-
-            scanf("%s", temp1);
-            if (Check_Input(temp1) == 1)
+            fscanf(LOAD, "%d", &All_Ships);
+            if (feof(LOAD) != 0)
             {
-                Error(2);
-            }
-            else if (StrToNum(temp1) < 1)
-            {
-                Error(3);
+                Load_Situ = 0;
             }
             else
             {
-                All_Ships = StrToNum(temp1);
                 break;
             }
         }
-        getchar();
-        if (All_Ships > SIZE * SIZE)
+        if (Load_Situ == 0)
         {
-            Error(5);
+            for (;;)
+            {
+                scanf("%s", temp1);
+                if (Check_Input(temp1) == 1)
+                {
+                    Error(2);
+                }
+                else if (StrToNum(temp1) < 1)
+                {
+                    Error(3);
+                }
+                else
+                {
+                    All_Ships = StrToNum(temp1);
+                    break;
+                }
+            }
+            getchar();
+            if (All_Ships > SIZE * SIZE)
+            {
+                Error(5);
+            }
+            else
+            {
+                fprintf(LOAD, "%d\n", All_Ships);
+                fflush(LOAD);
+                break;
+            }
         }
-        else
-            break;
     }
     printf("Please enter the amount of alowed repairs: ");
     for (;;)
     {
-        scanf("%s", &temp1);
-        if (Check_Input(temp1) == 1)
+        if (Load_Situ == 1 && feof(LOAD) == 0)
         {
-            Error(3);
-            continue;
+            fscanf(LOAD, "%d", &repair_p1);
+            if (feof(LOAD) != 0)
+            {
+                Load_Situ = 0;
+            }
+            else
+            {
+                break;
+            }
         }
-        else
+        if (Load_Situ == 0)
         {
-            repair_p1 = StrToNum(temp1);
+            scanf("%s", &temp1);
+            if (Check_Input(temp1) == 1)
+            {
+                Error(3);
+                continue;
+            }
+            else
+            {
+                repair_p1 = StrToNum(temp1);
+            }
+            if (repair_p1 < 0)
+            {
+                Error(3);
+                continue;
+            }
+            else
+            {
+                fprintf(LOAD, "%d\n", repair_p1);
+                fflush(LOAD);
+                break;
+            }
         }
-        if (repair_p1 < 0)
-        {
-            Error(3);
-            continue;
-        }
-        else
-            break;
     }
     repair_p2 = repair_p1;
     getchar();
     printf("Please enter your name : ");
-    gets(player1);
+    if (Load_Situ == 1 && feof(LOAD) == 0)
+    {
+        fscanf(LOAD, "%s", player1);
+        if (feof(LOAD) != 0)
+        {
+            Load_Situ = 0;
+        }
+    }
+    if (Load_Situ == 0)
+    {
+        gets(player1);
+        fprintf(LOAD, "%s\n", player1);
+        fflush(LOAD);
+    }
 
     printf("Choose your color : ");
 
@@ -1242,22 +1382,41 @@ int main()
 
     for (;;) // check kardan voroodi dorost baraye rang
     {
-        scanf("%s", temp1);
-        if (Check_Input(temp1) == 1)
+        if (Load_Situ == 1 && feof(LOAD) == 0)
         {
-            Error(3);
-            continue;
+            fscanf(LOAD, "%d", &P1_col);
+            if (feof(LOAD) != 0)
+            {
+                Load_Situ = 0;
+            }
+            else
+            {
+                break;
+            }
         }
-        else
+        if (Load_Situ == 0)
         {
-            P1_col = StrToNum(temp1);
+            scanf("%s", temp1);
+            if (Check_Input(temp1) == 1)
+            {
+                Error(3);
+                continue;
+            }
+            else
+            {
+                P1_col = StrToNum(temp1);
+            }
+            if (P1_col != 2 && P1_col != 4 && P1_col != 5 && P1_col != 6)
+            {
+                Error(3);
+            }
+            else
+            {
+                fprintf(LOAD, "%d\n", P1_col);
+                fflush(LOAD);
+                break;
+            }
         }
-        if (P1_col != 2 && P1_col != 4 && P1_col != 5 && P1_col != 6)
-        {
-            Error(3);
-        }
-        else
-            break;
     }
 
     // gereftan mokhtasat kashtiha va alamat gozari
@@ -1271,104 +1430,19 @@ int main()
 
         for (;;)
         {
-            scanf("%s %s %s", temp1, temp2, temp3);
-            if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1 || Check_Input(temp3) == 1)
+            if (Load_Situ == 1 && feof(LOAD) == 0)
             {
-                Error(3);
-                continue;
-            }
-            else
-            {
-                length = StrToNum(temp1);
-                width = StrToNum(temp2);
-                Boat_Count = StrToNum(temp3);
-            }
-            if (length * width * Boat_Count > Temp_All_Ships || length < 1 || width < 1 || Boat_Count < 1 || length > SIZE || width > SIZE)
-            {
-                Error(3);
-                continue;
-            }
-            else
-                break;
-        }
-
-        setTextColor(P1_col, 0);
-        printf("%s", player1);
-        setTextColor(15, 0);
-        printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
-
-        PrePlaceShip(SIZE, Boat_Count, BOARD_P1, BOARD_CONST_P1, BOARD_P2, BOARD_CONST_P2, length, width, 1, &Total_Boats_P1, play_robot);
-
-        Temp_All_Ships -= length * width * Boat_Count;
-        if (Temp_All_Ships != 0)
-        {
-            printf("Do you want to put another ship ? (y/n): ");
-            for (;;)
-            {
-                scanf("%s", temp1);
-                if (temp1[0] == 'y')
-                    break;
-                else if (temp1[0] == 'n')
-                    break;
+                fscanf(LOAD, "%d %d %d", &length, &width, &Boat_Count);
+                if (feof(LOAD) != 0)
+                {
+                    Load_Situ = 0;
+                }
                 else
-                    Error(4);
+                {
+                    break;
+                }
             }
-        }
-    } while (temp1[0] == 'y' && Temp_All_Ships != 0);
-
-    Line(5);
-    printf("\n");
-    getchar();
-    // Delay(2000);
-    // clrscr();
-    if (play_robot == 1)
-    {
-        strcpy(player2, "KOSKHOL");
-        P2_col = 4;
-        Total_Boats_P2 = Total_Boats_P1;
-    }
-    else
-    {
-        printf("Please enter your name: ");
-        gets(player2);
-
-        printf("Choose your color : ");
-
-        setTextColor(4, 0);
-        printf("\nRed = 4");
-        setTextColor(2, 0);
-        printf("\nGreen = 2");
-        setTextColor(6, 0);
-        printf("\nYellow = 6");
-        setTextColor(5, 0);
-        printf("\nPurple = 5\n");
-        setTextColor(15, 0);
-
-        for (;;) // check kardan voroodi dorost baraye rang
-        {
-            scanf("%s", temp1);
-            if (Check_Input(temp1) == 1)
-            {
-                Error(3);
-                continue;
-            }
-            else
-                P2_col = StrToNum(temp1);
-            if (P2_col != 2 && P2_col != 4 && P2_col != 5 && P2_col != 6)
-                Error(3);
-            else
-                break;
-        }
-        // gereftan mokhtasat kashtiha va alamat gozari
-        Temp_All_Ships = All_Ships;
-        do
-        {
-            setTextColor(P2_col, 0);
-            printf("%s", player2);
-            setTextColor(15, 0);
-            printf("! Please enter length and width of your ship and the number of it: \n");
-
-            for (;;)
+            if (Load_Situ == 0)
             {
                 scanf("%s %s %s", temp1, temp2, temp3);
                 if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1 || Check_Input(temp3) == 1)
@@ -1388,7 +1462,188 @@ int main()
                     continue;
                 }
                 else
+                {
+                    fprintf(LOAD, "%d %d %d\n", length, width, Boat_Count);
+                    fflush(LOAD);
                     break;
+                }
+            }
+        }
+
+        setTextColor(P1_col, 0);
+        printf("%s", player1);
+        setTextColor(15, 0);
+        printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
+
+        PrePlaceShip(SIZE, Boat_Count, BOARD_P1, BOARD_CONST_P1, BOARD_P2, BOARD_CONST_P2, length, width, 1, &Total_Boats_P1, play_robot, LOAD, &Load_Situ);
+
+        Temp_All_Ships -= length * width * Boat_Count;
+        if (Temp_All_Ships != 0)
+        {
+            printf("Do you want to put another ship ? (y/n): ");
+            for (;;)
+            {
+                if (Load_Situ == 1 && feof(LOAD) == 0)
+                {
+                    fscanf(LOAD, "%s", &temp1);
+                    if (feof(LOAD) != 0)
+                    {
+                        Load_Situ = 0;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                if (Load_Situ == 0)
+                {
+                    scanf("%s", temp1);
+                    if (temp1[0] == 'y')
+                    {
+                        fprintf(LOAD, "%c\n", temp1[0]);
+                        fflush(LOAD);
+                        break;
+                    }
+                    else if (temp1[0] == 'n')
+                    {
+                        fprintf(LOAD, "%c\n", temp1[0]);
+                        fflush(LOAD);
+                        break;
+                    }
+                    else
+                        Error(4);
+                }
+            }
+        }
+    } while (temp1[0] == 'y' && Temp_All_Ships != 0);
+
+    Line(5);
+    printf("\n");
+    if (Load_Situ == 0)
+    {
+        getchar();
+    }
+    // Delay(2000);
+    // clrscr();
+    if (play_robot == 1)
+    {
+        strcpy(player2, "KOSKHOL");
+        P2_col = 4;
+        Total_Boats_P2 = Total_Boats_P1;
+    }
+    else
+    {
+        printf("Please enter your name: ");
+        if (Load_Situ == 1 && feof(LOAD) == 0)
+        {
+            fscanf(LOAD, "%s", &player2);
+            if (feof(LOAD) != 0)
+            {
+                Load_Situ = 0;
+            }
+        }
+        if (Load_Situ == 0)
+        {
+            gets(player2);
+            fprintf(LOAD, "%s\n", player2);
+            fflush(LOAD);
+        }
+
+        printf("Choose your color : ");
+
+        setTextColor(4, 0);
+        printf("\nRed = 4");
+        setTextColor(2, 0);
+        printf("\nGreen = 2");
+        setTextColor(6, 0);
+        printf("\nYellow = 6");
+        setTextColor(5, 0);
+        printf("\nPurple = 5\n");
+        setTextColor(15, 0);
+
+        for (;;) // check kardan voroodi dorost baraye rang
+        {
+            if (Load_Situ == 1 && feof(LOAD) == 0)
+            {
+                fscanf(LOAD, "%d", &P2_col);
+                if (feof(LOAD) != 0)
+                {
+                    Load_Situ = 0;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if (Load_Situ == 0)
+            {
+                scanf("%s", temp1);
+                if (Check_Input(temp1) == 1)
+                {
+                    Error(3);
+                    continue;
+                }
+                else
+                    P2_col = StrToNum(temp1);
+                if (P2_col != 2 && P2_col != 4 && P2_col != 5 && P2_col != 6)
+                    Error(3);
+                else
+                {
+                    fprintf(LOAD, "%d\n", P2_col);
+                    fflush(LOAD);
+                    break;
+                }
+            }
+        }
+        // gereftan mokhtasat kashtiha va alamat gozari
+        Temp_All_Ships = All_Ships;
+        do
+        {
+            setTextColor(P2_col, 0);
+            printf("%s", player2);
+            setTextColor(15, 0);
+            printf("! Please enter length and width of your ship and the number of it: \n");
+
+            for (;;)
+            {
+                if (Load_Situ == 1 && feof(LOAD) == 0)
+                {
+                    fscanf(LOAD, "%d %d %d", &length, &width, &Boat_Count);
+                    if (feof(LOAD) != 0)
+                    {
+                        Load_Situ = 0;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                if (Load_Situ == 0)
+                {
+                    scanf("%s %s %s", temp1, temp2, temp3);
+                    if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1 || Check_Input(temp3) == 1)
+                    {
+                        Error(3);
+                        continue;
+                    }
+                    else
+                    {
+                        length = StrToNum(temp1);
+                        width = StrToNum(temp2);
+                        Boat_Count = StrToNum(temp3);
+                    }
+                    if (length * width * Boat_Count > Temp_All_Ships || length < 1 || width < 1 || Boat_Count < 1 || length > SIZE || width > SIZE)
+                    {
+                        Error(3);
+                        continue;
+                    }
+                    else
+                    {
+                        fprintf(LOAD, "%d %d %d\n", length, width, Boat_Count);
+                        fflush(LOAD);
+                        break;
+                    }
+                }
             }
 
             setTextColor(P2_col, 0);
@@ -1396,7 +1651,7 @@ int main()
             setTextColor(15, 0);
             printf("! Please enter the coordinates of your ships and their positions (x y (h/v)): \n");
 
-            PrePlaceShip(SIZE, Boat_Count, BOARD_P2, BOARD_CONST_P2, BOARD_P1, BOARD_CONST_P1, length, width, 2, &Total_Boats_P2, play_robot);
+            PrePlaceShip(SIZE, Boat_Count, BOARD_P2, BOARD_CONST_P2, BOARD_P1, BOARD_CONST_P1, length, width, 2, &Total_Boats_P2, play_robot, LOAD, &Load_Situ);
 
             Temp_All_Ships -= length * width * Boat_Count;
 
@@ -1405,17 +1660,43 @@ int main()
                 printf("Do you want to put another ship ? (y/n): ");
                 for (;;)
                 {
-                    scanf("%s", temp1);
-                    if (temp1[0] == 'y')
-                        break;
-                    else if (temp1[0] == 'n')
-                        break;
-                    else
-                        Error(4);
+                    if (Load_Situ == 1 && feof(LOAD) == 0)
+                    {
+                        fscanf(LOAD, "%s", &temp1);
+                        if (feof(LOAD) != 0)
+                        {
+                            Load_Situ = 0;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    if (Load_Situ == 0)
+                    {
+                        scanf("%s", temp1);
+                        if (temp1[0] == 'y')
+                        {
+                            fprintf(LOAD, "%c\n", temp1[0]);
+                            fflush(LOAD);
+                            break;
+                        }
+                        else if (temp1[0] == 'n')
+                        {
+                            fprintf(LOAD, "%c\n", temp1[0]);
+                            fflush(LOAD);
+                            break;
+                        }
+                        else
+                            Error(4);
+                    }
                 }
             }
         } while (temp1[0] == 'y' && Temp_All_Ships != 0);
-        getchar();
+        if (Load_Situ == 0)
+        {
+            getchar();
+        }
     }
 
     Line(5);
@@ -1424,43 +1705,13 @@ int main()
     // Delay(1000);
 
     // clrscr();
-    setTextColor(P1_col, 0);
-    printf("\n%s", player1);
-    setTextColor(15, 0);
-    printf("! If you ready to see your final board , press ENTER : ");
-
-    for (;;)
+    if (Load_Situ == 0)
     {
-        gets(temp1);
-        if (temp1[0] == 0)
-            break;
-        else
-            Error(4);
-    }
-
-    printf("\n");
-    Line(SIZE * 3 + 1);
-    printf("\n");
-
-    // Delay(1000);
-
-    // printe board FOCP1
-    Print_Board(BOARD_P1, SIZE, player1, Total_Boats_P1, P1_col);
-
-    // Delay(3000);
-
-    printf("\n");
-    Line(SIZE * 3 + 1);
-    printf("\n");
-
-    // Delay(3000);
-    // clrscr();
-    if (play_robot != 1)
-    {
-        setTextColor(P2_col, 0);
-        printf("\n%s", player2);
+        setTextColor(P1_col, 0);
+        printf("\n%s", player1);
         setTextColor(15, 0);
         printf("! If you ready to see your final board , press ENTER : ");
+
         for (;;)
         {
             gets(temp1);
@@ -1469,25 +1720,59 @@ int main()
             else
                 Error(4);
         }
+
+        printf("\n");
+        Line(SIZE * 3 + 1);
+        printf("\n");
+
+        // Delay(1000);
+
+        // printe board FOCP1
+        Print_Board(BOARD_P1, SIZE, player1, Total_Boats_P1, P1_col);
+
+        // Delay(3000);
+
+        printf("\n");
+        Line(SIZE * 3 + 1);
+        printf("\n");
+
+        // Delay(3000);
+        // clrscr();
+
+        if (play_robot != 1)
+        {
+            setTextColor(P2_col, 0);
+            printf("\n%s", player2);
+            setTextColor(15, 0);
+            printf("! If you ready to see your final board , press ENTER : ");
+            for (;;)
+            {
+                gets(temp1);
+                if (temp1[0] == 0)
+                    break;
+                else
+                    Error(4);
+            }
+        }
+
+        printf("\n");
+        Line(SIZE * 3 + 1);
+        printf("\n");
+
+        // Delay(1000);
+
+        // printe board FOCP2
+        Print_Board(BOARD_P2, SIZE, player2, Total_Boats_P2, P2_col);
+
+        // Delay(3000);
+
+        // Delay(2000);
+        printf("\n");
+        Line(SIZE * 3 + 1);
+        printf("\n");
+        // Delay(3000);
+        // clrscr();
     }
-
-    printf("\n");
-    Line(SIZE * 3 + 1);
-    printf("\n");
-
-    // Delay(1000);
-
-    // printe board FOCP2
-    Print_Board(BOARD_P2, SIZE, player2, Total_Boats_P2, P2_col);
-
-    // Delay(3000);
-
-    // Delay(2000);
-    printf("\n");
-    Line(SIZE * 3 + 1);
-    printf("\n");
-    // Delay(3000);
-    // clrscr();
 
     int RMN_Ships1 = Total_Boats_P1; // remaining ships for player 1
     int RMN_Ships2 = Total_Boats_P2; // remaining ships for player 2
@@ -1520,21 +1805,40 @@ int main()
             printf("! Do you want to attack(1) or repair(2)?  (1/2)\n");
             for (;;)
             {
-                scanf("%s", &temp1);
-                if (Check_Input(temp1) == 1)
+                if (Load_Situ == 1 && feof(LOAD) == 0)
                 {
-                    Error(2);
-                    continue;
+                    fscanf(LOAD, "%d", &att_or_rep);
+                    if (feof(LOAD) != 0)
+                    {
+                        Load_Situ = 0;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
-                else
-                    att_or_rep = StrToNum(temp1);
-                if (att_or_rep != 1 && att_or_rep != 2)
+                if (Load_Situ == 0)
                 {
-                    Error(3);
-                    continue;
+                    scanf("%s", &temp1);
+                    if (Check_Input(temp1) == 1)
+                    {
+                        Error(2);
+                        continue;
+                    }
+                    else
+                        att_or_rep = StrToNum(temp1);
+                    if (att_or_rep != 1 && att_or_rep != 2)
+                    {
+                        Error(3);
+                        continue;
+                    }
+                    else
+                    {
+                        fprintf(LOAD, "%d\n", att_or_rep);
+                        fflush(LOAD);
+                        break;
+                    }
                 }
-                else
-                    break;
             }
         }
         if (att_or_rep == 1 || repair_p1 == 0)
@@ -1546,19 +1850,38 @@ int main()
 
             for (;;)
             {
-                scanf("%s %s", &temp1, &temp2);
-                if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
-                    Error(3);
-                else
+                if (Load_Situ == 1 && feof(LOAD) == 0)
                 {
-                    x = StrToNum(temp1);
-                    y = StrToNum(temp2);
-                    if (x < 1 || y < 1 || x > SIZE || y > SIZE)
-                        Error(7);
-                    else if (BOARD_P2[x][y] == Clashed)
-                        Error(8);
+                    fscanf(LOAD, "%d %d", &x, &y);
+                    if (feof(LOAD) != 0)
+                    {
+                        Load_Situ = 0;
+                    }
                     else
+                    {
                         break;
+                    }
+                }
+                if (Load_Situ == 0)
+                {
+                    scanf("%s %s", &temp1, &temp2);
+                    if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+                        Error(3);
+                    else
+                    {
+                        x = StrToNum(temp1);
+                        y = StrToNum(temp2);
+                        if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                            Error(7);
+                        else if (BOARD_P2[x][y] == Clashed)
+                            Error(8);
+                        else
+                        {
+                            fprintf(LOAD, "%d %d\n", x, y);
+                            fflush(LOAD);
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -1581,37 +1904,59 @@ int main()
 
             for (;;)
             {
-                scanf("%s %s", &temp1, &temp2);
-                if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+                if (Load_Situ == 1 && feof(LOAD) == 0)
                 {
-                    Error(3);
-                    continue;
-                }
-                else
-                {
-                    x = StrToNum(temp1);
-                    y = StrToNum(temp2);
-                    if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                    fscanf(LOAD, "%d %d", &x, &y);
+                    if (feof(LOAD) != 0)
                     {
-                        Error(9);
-                        continue;
+                        Load_Situ = 0;
                     }
-                    else if (BOARD_P1[x][y] != 10)
+                    else
                     {
-                        Error(9);
-                        continue;
+                        int rep = repair(BOARD_P1, BOARD_CONST_P1, BOARD_OPP_P2, Total_Boats_P1, x, y, 1);
+                        if (rep == 1)
+                        {
+                            repair_p1--;
+                            break;
+                        }
                     }
                 }
-                int rep = repair(BOARD_P1, BOARD_CONST_P1, BOARD_OPP_P2, Total_Boats_P1, x, y, 1);
-                if (rep == 0) // kashti ghargh shode ast
+                if (Load_Situ == 0)
                 {
-                    Error(10);
-                    continue;
-                }
-                else if (rep == 1)
-                {
-                    repair_p1--;
-                    break;
+                    scanf("%s %s", &temp1, &temp2);
+                    if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+                    {
+                        Error(3);
+                        continue;
+                    }
+                    else
+                    {
+                        x = StrToNum(temp1);
+                        y = StrToNum(temp2);
+                        if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                        {
+                            Error(9);
+                            continue;
+                        }
+                        else if (BOARD_P1[x][y] != 10)
+                        {
+                            Error(9);
+                            continue;
+                        }
+                    }
+                    int rep = repair(BOARD_P1, BOARD_CONST_P1, BOARD_OPP_P2, Total_Boats_P1, x, y, 1);
+                    if (rep == 0) // kashti ghargh shode ast
+                    {
+                        Error(10);
+                        continue;
+                    }
+                    else if (rep == 1)
+                    {
+                        fprintf(LOAD, "%d %d\n", x, y);
+                        fflush(LOAD);
+                        repair_p1--;
+                        break;
+                    }
                 }
             }
         }
@@ -1751,23 +2096,42 @@ int main()
                 printf("! Do you want to attack(1) or repair(2)?  (1/2)\n");
                 for (;;)
                 {
-                    scanf("%s", &temp1);
-                    if (Check_Input(temp1) == 1)
+                    if (Load_Situ == 1 && feof(LOAD) == 0)
                     {
-                        Error(2);
-                        continue;
+                        fscanf(LOAD, "%d", &att_or_rep);
+                        if (feof(LOAD) != 0)
+                        {
+                            Load_Situ = 0;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    else
+                    if (Load_Situ == 0)
                     {
-                        att_or_rep = StrToNum(temp1);
+                        scanf("%s", &temp1);
+                        if (Check_Input(temp1) == 1)
+                        {
+                            Error(2);
+                            continue;
+                        }
+                        else
+                        {
+                            att_or_rep = StrToNum(temp1);
+                        }
+                        if (att_or_rep != 1 && att_or_rep != 2)
+                        {
+                            Error(3);
+                            continue;
+                        }
+                        else
+                        {
+                            fprintf(LOAD, "%d\n", att_or_rep);
+                            fflush(LOAD);
+                            break;
+                        }
                     }
-                    if (att_or_rep != 1 && att_or_rep != 2)
-                    {
-                        Error(3);
-                        continue;
-                    }
-                    else
-                        break;
                 }
             }
 
@@ -1780,19 +2144,38 @@ int main()
 
                 for (;;)
                 {
-                    scanf("%s %s", &temp1, &temp2);
-                    if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
-                        Error(3);
-                    else
+                    if (Load_Situ == 1 && feof(LOAD) == 0)
                     {
-                        x = StrToNum(temp1);
-                        y = StrToNum(temp2);
-                        if (x < 1 || y < 1 || x > SIZE || y > SIZE)
-                            Error(7);
-                        else if (BOARD_P1[x][y] == 10)
-                            Error(8);
+                        fscanf(LOAD, "%d %d", &x, &y);
+                        if (feof(LOAD) != 0)
+                        {
+                            Load_Situ = 0;
+                        }
                         else
+                        {
                             break;
+                        }
+                    }
+                    if (Load_Situ == 0)
+                    {
+                        scanf("%s %s", &temp1, &temp2);
+                        if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+                            Error(3);
+                        else
+                        {
+                            x = StrToNum(temp1);
+                            y = StrToNum(temp2);
+                            if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                                Error(7);
+                            else if (BOARD_P1[x][y] == 10)
+                                Error(8);
+                            else
+                            {
+                                fprintf(LOAD, "%d %d\n", x, y);
+                                fflush(LOAD);
+                                break;
+                            }
+                        }
                     }
                 }
                 if (BOARD_P1[x][y] == 1 || BOARD_P1[x][y] == -1 || BOARD_P1[x][y] == 2 || BOARD_P1[x][y] == -2 || BOARD_P1[x][y] == 3 || BOARD_P1[x][y] == -3 || BOARD_P1[x][y] == 4 || BOARD_P1[x][y] == -4)
@@ -1812,37 +2195,57 @@ int main()
 
                 for (;;)
                 {
-                    scanf("%s %s", &temp1, &temp2);
-                    if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+                    if (Load_Situ == 1 && feof(LOAD) == 0)
                     {
-                        Error(3);
-                        continue;
-                    }
-                    else
-                    {
-                        x = StrToNum(temp1);
-                        y = StrToNum(temp2);
-                        if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                        fscanf(LOAD, "%d %d", &x, &y);
+                        if (feof(LOAD) != 0)
                         {
-                            Error(9);
-                            continue;
+                            Load_Situ = 0;
                         }
-                        else if (BOARD_P2[x][y] != 10)
+                        else
                         {
-                            Error(9);
-                            continue;
+                            int rep = repair(BOARD_P2, BOARD_CONST_P2, BOARD_OPP_P1, Total_Boats_P2, x, y, 2);
+                            if (rep == 1)
+                            {
+                                repair_p2--;
+                                break;
+                            }
                         }
                     }
-                    int rep = repair(BOARD_P2, BOARD_CONST_P2, BOARD_OPP_P1, Total_Boats_P2, x, y, 2);
-                    if (rep == 0) // kashti ghargh shode ast
+                    if (Load_Situ == 0)
                     {
-                        Error(10);
-                        continue;
-                    }
-                    else if (rep == 1)
-                    {
-                        repair_p2--;
-                        break;
+                        scanf("%s %s", &temp1, &temp2);
+                        if (Check_Input(temp1) == 1 || Check_Input(temp2) == 1)
+                        {
+                            Error(3);
+                            continue;
+                        }
+                        else
+                        {
+                            x = StrToNum(temp1);
+                            y = StrToNum(temp2);
+                            if (x < 1 || y < 1 || x > SIZE || y > SIZE)
+                            {
+                                Error(9);
+                                continue;
+                            }
+                            else if (BOARD_P2[x][y] != 10)
+                            {
+                                Error(9);
+                                continue;
+                            }
+                        }
+                        int rep = repair(BOARD_P2, BOARD_CONST_P2, BOARD_OPP_P1, Total_Boats_P2, x, y, 2);
+                        if (rep == 0) // kashti ghargh shode ast
+                        {
+                            Error(10);
+                            continue;
+                        }
+                        else if (rep == 1)
+                        {
+                            repair_p2--;
+                            break;
+                        }
                     }
                 }
             }
@@ -1897,5 +2300,6 @@ int main()
         // clrscr();
         Round++;
     }
+    fclose(LOAD);
     return 0;
 }
