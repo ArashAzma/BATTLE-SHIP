@@ -1124,7 +1124,7 @@ int MainMenu()
 
 int main()
 {
-    // clrscr();
+    clrscr();
     char *startup = "startup.txt";
     FILE *fptr = NULL;
     if ((fptr = fopen(startup, "r")) == NULL)
@@ -1523,11 +1523,11 @@ int main()
     {
         getchar();
     }
-    // Delay(2000);
-    // clrscr();
+    Delay(1000);
+    clrscr();
     if (play_robot == 1)
     {
-        strcpy(player2, "KOSKHOL");
+        strcpy(player2, "Jamshid");
         P2_col = 4;
         Total_Boats_P2 = Total_Boats_P1;
     }
@@ -1703,8 +1703,7 @@ int main()
     printf("\n");
 
     // Delay(1000);
-
-    // clrscr();
+    clrscr();
     if (Load_Situ == 0)
     {
         setTextColor(P1_col, 0);
@@ -1730,14 +1729,14 @@ int main()
         // printe board FOCP1
         Print_Board(BOARD_P1, SIZE, player1, Total_Boats_P1, P1_col);
 
-        // Delay(3000);
+        Delay(3000);
 
         printf("\n");
         Line(SIZE * 3 + 1);
         printf("\n");
 
-        // Delay(3000);
-        // clrscr();
+        Delay(3000);
+        clrscr();
 
         if (play_robot != 1)
         {
@@ -1753,25 +1752,24 @@ int main()
                 else
                     Error(4);
             }
+            printf("\n");
+            Line(SIZE * 3 + 1);
+            printf("\n");
+
+            // Delay(1000);
+
+            // printe board FOCP2
+            Print_Board(BOARD_P2, SIZE, player2, Total_Boats_P2, P2_col);
+
+            Delay(3000);
+
+            printf("\n");
+            Line(SIZE * 3 + 1);
+            printf("\n");
+            Delay(3000);
+            clrscr();
         }
 
-        printf("\n");
-        Line(SIZE * 3 + 1);
-        printf("\n");
-
-        // Delay(1000);
-
-        // printe board FOCP2
-        Print_Board(BOARD_P2, SIZE, player2, Total_Boats_P2, P2_col);
-
-        // Delay(3000);
-
-        // Delay(2000);
-        printf("\n");
-        Line(SIZE * 3 + 1);
-        printf("\n");
-        // Delay(3000);
-        // clrscr();
     }
 
     int RMN_Ships1 = Total_Boats_P1; // remaining ships for player 1
@@ -1985,11 +1983,7 @@ int main()
             setTextColor(15, 0);
         }
 
-        if (BOARD_OPP_P1[x][y] == -10)
-        {
-            BOARD_OPP_P1[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
-        }
-
+        if (BOARD_OPP_P1[x][y] == -10) BOARD_OPP_P1[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
         // Delay(4500);
 
         printf("\n");
@@ -2007,10 +2001,10 @@ int main()
             break;
         }
 
-        // Delay(4000);
+        Delay(4000);
         printf("\n");
         // clrscr();
-        if (play_robot == 1)
+        if (play_robot)
         {
             if (bot_hit == 0)
             {
@@ -2249,13 +2243,13 @@ int main()
                     }
                 }
             }
+            printf("\n");
+            Line(7 * SIZE + 2 + 21);
+            printf("\n");
+
+            Print_TwoBoard(BOARD_P2, BOARD_OPP_P2, SIZE, player2, RMN_Ships2, P2_col);
         }
         sink_p1_boat = check_remaining_boats(BOARD_P1, Total_Boats_P1, &RMN_Ships1, 1);
-        printf("\n");
-        Line(7 * SIZE + 2 + 21);
-        printf("\n");
-
-        Print_TwoBoard(BOARD_P2, BOARD_OPP_P2, SIZE, player2, RMN_Ships2, P2_col);
 
         if (sink_p2_boat == 2)
         {
@@ -2275,29 +2269,27 @@ int main()
             setTextColor(15, 0);
         }
 
-        if (BOARD_OPP_P2[x][y] == Missed)
-        {
-            BOARD_OPP_P2[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
-        }
-
+        if (BOARD_OPP_P2[x][y] == Missed)  BOARD_OPP_P2[x][y] = 0; // hazf khune hamle shode be dalil nabood keshti dar mokhtasate morede nazar
         // Delay(4500);
-
-        printf("\n");
-        Line(7 * SIZE + 2 + 21);
-        printf("\n");
+        if (!play_robot)
+        {
+            printf("\n");
+            Line(7 * SIZE + 2 + 21);
+            printf("\n");
+        }
 
         if (RMN_Ships1 == 0)
         {
             // Delay(1500);
             setTextColor(P2_col, 0);
-            printf("%s", player2);
+            printf("\n%s", player2);
             setTextColor(15, 0);
             printf(" WINS!");
             // Delay(2500);
             break;
         }
         // Delay(4000);
-        // clrscr();
+        clrscr();
         Round++;
     }
     fclose(LOAD);
