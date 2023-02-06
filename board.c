@@ -1157,6 +1157,20 @@ int MainMenu()
     }
 }
 
+void pick_color()
+{
+    printf("Choose your color : ");
+    setTextColor(4, 0);
+    printf("\nRed = 4");
+    setTextColor(2, 0);
+    printf("\nGreen = 2");
+    setTextColor(6, 0);
+    printf("\nYellow = 6");
+    setTextColor(5, 0);
+    printf("\nPurple = 5\n");
+    setTextColor(15, 0);
+}
+
 int main()
 {
     clrscr();
@@ -1187,7 +1201,7 @@ int main()
     int Load_Situ;
     FILE *LOAD;
 
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 100; i++) // SEFR KRDN VAZIAT KASHTI HA (GHARGH NISTAN)
     {
         P1_boats[i].situ = 0;
         P2_boats[i].situ = 0;
@@ -1258,7 +1272,7 @@ int main()
     printf("Please enter the length of board: ");
     for (;;)
     {
-        if (Load_Situ == 1 && feof(LOAD) == 0)
+        if (Load_Situ == 1 && feof(LOAD) == 0) //KHANDAN AZ FILE
         {
             fscanf(LOAD, "%d", &SIZE);
             if (feof(LOAD) != 0)
@@ -1315,7 +1329,7 @@ int main()
     printf("Please enter the number of total space for all ships: ");
     for (;;)
     {
-        if (Load_Situ == 1 && feof(LOAD) == 0)
+        if (Load_Situ == 1 && feof(LOAD) == 0) //KHANDAN AZ FILE
         {
             fscanf(LOAD, "%d", &All_Ships);
             if (feof(LOAD) != 0)
@@ -1363,7 +1377,7 @@ int main()
     printf("Please enter the amount of alowed repairs: ");
     for (;;)
     {
-        if (Load_Situ == 1 && feof(LOAD) == 0)
+        if (Load_Situ == 1 && feof(LOAD) == 0) //KHANDAN AZ FILE
         {
             fscanf(LOAD, "%d", &repair_p1);
             if (feof(LOAD) != 0)
@@ -1405,7 +1419,7 @@ int main()
     getchar();
 
     printf("Please enter your name : ");
-    if (Load_Situ == 1 && feof(LOAD) == 0)
+    if (Load_Situ == 1 && feof(LOAD) == 0) //KHANDAN AZ FILE
     {
         fscanf(LOAD, "%s", player1);
         if (feof(LOAD) != 0)
@@ -1420,20 +1434,11 @@ int main()
         fflush(LOAD);
     }
 
-    printf("Choose your color : ");
-    setTextColor(4, 0);
-    printf("\nRed = 4");
-    setTextColor(2, 0);
-    printf("\nGreen = 2");
-    setTextColor(6, 0);
-    printf("\nYellow = 6");
-    setTextColor(5, 0);
-    printf("\nPurple = 5\n");
-    setTextColor(15, 0);
+    pick_color(); //ENTEKHUB RANG PLAYER
 
     for (;;)
     {
-        if (Load_Situ == 1 && feof(LOAD) == 0)
+        if (Load_Situ == 1 && feof(LOAD) == 0)//KHANDAN AZ FILE
         {
             fscanf(LOAD, "%d", &P1_col);
             if (feof(LOAD) != 0)
@@ -1478,7 +1483,7 @@ int main()
 
         for (;;)
         {
-            if (Load_Situ == 1 && feof(LOAD) == 0)
+            if (Load_Situ == 1 && feof(LOAD) == 0) //KHANDAN AZ FILE
             {
                 fscanf(LOAD, "%d %d %d", &length, &width, &Boat_Count);
                 if (feof(LOAD) != 0)
@@ -1531,7 +1536,7 @@ int main()
             printf("Do you want to put another ship ? (y/n): ");
             for (;;)
             {
-                if (Load_Situ == 1 && feof(LOAD) == 0)
+                if (Load_Situ == 1 && feof(LOAD) == 0) //KHANDAN AZ FILE
                 {
                     fscanf(LOAD, "%s", &temp1);
                     if (feof(LOAD) != 0)
@@ -1584,7 +1589,7 @@ int main()
     else
     {
         printf("Please enter your name: ");
-        if (Load_Situ == 1 && feof(LOAD) == 0)
+        if (Load_Situ == 1 && feof(LOAD) == 0) //KHANDAN AZ FILE
         {
             fscanf(LOAD, "%s", &player2);
             if (feof(LOAD) != 0)
@@ -1599,21 +1604,11 @@ int main()
             fflush(LOAD);
         }
 
-        printf("Choose your color : ");
-
-        setTextColor(4, 0);
-        printf("\nRed = 4");
-        setTextColor(2, 0);
-        printf("\nGreen = 2");
-        setTextColor(6, 0);
-        printf("\nYellow = 6");
-        setTextColor(5, 0);
-        printf("\nPurple = 5\n");
-        setTextColor(15, 0);
+        pick_color(); //ENTEKHUB RANG PLAYER
 
         for (;;)
         {
-            if (Load_Situ == 1 && feof(LOAD) == 0)
+            if (Load_Situ == 1 && feof(LOAD) == 0) //KHANDAN AZ FILE
             {
                 fscanf(LOAD, "%d", &P2_col);
                 if (feof(LOAD) != 0)
@@ -1654,7 +1649,7 @@ int main()
 
             for (;;)
             {
-                if (Load_Situ == 1 && feof(LOAD) == 0)
+                if (Load_Situ == 1 && feof(LOAD) == 0) //KHANDAN AZ FILE
                 {
                     fscanf(LOAD, "%d %d %d", &length, &width, &Boat_Count);
                     if (feof(LOAD) != 0)
@@ -1706,7 +1701,7 @@ int main()
                 printf("Do you want to put another ship ? (y/n): ");
                 for (;;)
                 {
-                    if (Load_Situ == 1 && feof(LOAD) == 0)
+                    if (Load_Situ == 1 && feof(LOAD) == 0) //KHANDAN AZ FILE
                     {
                         fscanf(LOAD, "%s", &temp1);
                         if (feof(LOAD) != 0)
@@ -1848,7 +1843,7 @@ int main()
     for (Round = 1; RMN_Ships1 != 0 && RMN_Ships2 != 0;)
     {
         int att_or_rep;
-
+        
         Space((3 * SIZE + 1) + 4);
 
         if (Load_Situ == 0)
@@ -1871,7 +1866,7 @@ int main()
             printf("! Do you want to attack(1) or repair(2)?  (1/2)\n");
             for (;;)
             {
-                if (Load_Situ == 1 && feof(LOAD) == 0)
+                if (Load_Situ == 1 && feof(LOAD) == 0) //KHANDAN AZ FILE
                 {
                     fscanf(LOAD, "%d", &att_or_rep);
                     if (feof(LOAD) != 0)
@@ -1914,7 +1909,7 @@ int main()
 
             for (;;)
             {
-                if (Load_Situ == 1 && feof(LOAD) == 0)
+                if (Load_Situ == 1 && feof(LOAD) == 0) //KHANDAN AZ FILE
                 {
                     fscanf(LOAD, "%d %d", &x, &y);
                     if (feof(LOAD) != 0)
@@ -1966,7 +1961,7 @@ int main()
 
             for (;;)
             {
-                if (Load_Situ == 1 && feof(LOAD) == 0)
+                if (Load_Situ == 1 && feof(LOAD) == 0) //KHANDAN AZ FILE
                 {
                     fscanf(LOAD, "%d %d", &x, &y);
                     if (feof(LOAD) != 0)
@@ -2089,9 +2084,9 @@ int main()
 
         printf("\n");
 
-        if (play_robot)
+        if (play_robot) // BAZI KRDN BA ROBOT
         {
-            if (bot_hit == 0)
+            if (bot_hit == 0) // SHELIK GHABLI BOT BE KASHTI NAKHORDE BASHE
             {
                 int sw = 0;
                 attack_bot_count++;
@@ -2123,7 +2118,7 @@ int main()
                     attacked_places[attack_bot_count].y = y;
                 }
             }
-            else
+            else // SHELIK GHABLI BE HADAF KHORDE
             {
                 int sw = 0;
                 attack_bot_count++;
@@ -2155,8 +2150,8 @@ int main()
             {
                 BOARD_OPP_P2[x][y] = Clashed;
                 BOARD_P1[x][y] = Clashed;
-                x_hit = x;
-                y_hit = y;
+                x_hit = x; // SAVE KRDN MOKHTASAT ZARBE
+                y_hit = y; // SAVE KRDN MOKHTASAT ZARBE
                 bot_hit = 1;
             }
             else
