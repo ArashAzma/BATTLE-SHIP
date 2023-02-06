@@ -2383,18 +2383,21 @@ int main()
             }
         }
 
-        if (sink_p2_boat == 2)
+        if(!play_robot)
         {
-            printf("\n\n");
-            Space((3 * SIZE + 1) + 4);
-            Print_Name("You Lost A Ship", 4);
-            sink_p2_boat = 0;
-        }
-        if (sink_p1_boat == 1)
-        {
-            printf("\n\n");
-            Space((3 * SIZE + 1) + 4);
-            Print_Name("You Sinked A Ship", 2);
+            if (sink_p2_boat == 2)
+            {
+                printf("\n\n");
+                Space((3 * SIZE + 1) + 4);
+                Print_Name("You Lost A Ship", 4);
+                sink_p2_boat = 0;
+            }
+            if (sink_p1_boat == 1)
+            {
+                printf("\n\n");
+                Space((3 * SIZE + 1) + 4);
+                Print_Name("You Sinked A Ship", 2);
+            }
         }
 
         if (BOARD_OPP_P2[x][y] == Missed)
