@@ -1842,8 +1842,9 @@ int main()
 
     for (Round = 1; RMN_Ships1 != 0 && RMN_Ships2 != 0;)
     {
+        int repair_p1_sw=0;
+        int repair_p2_sw=0;
         int att_or_rep;
-        
         Space((3 * SIZE + 1) + 4);
 
         if (Load_Situ == 0)
@@ -1859,8 +1860,20 @@ int main()
         {
             Delay(1000);
         }
+        for(int i=1;i<=SIZE+1;i++)
+        {
+            for(int j=1;j<=SIZE+1;j++)
+            {
+                if(BOARD_P1[i][j] == 10)
+                {
+                    repair_p1_sw=1;
+                    break;
+                }
+            }
+            if(repair_p1_sw) break;
+        }
 
-        if (repair_p1 != 0)
+        if (repair_p1 != 0 && repair_p1_sw)
         {
             Print_Name(player1, P1_col);
             printf("! Do you want to attack(1) or repair(2)?  (1/2)\n");
@@ -1902,7 +1915,7 @@ int main()
                 }
             }
         }
-        if (att_or_rep == 1 || repair_p1 == 0)
+        if (att_or_rep == 1 || repair_p1 == 0 || repair_p1_sw == 0)
         {
             Print_Name(player1, P1_col);
             printf("! Enter a coordinate to attack : ");
@@ -2163,7 +2176,19 @@ int main()
         }
         else
         {
-            if (repair_p2 != 0)
+            for(int i=1;i<=SIZE+1;i++)
+            {
+                for(int j=1;j<=SIZE+1;j++)
+                {
+                    if(BOARD_P2[i][j] == 10)
+                    {
+                        repair_p2_sw=1;
+                        break;
+                    }
+                }
+                if(repair_p2_sw) break;
+            }
+            if (repair_p2 != 0 && repair_p2_sw)
             {
                 if (Load_Situ == 0)
                 {
@@ -2212,7 +2237,7 @@ int main()
                     }
                 }
             }
-            if (att_or_rep == 1 || repair_p2 == 0)
+            if (att_or_rep == 1 || repair_p2 == 0 || repair_p2_sw==0)
             {
                 Print_Name(player2, P2_col);
                 printf("! Enter a coordinate to attack : ");
